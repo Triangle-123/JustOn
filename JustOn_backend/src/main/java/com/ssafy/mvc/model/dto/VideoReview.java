@@ -6,18 +6,21 @@ public class VideoReview {
 	private String writer;
 	private String regDate;
 	private int videoNo;
+	private int parentNo;
 	private String userId;
 	public VideoReview() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public VideoReview(int reviewNo, String content, String writer, String regDate, int videoNo, String userId) {
+	public VideoReview(int reviewNo, String content, String writer, String regDate, int videoNo, int parentNo,
+			String userId) {
 		super();
 		this.reviewNo = reviewNo;
 		this.content = content;
 		this.writer = writer;
 		this.regDate = regDate;
 		this.videoNo = videoNo;
+		this.parentNo = parentNo;
 		this.userId = userId;
 	}
 	public int getReviewNo() {
@@ -50,6 +53,12 @@ public class VideoReview {
 	public void setVideoNo(int videoNo) {
 		this.videoNo = videoNo;
 	}
+	public int getParentNo() {
+		return parentNo;
+	}
+	public void setParentNo(int parentNo) {
+		this.parentNo = parentNo;
+	}
 	public String getUserId() {
 		return userId;
 	}
@@ -59,8 +68,7 @@ public class VideoReview {
 	@Override
 	public String toString() {
 		return "VideoReview [reviewNo=" + reviewNo + ", content=" + content + ", writer=" + writer + ", regDate="
-				+ regDate + ", videoNo=" + videoNo + ", userId=" + userId + "]";
+				+ regDate + ", videoNo=" + videoNo + ", parentNo=" + parentNo + ", userId=" + userId + "]";
 	}
-	
 	
 }
