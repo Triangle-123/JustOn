@@ -7,7 +7,7 @@ import com.ssafy.mvc.model.dto.UserProfile;
 
 public interface UserDao {
 	// 회원가입
-	void insertUser(User user);
+	int insertUser(User user);
 	
 	// 로그인 검사
 	User selectUser(Map<String, String> info);
