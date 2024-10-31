@@ -6,7 +6,7 @@ public class User {
 	private String name;
 	private String email;
 	private String gender;
-	private String adress;
+	private String address;
 	private String nickname;
 	private String birth;
 	
@@ -17,7 +17,7 @@ public class User {
 		// TODO Auto-generated constructor stub
 	}
 
-	public User(String id, String password, String name, String email, String gender, String adress, String nickname,
+	public User(String id, String password, String name, String email, String gender, String address, String nickname,
 			String birth, UserProfile userProfile) {
 		super();
 		this.userId = id;
@@ -25,7 +25,7 @@ public class User {
 		this.name = name;
 		this.email = email;
 		this.gender = gender;
-		this.adress = adress;
+		this.address = address;
 		this.nickname = nickname;
 		this.birth = birth;
 		this.userProfile = userProfile;
@@ -71,12 +71,12 @@ public class User {
 		this.gender = gender;
 	}
 
-	public String getAdress() {
-		return adress;
+	public String getaddress() {
+		return address;
 	}
 
-	public void setAdress(String adress) {
-		this.adress = adress;
+	public void setaddress(String address) {
+		this.address = address;
 	}
 
 	public String getNickname() {
@@ -106,7 +106,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + ", gender="
-				+ gender + ", adress=" + adress + ", nickname=" + nickname + ", birth=" + birth + ", userProfile="
+				+ gender + ", address=" + address + ", nickname=" + nickname + ", birth=" + birth + ", userProfile="
 				+ userProfile + "]";
 	}
 	
