@@ -10,15 +10,25 @@
 		WHERE id = #{id} AND password = #{password}
 	</select>
 	
-
 	<insert id="insertUser" parameterType="User">
 		INSERT INTO user
 		VALUES(#{userId}, #{password}, #{name}, #{email}, #{gender}, #{address}, #{nickname}, #{birth})
 	</insert> 
 	
+	<update id="updateUser" parameterType="User">
+		UPDATE user
+		SET email = #{email}, gender = #{gender}, address = #{address}, nickname = #{nickname}, birth = #{birth}
+		WHERE user_id = #{userId}
+	</update>
 	
+	<insert id="insertProfile" parameterType="UserProfile">
+		INSERT INTO user_profile_img(file_path, ori_name, system_name, user_id)
+		VALUES (#{filePath}, #{oriName}, #{systemName}, #{UserId})
+	</insert>
 	
-	
-	
+	<delete id="deleteProfile" parameterType="String">
+		DELETE FROM user_profile_img
+		WHERE user_id = #{id}
+	</delete>
 	
 </mapper>

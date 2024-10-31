@@ -1,12 +1,8 @@
 package com.ssafy.mvc.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +18,7 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/api/user")
 public class UserRestController {
 	
-	final private UserService userService;
+	private final UserService userService;
 
 	public UserRestController(UserService userService) {
 		this.userService = userService;
@@ -54,5 +50,16 @@ public class UserRestController {
         }	
 	}
 	
+	@PostMapping("/signup")
+	public ResponseEntity<String> signUp(@RequestBody User user) {
+		try {
+			if(userService.signUp(user)) {
+				return ResponseEntity.ok("회원가입이 완료되었습니다.");
+			}
+			return ResponseEntity.internalServerError().body("회원가입에 실패하였습니다.");			
+		} catch(Exception e) {
+			return ResponseEntity.internalServerError().body("회원가입에 실패하였습니다.");	
+		}
+	}
 	
 }

@@ -22,7 +22,16 @@ public class UserServiceImpl implements UserService {
 		User tmp = userDao.selectUser(info);
 		return tmp;
 	}
-	
 
+	@Override
+	public boolean signUp(User user) {
+		return userDao.insertUser(user) == 1;
+	}
+
+	@Override
+	public void modifyInfo(User user) {
+		userDao.updateUser(user);
+		
+	}
 	
 }
