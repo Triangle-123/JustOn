@@ -1,4 +1,4 @@
-package com.ssafy.mvc.service;
+package com.ssafy.mvc.model.service;
 
 import java.util.List;
 
@@ -18,6 +18,7 @@ public class VideoReviewServiceImpl implements VideoReviewService {
 	
 	@Override
 	public boolean regist(VideoReview videoReview) {
+		System.out.println("서비스");
 		return videoReviewDao.insertReview(videoReview) == 1;
 	}
 

@@ -3,6 +3,7 @@ package com.ssafy.mvc.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,12 +13,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.mvc.model.dto.User;
 import com.ssafy.mvc.model.dto.VideoReview;
-import com.ssafy.mvc.service.VideoReviewService;
+import com.ssafy.mvc.model.service.VideoReviewService;
+
+import jakarta.servlet.http.HttpSession;
 
 
 @RestController
 @RequestMapping("/api/review")
+@CrossOrigin
 public class VideoReviewRestController {
 	
 	private final VideoReviewService ReviewService;
@@ -27,13 +32,16 @@ public class VideoReviewRestController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> regist(@RequestBody VideoReview videoreview) {
+	public ResponseEntity<String> regist(@RequestBody VideoReview videoReview, HttpSession session) {
 		try {
-			if(ReviewService.regist(videoreview)) {
+//			User user = (User)session.getAttribute("user");
+//			videoreview.setUserId(user.getId());
+			if(ReviewService.regist(videoReview)) {
 				return ResponseEntity.ok().build();
 			}
 			return ResponseEntity.internalServerError().build();			
 		} catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
 		}
 	}
@@ -45,7 +53,7 @@ public class VideoReviewRestController {
 			if(list != null) {
 				return ResponseEntity.ok(list);
 			} 
-			return ResponseEntity.noContent().build();			
+			return ResponseEntity.noContent().build();
 		} catch(Exception e) {
 			return ResponseEntity.internalServerError().build();
 		}

@@ -2,13 +2,14 @@ package com.ssafy.mvc.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.mvc.model.dto.User;
-import com.ssafy.mvc.service.UserService;
+import com.ssafy.mvc.model.service.UserService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.HttpSession;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/user")
+@CrossOrigin
 public class UserRestController {
 	
 	private final UserService userService;

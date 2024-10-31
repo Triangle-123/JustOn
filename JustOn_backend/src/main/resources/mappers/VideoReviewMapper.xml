@@ -6,19 +6,12 @@
 	
 	<insert id="insertReview" parameterType="VideoReview">
 		INSERT INTO video_review(content, writer, video_no, user_id, parent_no)
-		VALUES (${content}, ${writer}, ${videoNo}, ${userId}
-		<choose>
-			<when test="parentNo != null">
-				,${parentNo}
-			</when>
-			<otherwise>,null</otherwise>
-		</choose>
-		)
+		VALUES (#{content}, #{writer}, #{videoNo}, #{userId}, #{parentNo})
 	</insert>
 	
 	<select id="selectReview" resultType="VideoReview">
-		SELECT content, writer, reg_date
-		FROM video_review
+		SELECT * FROM video_review
+		WHERE parent_no = 0
 		ORDER BY reg_date
 	</select>
 	
@@ -34,8 +27,8 @@
 	</delete>
 	
 	<select id="selectReply" resultType="VideoReview" parameterType="int">
-		SELECT content, writer, reg_date
-		FROM video_review
+		SELECT * FROM video_review
 		WHERE parent_no = #{parentNo}
+		ORDER BY reg_date
 	</select>
 </mapper>
