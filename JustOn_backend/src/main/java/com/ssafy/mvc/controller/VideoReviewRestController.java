@@ -68,6 +68,7 @@ public class VideoReviewRestController {
 			}
 			return ResponseEntity.internalServerError().build();			
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
 		}	
 	}
@@ -80,6 +81,7 @@ public class VideoReviewRestController {
 			}
 			return ResponseEntity.internalServerError().build();			
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
 		}	
 	}

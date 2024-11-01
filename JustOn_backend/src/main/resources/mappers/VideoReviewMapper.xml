@@ -23,7 +23,7 @@
 
 	<delete id="deleteReview" parameterType="int">
 		DELETE FROM video_review
-		WHERE review_no = #{reviewNo}
+		WHERE review_no = #{reviewNo} OR parent_no = #{reviewNo};
 	</delete>
 	
 	<select id="selectReply" resultType="VideoReview" parameterType="int">

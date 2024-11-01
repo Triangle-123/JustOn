@@ -35,7 +35,7 @@ public class VideoReviewServiceImpl implements VideoReviewService {
 
 	@Override
 	public boolean remove(int reviewNo) {
-		return videoReviewDao.deleteReview(reviewNo) == 1;
+		return videoReviewDao.deleteReview(reviewNo) >= 1;
 	}
 	
 	@Override

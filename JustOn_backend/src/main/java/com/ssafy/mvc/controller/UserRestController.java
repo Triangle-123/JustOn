@@ -26,18 +26,19 @@ public class UserRestController {
 		this.userService = userService;
 	}
 	
-	@GetMapping("/login")
-	public String loginForm() {
-		return "/user/loginform";
-	}
-	
+//	@GetMapping("/login")
+//	public String loginForm() {
+//		return "/user/loginform";
+//	}
+//	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody User user, HttpSession session) {
 		User tmp = userService.login(user.getId(), user.getPassword());
 		if(tmp == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 아이디 입니다.");
 		}
-		session.setAttribute("loginUser", tmp.getName());
+		user.setPassword(null);
+		session.setAttribute("loginUser", tmp);
 		return ResponseEntity.ok().build();
 	}
 	
