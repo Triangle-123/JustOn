@@ -9,10 +9,18 @@
 		VALUES (#{content}, #{writer}, #{videoNo}, #{userId}, #{parentNo})
 	</insert>
 	
-	<select id="selectReview" resultType="VideoReview">
+	<select id="selectReview" resultType="VideoReview" parameterType="ReviewSearch">
 		SELECT * FROM video_review
 		WHERE parent_no = 0
 		ORDER BY reg_date
+		LIMIT #{offset}, #{listSize}
+	</select>
+	
+	<!-- 게시물 목록 카운트 -->
+	<select id="selectReviewCount" resultType="int" parameterType="ReviewSearch">
+		SELECT count(*)
+		FROM video_review
+		WHERE parent_no = 0
 	</select>
 	
 	<update id="updateReview" parameterType="VideoReview">
@@ -29,6 +37,6 @@
 	<select id="selectReply" resultType="VideoReview" parameterType="int">
 		SELECT * FROM video_review
 		WHERE parent_no = #{parentNo}
-		ORDER BY reg_date
+		ORDER BY reg_date 
 	</select>
 </mapper>
