@@ -1,6 +1,7 @@
 package com.ssafy.mvc.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.mvc.model.dto.User;
+import com.ssafy.mvc.model.dto.ReviewSearch;
 import com.ssafy.mvc.model.dto.VideoReview;
 import com.ssafy.mvc.model.service.VideoReviewService;
 
@@ -47,11 +48,11 @@ public class VideoReviewRestController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<?> reviewList() {
-		List<VideoReview> list = ReviewService.reviewList();
+	public ResponseEntity<?> reviewList(/*@RequestBody(required = false)*/ ReviewSearch reviewSearch) {
+		Map<String, Object> result = ReviewService.reviewList(reviewSearch);
 		try {
-			if(list != null) {
-				return ResponseEntity.ok(list);
+			if(result.get("list") != null) {
+				return ResponseEntity.ok(result);
 			} 
 			return ResponseEntity.noContent().build();
 		} catch(Exception e) {
