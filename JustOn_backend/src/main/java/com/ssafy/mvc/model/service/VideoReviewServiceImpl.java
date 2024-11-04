@@ -27,6 +27,7 @@ public class VideoReviewServiceImpl implements VideoReviewService {
 
 	@Override
 	public Map<String, Object> reviewList(ReviewSearch reviewSearch) {
+		System.out.println(reviewSearch.getOffset() + " " + reviewSearch.getListSize());
 		List<VideoReview> list = videoReviewDao.selectReview(reviewSearch);
 		
 		Map<String, Object> result = new HashMap<>();

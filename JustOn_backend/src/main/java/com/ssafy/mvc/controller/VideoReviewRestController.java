@@ -48,7 +48,8 @@ public class VideoReviewRestController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<?> reviewList(/*@RequestBody(required = false)*/ ReviewSearch reviewSearch) {
+	public ResponseEntity<?> reviewList(ReviewSearch reviewSearch) {
+		System.out.println(reviewSearch.getOffset() + " " + reviewSearch.getListSize());
 		Map<String, Object> result = ReviewService.reviewList(reviewSearch);
 		try {
 			if(result.get("list") != null) {
