@@ -36,20 +36,15 @@ public class DiaryRestController {
 	// 등록 시 동시에 부위별 테이블 등록
 	@PostMapping("/diary")
 	public ResponseEntity<?> insertDiary(@RequestBody Diary diary) {
+		
 		boolean isInsert = diaryService.writeDiary(diary);
 		// DiaryExList 추가하기
 		List<DiaryEx> ExList = diary.getDiaryExList();
-		boolean isExInsert = diaryService.addDiaryExList(ExList);
 		
 		// 등록 후 조회에 사용될 수 있도록 diaryNo 받아서 return
 		int diaryNo = diary.getDiaryNo();
-		if(isInsert && isExInsert) {
+		if(isInsert) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(diaryNo);
-//			return new ResponseEntity<Integer>(diaryNo, HttpStatus.CREATED);
-		} else if (isInsert && !isExInsert) {
-			return ResponseEntity.status(HttpStatus.CREATED).body("Diary insert Sucess, But DiaryEx insert failed");
-		} else if (!isInsert && isExInsert) {
-			return ResponseEntity.status(HttpStatus.CREATED).body("DiaryEx insert Sucess, But Diary insert failed");
 		} else {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("All Insert Failed");
 		}
@@ -59,9 +54,14 @@ public class DiaryRestController {
 	// 특정 유저의 다이어리 전체 조회 
 	@GetMapping("/diary") // @RequestBody(required = false) 
 	public ResponseEntity<?> getUserDiaryList(DiarySearch diarySearch, HttpSession session, @ModelAttribute User user) {
+		
 		// 체크 필요 : 일반적인 방식 session.getAttribute("userId")
 //		String userId = session.getId();
-		String userId = user.getId();
+		String userId = user.getUserId();
+		String pw = user.getPassword();
+		
+		System.out.println(userId);
+		System.out.println(pw);
 		Map<String, Object> result = diaryService.selectAllDiary(diarySearch, userId);
 		// 이게 맞나??
 		List<Diary> list = (List<Diary>) result.get("list");

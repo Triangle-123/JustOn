@@ -11,7 +11,7 @@ public interface DiaryDao {
 	
 	// 다이어리 등록 및 다이어리 운동 리스트 등록
 	int insertDiary(Diary diary);
-	int insertDiaryExList(List<DiaryEx> exList);
+	int insertDiaryExList(DiaryEx exList);
 	
 	// 특정 유저의 다이어리 전체 조회
 	// 다이어리 수 조회

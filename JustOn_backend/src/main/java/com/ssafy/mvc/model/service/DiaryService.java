@@ -12,7 +12,6 @@ import com.ssafy.mvc.model.dto.DiarySearch;
 public interface DiaryService  {
 
 	public boolean writeDiary(Diary diary);
-	public boolean addDiaryExList(List<DiaryEx> exList);
 
 	public Map<String, Object> selectAllDiary(DiarySearch diarySearch, String userId);
 

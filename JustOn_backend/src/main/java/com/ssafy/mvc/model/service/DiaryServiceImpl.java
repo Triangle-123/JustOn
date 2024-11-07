@@ -24,28 +24,28 @@ public class DiaryServiceImpl implements DiaryService {
 	// 다이어리 등록
 	@Override
 	public boolean writeDiary(Diary diary) {
-		int result = diaryDao.insertDiary(diary);
-		return result == 1;
+		int result1 = diaryDao.insertDiary(diary);
+		int result2 = 1;
+		for(DiaryEx diaryEx : diary.getDiaryExList()) {
+			diaryEx.setDiaryNo(diary.getDiaryNo());
+			result2 = diaryDao.insertDiaryExList(diaryEx);
+		}
+		return result1 == 1 && result2 == 1;
 	}
 	
-	// 다이어리 등록시 운동 리스트 추가
-	@Override
-	public boolean addDiaryExList(List<DiaryEx> exList) {
-		int result = diaryDao.insertDiaryExList(exList);
-		return result == 1;
-	}
-
 	// 특정 유저의 다이어리 전체 조회
 	@Override
 	public Map<String, Object> selectAllDiary(DiarySearch diarySearch, String userId) {
+		// params 에 유저 아이디와 검색 정보 담기
 		Map<String, Object> params = new HashMap<>();
 		params.put("diarySearch", diarySearch);
 		params.put("userId", userId);
+		System.out.println("#33");
+		// result에 결과를 담아서 Contoller로 넘기기 
 		Map<String, Object> result = new HashMap<>();
 		result.put("list", diaryDao.selectAllDiary(params));
 		result.put("pr", new PageResult(
 					diarySearch.getPage(),
-					//DiarySearch를 파라미터로 가져온 이유? 추후 혹시 모를 검색 설정 위함 
 					diaryDao.selectAllDiaryCount(userId),
 					diarySearch.getListSize()
 			)

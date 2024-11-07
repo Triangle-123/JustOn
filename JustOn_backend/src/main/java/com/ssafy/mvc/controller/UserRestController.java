@@ -31,7 +31,7 @@ public class UserRestController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody User user, HttpSession session) {
-		User tmp = userService.login(user.getId(), user.getPassword());
+		User tmp = userService.login(user.getUserId(), user.getPassword());
 		if(tmp == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 아이디 입니다.");
 		}

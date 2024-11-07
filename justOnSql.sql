@@ -45,7 +45,7 @@ CREATE TABLE diary (
 	diary_no INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(300) NOT NULL,
     content TEXT NOT NULL,
-    reg_date DATE,
+    reg_date DATE DEFAULT (CURRENT_DATE()),
     user_id VARCHAR(100) NOT NULL,
     FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
@@ -68,9 +68,9 @@ CREATE TABLE diary_ex (
 );
 
 INSERT INTO `diary_ex` (play_num, diary_no, video_no)
-VALUES (3, 3, 1),
-	   (3, 3, 2),
-       (3, 3, 3);
+VALUES (3, 2, 1),
+	   (3, 2, 2),
+       (3, 2, 3);
 
 SELECT * FROM diary_ex;
 

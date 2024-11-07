@@ -26,7 +26,7 @@ public class DiarySearch {
 	}
 
 	public int getOffset() {
-		return (page - 1) * listSize;
+		return (page - 1) * listSize; // 
 	}
 
 	public int getListSize() {
