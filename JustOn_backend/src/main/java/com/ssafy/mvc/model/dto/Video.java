@@ -6,25 +6,27 @@ public class Video {
 	private String src;
 	private String title;
 	private int viewCnt;
+	private String thumb;
 	private String userId;
 	public Video() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Video(int no, String videoId, String src, String title, int viewCnt, String userId) {
+	public Video(int videoNo, String videoId, String src, String title, int viewCnt, String thumb, String userId) {
 		super();
-		this.videoNo = no;
+		this.videoNo = videoNo;
 		this.videoId = videoId;
 		this.src = src;
 		this.title = title;
 		this.viewCnt = viewCnt;
+		this.thumb = thumb;
 		this.userId = userId;
 	}
-	public int getNo() {
+	public int getVideoNo() {
 		return videoNo;
 	}
-	public void setNo(int no) {
-		this.videoNo = no;
+	public void setVideoNo(int videoNo) {
+		this.videoNo = videoNo;
 	}
 	public String getVideoId() {
 		return videoId;
@@ -50,6 +52,12 @@ public class Video {
 	public void setViewCnt(int viewCnt) {
 		this.viewCnt = viewCnt;
 	}
+	public String getThumb() {
+		return thumb;
+	}
+	public void setThumb(String thumb) {
+		this.thumb = thumb;
+	}
 	public String getUserId() {
 		return userId;
 	}
@@ -58,8 +66,8 @@ public class Video {
 	}
 	@Override
 	public String toString() {
-		return "Video [no=" + videoNo + ", videoId=" + videoId + ", src=" + src + ", title=" + title + ", viewCnt=" + viewCnt
-				+ ", userId=" + userId + "]";
+		return "Video [videoNo=" + videoNo + ", videoId=" + videoId + ", src=" + src + ", title=" + title + ", viewCnt="
+				+ viewCnt + ", thumb=" + thumb + ", userId=" + userId + "]";
 	}
 	
 	

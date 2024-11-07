@@ -18,13 +18,13 @@ public interface VideoDao {
 	List<Video> selectVideoByGroup(VideoGroup videoGroup);
 	
 	// 재생목록 넣기 전 => 유저별 영상 제목 조회
-	List<String> selectVideoTitle();
+	List<String> selectVideoTitle(String id);
 	
 	// 재생목록에 영상 추가
-	int insertVideoByGroup(Video video);
+	int insertVideoToGroup(Video video);
 	
 	// 재생목록에서 영상 삭제
-	int deleteVideoByGroup(Map<String, Integer> map);
+	int deleteVideoFromGroup(Map<String, Integer> map);
 	
 	// 재생목록 추가
 	int insertVideoGroup(VideoGroup videoGroup);
