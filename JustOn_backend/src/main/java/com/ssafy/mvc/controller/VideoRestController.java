@@ -1,6 +1,7 @@
 package com.ssafy.mvc.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class VideoRestController {
 			if(videoService.addVideo(video)) {
 				return ResponseEntity.ok("영상이 등록되었습니다.");
 			}
-			throw new Exception();
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 등록된 영상입니다.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.internalServerError().body("영상 등록에 실패하였습니다.");
@@ -60,7 +61,7 @@ public class VideoRestController {
 	@GetMapping
 	public ResponseEntity<?> titleList() {
 		try {
-			List<String> list = videoService.titleList("ssafy");
+			List<Video> list = videoService.titleList("ssafy");
 			if(list != null && !list.isEmpty()) {
 				return ResponseEntity.ok(list);
 			}
@@ -71,7 +72,7 @@ public class VideoRestController {
 		}
 	}
 	
-	@GetMapping("/playlist")
+	@GetMapping("/{categoryName}/videos")
 	public ResponseEntity<?> videoList(@RequestBody VideoGroup videoGroup) {
 		try {
 			List<Video> list = videoService.videoList(videoGroup);
@@ -85,10 +86,10 @@ public class VideoRestController {
 		}
 	}
 	
-	@PostMapping("/playlist")
-	public ResponseEntity<String> addVideoToList(@RequestBody Video video) {
+	@PostMapping("/{categoryName}/{videoNo}")
+	public ResponseEntity<String> addVideoToList(@PathVariable("categoryName") String categoryName, @PathVariable("videoNo") int videoNo) {
 		try {
-			if(videoService.addVideoToList(video)) {
+			if(videoService.addVideoToList(categoryName, videoNo)) {
 				return ResponseEntity.ok("재생목록에 영상이 추가되었습니다.");
 			}
 			throw new Exception();
@@ -98,19 +99,62 @@ public class VideoRestController {
 		}
 	}
 	
-//	@DeleteMapping("/playlist")
-//	public ResponseEntity<String> removeVideoFromList() {
-//		
-//	}
+	@DeleteMapping("/{categoryName}/{videoNo}")
+	public ResponseEntity<String> removeVideoFromList(@PathVariable("categoryName") String categoryName, @PathVariable("videoNo") int videoNo) {
+		try {
+			if(videoService.removeVideoFromList(categoryName, videoNo)) {
+				return ResponseEntity.ok("재생목록에서 영상이 삭제되었습니다.");
+			}
+			throw new Exception();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("영상 삭제에 실패하였습니다.");
+		}
+	}
 	
-//	@PostMapping("/playlist")
-//	public ResponseEntity<String> addPlaylist(@RequestBody VideoGroup videoGroup) {
-//		
-//	}
+	@GetMapping("/playlist/{videoNo}")
+	public ResponseEntity<?> showPlaylist(@PathVariable("videoNo") int videoNo) {
+		try {
+			Map<String, Object> result = videoService.showPlaylist(videoNo, "ssafy");
+//			List<VideoGroup> list = (List<VideoGroup>) result.get("list");
+			if(result != null && !result.isEmpty()) {
+				return ResponseEntity.ok(result);
+			}
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("재생목록이 없습니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("재생목록 불러오기에 실패하였습니다.");
+		}
+	}
 	
-//	@DeleteMapping("/playlist/{no}")
-//	public ResponseEntity<String> removePlaylist(@PathVariable("no") int no) {
-//		
-//	}
+	@PostMapping("/playlist")
+	public ResponseEntity<String> addPlaylist(@RequestBody VideoGroup videoGroup) {
+		videoGroup.setUserId("ssafy");
+		try {
+			if(videoService.addPlaylist(videoGroup)) {
+				return ResponseEntity.ok("재생목록이 추가되었습니다.");
+			}
+			throw new Exception();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("재생목록 추가에 실패하였습니다.");
+		}
+	}
+		
+	@DeleteMapping("/playlist/{categoryName}")
+	public ResponseEntity<String> removePlaylist(@PathVariable("categoryName") String categoryName) 	{
+		VideoGroup videoGroup = new VideoGroup();
+		videoGroup.setCategoryName(categoryName);
+		videoGroup.setUserId("ssafy");
+		try {
+			if(videoService.removePlaylist(videoGroup)) {
+				return ResponseEntity.ok("재생목록이 삭제되었습니다.");
+			}
+			throw new Exception();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("재생목록 삭제에 실패하였습니다.");
+		}
+	}
 	
 }

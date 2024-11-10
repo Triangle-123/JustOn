@@ -15,27 +15,42 @@
 		
 	
 	<select id="selectVideoByGroup" resultType="Video" parameterType="VideoGroup">
-	
+		
 	</select>
 	
-	<select id="selectVideoTitle" resultType="String" parameterType="String">
-		SELECT title FROM video
+	<select id="selectVideoTitle" resultType="Video" parameterType="String">
+		SELECT video_no, title FROM video
 		WHERE user_id = #{Id}
 	</select>
 	
-	<insert id="insertVideoToGroup" parameterType="Video">
-	
+	<insert id="insertVideoToGroup">
+		INSERT INTO category_video(category_name, video_no)
+		VALUES (#{categoryName}, #{videoNo})
 	</insert>
 	
-	<delete id="deleteVideoFromGroup" parameterType="Map">
-	
+	<delete id="deleteVideoFromGroup">
+		DELETE FROM category_video
+		WHERE category_name = #{categoryName} AND video_no = #{videoNo}
 	</delete>
 	
-	<insert id="insertVideoGroup" parameterType="VideoGroup">
+	<select id="selectVideoGroup" resultType="VideoGroup" parameterType="String">
+		SELECT category_name, group_desc FROM video_group
+		WHERE user_id = #{userId}
+		ORDER BY create_date
+	</select>
 	
+	<select id="selectRegistedVideoGroup" resultType="String" parameterType="int">
+		SELECT category_name FROM category_video
+		WHERE video_no = #{videoNo}
+	</select>
+		
+	<insert id="insertVideoGroup" parameterType="VideoGroup">
+		INSERT INTO video_group(category_name, user_id, group_desc)
+		VALUES (#{categoryName}, #{userId}, #{groupDesc})
 	</insert>
 	
-	<delete id="deleteVideoGroup" parameterType="int">
-	
+	<delete id="deleteVideoGroup" parameterType="VideoGroup">
+		DELETE FROM video_group
+		WHERE category_name = #{categoryName} AND user_id = #{userId}
 	</delete>
 </mapper>

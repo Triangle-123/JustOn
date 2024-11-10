@@ -18,17 +18,19 @@ public interface VideoService {
 		List<Video> videoList(VideoGroup videoGroup);
 		
 		// 재생목록 넣기 전 => 유저별 영상 제목 조회
-		List<String> titleList(String id);
+		List<Video> titleList(String id);
 		
 		// 재생목록에 영상 추가
-		boolean addVideoToList(Video video);
+		boolean addVideoToList(String categoryName, int videoNo);
 		
 		// 재생목록에서 영상 삭제
-		boolean removeVideoFromList(Map<String, Integer> map);
+		boolean removeVideoFromList(String categoryName, int videoNo);
+		
+		Map<String, Object> showPlaylist(int videoNo, String id);
 		
 		// 재생목록 추가
 		boolean addPlaylist(VideoGroup videoGroup);
 
 		// 재생목록 삭제
-		boolean removePlaylist(int no);
+		boolean removePlaylist(VideoGroup videoGroup);
 }
