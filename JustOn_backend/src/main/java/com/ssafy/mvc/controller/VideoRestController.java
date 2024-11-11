@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.mvc.model.dto.AddVideoDTO;
 import com.ssafy.mvc.model.dto.Video;
+import com.ssafy.mvc.model.dto.VideoEx;
 import com.ssafy.mvc.model.dto.VideoGroup;
 import com.ssafy.mvc.model.service.VideoService;
 
@@ -28,14 +30,15 @@ public class VideoRestController {
 	
 	public VideoRestController(VideoService videoService) {
 		this.videoService = videoService;
-	}
+	}	
 	
 	@PostMapping
-	public ResponseEntity<String> addVideo(@RequestBody Video video) {
+	public ResponseEntity<String> addVideo(@RequestBody AddVideoDTO addVideoDto) {
 		try {
-			video.setUserId("ssafy");
-			System.out.println(video);
-			if(videoService.addVideo(video)) {
+			
+			addVideoDto.getVideo().setUserId("ssafy");
+//			System.out.println(addDto.video);
+			if(videoService.addVideo(addVideoDto)) {
 				return ResponseEntity.ok("영상이 등록되었습니다.");
 			}
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 등록된 영상입니다.");

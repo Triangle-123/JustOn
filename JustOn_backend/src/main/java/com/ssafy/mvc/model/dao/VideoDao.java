@@ -1,9 +1,9 @@
 package com.ssafy.mvc.model.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import com.ssafy.mvc.model.dto.Video;
+import com.ssafy.mvc.model.dto.VideoEx;
 import com.ssafy.mvc.model.dto.VideoGroup;
 
 public interface VideoDao {
@@ -36,5 +36,7 @@ public interface VideoDao {
 	int deleteVideoGroup(VideoGroup videoGroup);
 
 	List<String> selectRegistedVideoGroup(int videoNo);
+	
+	int insertVideoEx(List<VideoEx> videoExList, int videoNo, String userId);
 	
 }

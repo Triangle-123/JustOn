@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.mvc.model.dao.VideoDao;
+import com.ssafy.mvc.model.dto.AddVideoDTO;
 import com.ssafy.mvc.model.dto.Video;
 import com.ssafy.mvc.model.dto.VideoGroup;
 
@@ -20,8 +21,11 @@ public class VideoServiceImpl implements VideoService {
 	}
 	
 	@Override
-	public boolean addVideo(Video video) {
-		return videoDao.insertVideo(video) >= 1;
+	public boolean addVideo(AddVideoDTO addVideoDto) {
+		int videoCnt = videoDao.insertVideo(addVideoDto.getVideo());
+		int videoExCnt = videoDao.insertVideoEx(addVideoDto.getVideoExList(), addVideoDto.getVideo().getVideoNo());
+		return videoCnt >= 1 && videoExCnt >= 1;
+		
 	}
 
 	@Override

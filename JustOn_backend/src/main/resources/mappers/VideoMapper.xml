@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.mvc.model.dao.VideoDao">
-	<insert id="insertVideo" parameterType="Video">
+	<insert id="insertVideo" parameterType="Video" useGeneratedKeys="true" keyProperty="videoNo">
 		INSERT INTO video(video_id, src, title, user_id, thumb)
 		SELECT #{videoId}, #{src}, #{title}, #{userId}, #{thumb} FROM DUAL
 		WHERE #{videoId} NOT IN (SELECT video_id FROM video WHERE user_id = #{userId})
@@ -53,4 +53,9 @@
 		DELETE FROM video_group
 		WHERE category_name = #{categoryName} AND user_id = #{userId}
 	</delete>
+	
+	<insert id="insertVideoEx">
+		INSERT INTO video_ex_list
+		VALUE 
+	</insert>
 </mapper>
