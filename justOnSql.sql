@@ -1,5 +1,4 @@
 DROP DATABASE IF EXISTS just_on;
-
 CREATE DATABASE IF NOT EXISTS just_on;
 
 USE just_on;
@@ -43,17 +42,17 @@ CREATE TABLE user_profile_img (
 # 사용자별 운동 일기
 CREATE TABLE diary (
 	diary_no INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(300) NOT NULL,
+    -- title VARCHAR(300) NOT NULL,
     content TEXT NOT NULL,
-    reg_date DATE DEFAULT (CURRENT_DATE()),
+    reg_date VARCHAR(50) UNIQUE,
     user_id VARCHAR(100) NOT NULL,
     FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
 
-INSERT INTO `diary` (title, content, reg_date, user_id)
-VALUES ('제목입니다1','내용입니다1', CURDATE(), 'ssafy'),
-	   ('제목입니다2','내용입니다2', CURDATE(), 'ssafy'),
-       ('제목입니다3','내용입니다3', CURDATE(), 'ssafy');
+INSERT INTO `diary` (content, reg_date, user_id)
+VALUES ('내용입니다1', '2024-11-11', 'ssafy'),
+	   ('내용입니다2', '2024-11-12', 'ssafy'),
+       ('내용입니다3', '2024-11-13', 'ssafy');
 
 SELECT * FROM diary;
 
@@ -101,6 +100,7 @@ CREATE TABLE IF NOT EXISTS video_group(
     PRIMARY KEY(category_name),
     FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
+
 
 # 영상 정보
 CREATE TABLE IF NOT EXISTS video(

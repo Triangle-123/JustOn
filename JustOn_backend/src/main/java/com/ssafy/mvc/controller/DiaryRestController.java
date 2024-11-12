@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,6 +26,7 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api-diary")
+@CrossOrigin
 public class DiaryRestController {
 	private final DiaryService diaryService;
 
@@ -57,7 +59,8 @@ public class DiaryRestController {
 		
 		// 체크 필요 : 일반적인 방식 session.getAttribute("userId")
 //		String userId = session.getId();
-		String userId = user.getUserId();
+//		String userId = user.getUserId();
+		String userId = "ssafy";
 		String pw = user.getPassword();
 		
 		System.out.println(userId);
@@ -73,10 +76,11 @@ public class DiaryRestController {
 	}
 
 	// 다이어리 날짜 선택 조회
-	@GetMapping("/diary/{regDate}")
+	@GetMapping("/diary/list/{regDate}")
 	public ResponseEntity<?> getUserDiaryListByRegDate(@PathVariable("regDate") String regDate, HttpSession session) {
 		
-		List<Diary> list = diaryService.selectDiaryByRegDate(session.getId(), regDate);
+//		List<Diary> list = diaryService.selectDiaryByRegDate(session.getId(), regDate);
+		List<Diary> list = diaryService.selectDiaryByRegDate("ssafy", regDate);
 		if(list == null || list.size() == 0) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No diaries found by regDate");
 		}
