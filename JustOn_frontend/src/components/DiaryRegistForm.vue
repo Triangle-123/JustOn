@@ -224,6 +224,9 @@ const props = defineProps({
     type: Object,
     Required: true,
   },
+  isUpdate: {
+    type : Boolean,
+  }
 });
 
 // const date = ref("");
@@ -235,8 +238,6 @@ const props = defineProps({
 const modifyDiary = ref({});
 modifyDiary.value = props.modifyDiary;
 console.dir(modifyDiary.value)
-
-
 
 import Multiselect from "vue-multiselect";
 

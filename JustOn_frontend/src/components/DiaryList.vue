@@ -98,7 +98,7 @@
     -->
   </div>
 
-  <DiaryRegistForm v-if="isShowRegisterForm" @update-list="updateList" :modifyDiary="modifyDiary" />
+  <DiaryRegistForm v-if="isShowRegisterForm" @update-list="updateList" :modifyDiary="modifyDiary" :isUpdate="isUpdate" />
   <DiaryDetail v-if="isDiaryDetailShow"
     @closeDetail="closeDetail" @openModifyDiary="openModifyDiary"
     :diary="selectedDiary" 
@@ -163,9 +163,11 @@ const diaryDetailShow = (diary) => {
 
 // 다이어리 기록 창
 const isShowRegisterForm = ref(false);
+const isUpdate = ref(false);
 const showRegisterForm = () => {
   isShowRegisterForm.value = true;
   isDiaryDetailShow.value = false;
+  isUpdate = false;
 };
 
 // closeDetail
