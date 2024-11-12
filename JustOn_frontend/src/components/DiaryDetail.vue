@@ -15,7 +15,7 @@
         <h3 class="font-bold text-xl mr-6 mb-5">
           <span class="bg-[var(--juston-black)] text-white px-2 py-1 mr-1"
             ><strong class="font-[900] juston-gradient-text"
-              >DATE &nbsp;2024-11-11{{ diary.regDate }}</strong
+              >DATE &nbsp;{{ diary.regDate }}</strong
             ></span
           >
         </h3>
@@ -26,8 +26,7 @@
             class="w-[100%] h-[200px] border-solid border-2 border-gray-200 rounded-[16px] px-4 py-2 mb-6"
           >
             <span class="text-gray-300" v-if="diary.content === ''"
-              >입력된 소감이 없습니다.</span
-            >
+              >입력된 소감이 없습니다.</span>
             {{ diary.content }}
           </p>
         </div>
@@ -57,7 +56,7 @@
       </div>
 
       <div class="flex justify-center">
-        <button @click="updateDiary" class="btn-m-black w-[300px] mr-3">
+        <button @click="openModifyDiary" class="btn-m-black w-[300px] mr-3">
           수정하기
         </button>
         <button @click="deleteDiary" class="btn-m-white">
@@ -72,16 +71,15 @@
 
 <script setup>
 // import { defineProps, defineEmits } from "vue";
-const emit = defineEmits(["closeDetail"]);
+const emit = defineEmits(["closeDetail", 'openModifyDiary']);
 
-defineProps({
+const props = defineProps({
   diary: {
     type: Object,
     Required: true,
   },
 });
 
-console.dir(diary);
 async function deleteDiary() {
   if (diary.diaryNo) {
     try {
@@ -96,6 +94,12 @@ async function deleteDiary() {
     // getUserDiaryList();
     // emit("closeDetail");
   }
+}
+
+const diary = props.diary;
+const openModifyDiary = (diary) => {
+  emit('openModifyDiary', diary)
+  
 }
 </script>
 

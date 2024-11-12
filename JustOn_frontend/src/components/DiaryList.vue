@@ -98,85 +98,21 @@
     -->
   </div>
 
-  <DiaryRegistForm v-if="isShowRegisterForm && !selectedDiary" @update-list="updateList" />
-  <DiaryDetail
-    @closeDetail="closeDetail"
-    v-if="selectedDiary && !isShowRegisterForm"
-    :diary="selectedDiary"
+  <DiaryRegistForm v-if="isShowRegisterForm" @update-list="updateList" :modifyDiary="modifyDiary" />
+  <DiaryDetail v-if="isDiaryDetailShow"
+    @closeDetail="closeDetail" @openModifyDiary="openModifyDiary"
+    :diary="selectedDiary" 
   />
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref, onBeforeMount } from "vue";
 import axios from "axios";
 import DiaryRegistForm from "./DiaryRegistForm.vue";
 import DiaryDetail from "./DiaryDetail.vue";
 
 import FlatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
-
-// const diaryList = ref([
-//   {
-//     title: "다이어리 제목입니다1",
-//     content: "다이어리 내용입니다1",
-//     reg_date: "2024-11-01",
-//     user_id: "ssafy",
-//   },
-//   {
-//     title: "다이어리 제목입니다2",
-//     content: "다이어리 내용입니다2",
-//     reg_date: "2024-11-01",
-//     user_id: "ssafy",
-//   },
-//   {
-//     title: "다이어리 제목입니다3",
-//     content: "다이어리 내용입니다3",
-//     reg_date: "2024-11-01",
-//     user_id: "ssafy",
-//   },
-//   {
-//     title: "다이어리 제목입니다4",
-//     content: "다이어리 내용입니다4",
-//     reg_date: "2024-11-01",
-//     user_id: "ssafy",
-//   },
-//   {
-//     title: "다이어리 제목입니다5",
-//     content: "다이어리 내용입니다5",
-//     reg_date: "2024-11-01",
-//     user_id: "ssafy",
-//   },
-//   {
-//     title: "다이어리 제목입니다6",
-//     content: "다이어리 내용입니다6",
-//     reg_date: "2024-11-01",
-//     user_id: "ssafy",
-//   },
-//   {
-//     title: "다이어리 제목입니다7",
-//     content: "다이어리 내용입니다7",
-//     reg_date: "2024-11-01",
-//     user_id: "ssafy",
-//   },
-//   {
-//     title: "다이어리 제목입니다8",
-//     content: "다이어리 내용입니다8",
-//     reg_date: "2024-11-01",
-//     user_id: "ssafy",
-//   },
-//   {
-//     title: "다이어리 제목입니다9",
-//     content: "다이어리 내용입니다9",
-//     reg_date: "2024-11-01",
-//     user_id: "ssafy",
-//   },
-//   {
-//     title: "다이어리 제목입니다10",
-//     content: "다이어리 내용입니다10",
-//     reg_date: "2024-11-01",
-//     user_id: "ssafy",
-//   },
-// ]);
 
 const diaryList = ref([]);
 
@@ -186,7 +122,6 @@ async function getUserDiaryList() {
   diaryList.value = data.list.sort(
     (a, b) => new Date(b.regDate) - new Date(a.regDate)
   );
-  console.dir(diaryList.value);
 }
 getUserDiaryList();
 
@@ -217,8 +152,11 @@ async function selectDiaryByRegDate() {
 
 // 다이어리 상세
 const selectedDiary = ref({});
+const isDiaryDetailShow = ref(false);
+
 const diaryDetailShow = (diary) => {
   selectedDiary.value = diary;
+  isDiaryDetailShow.value = !isDiaryDetailShow.value;
   isShowRegisterForm.value = false;
 };
 
@@ -226,13 +164,21 @@ const diaryDetailShow = (diary) => {
 const isShowRegisterForm = ref(false);
 const showRegisterForm = () => {
   isShowRegisterForm.value = !isShowRegisterForm.value;
-  selectedDiary.value = null;
+  isDiaryDetailShow.value = false;
 };
 
 // closeDetail
 const closeDetail = () => {
   selectedDiary.value = null;
 };
+
+// openModifyDiary
+const modifyDiary = ref({});
+const openModifyDiary = (diary) => {
+  modifyDiary.value = diary;
+  isShowRegisterForm.value = true;
+  isDiaryDetailShow.value = false;
+} 
 </script>
 
 <style scoped></style>

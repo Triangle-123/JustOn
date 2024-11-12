@@ -137,14 +137,14 @@
 
         <div class="flex justify-center">
           <button
-            v-if="!isExist"
+            v-if="!isUpdate"
             @click="registDiary"
             class="btn-m-black w-[300px]"
           >
             등록하기
           </button>
           <button
-            v-if="isExist"
+            v-if="isUpdate"
             @click="updateDiary"
             class="btn-m-black w-[300px]"
           >
@@ -163,7 +163,7 @@
             <div class="loader mb-1"></div>
             <div class="font-bold">Just On</div>
           </div>
-          <span class="text-center">
+          <span class="text-center text-l">
             해당 날짜에 작성된 다이어리가 있어요.<br />
             기록을 불러옵니다.
           </span>
@@ -219,6 +219,47 @@ import "flatpickr/dist/flatpickr.css";
 import { ref, onMounted, nextTick, watch } from "vue";
 import axios from "axios";
 
+const props = defineProps({
+  modifyDiary: {
+    type: Object,
+    Required: true,
+  },
+});
+
+// const date = ref("");
+// const content = ref("");
+// const diaryNo = ref("");
+// const isUpdate = ref(false);
+
+// 수정해야하는 다이어리 반영
+const modifyDiary = props.modifyDiary;
+console.log("modifyDiary : " + modifyDiary)
+watch(modifyDiary, async (newModifyDiary) => {
+  console.dir("newModifyDiary.diaryNo : " + newModifyDiary.diaryNo)
+  if (newModifyDiary) {
+    console.log("조회 실행되었습니다.");
+    diaryNo.value = newModifyDiary.diaryNo;
+    date.value = newModifyDiary.date; 
+    content.value = newModifyDiary.content;
+
+    // diaryExList 배열 처리
+    if (Array.isArray(newModifyDiary.diaryExList)) {
+      addedVideoList.value = newModifyDiary.diaryExList.map((item) => ({
+        diaryExNo: item.diaryExNo,
+        title: item.title,
+        playNum: item.playNum,
+      }));
+    } else {
+      addedVideoList.value = [];
+      console.warn("diaryExList is not an array:", data.diaryExList);
+    }
+
+    isUpdate.value = true;
+
+  }
+});
+
+
 import Multiselect from "vue-multiselect";
 
 const emit = defineEmits(["update-list"]);
@@ -230,7 +271,7 @@ const isLoading = ref(false);
 const date = ref("");
 const content = ref("");
 const diaryNo = ref("");
-const isExist = ref(false);
+const isUpdate = ref(false);
 
 // 다이어리 Ex 추가 관련 변수
 const title = ref("");
@@ -385,7 +426,7 @@ const updateDiary = async () => {
   }
 };
 
-// 날짜 선택 시, 해당 다이어리가 있는지 확인 -> isExist 값이 true 일 경우 수정이 보여지도록, 수정 버튼 클릭시에는 수정 메서드 진행
+// 날짜 선택 시, 해당 다이어리가 있는지 확인 -> isUpdate 값이 true 일 경우 수정이 보여지도록, 수정 버튼 클릭시에는 수정 메서드 진행
 async function selectDiaryByRegDate() {
   if (!date.value) return null;
 
@@ -432,15 +473,15 @@ watch(date, async (newDate) => {
         }));
       } else {
         addedVideoList.value = [];
-        isExist.value = false;
+        isUpdate.value = false;
         console.warn("diaryExList is not an array:", data.diaryExList);
       }
 
-      isExist.value = true;
+      isUpdate.value = true;
       // 3초 후 로딩 상태 false로 변경
       setTimeout(() => {
         isLoading.value = false;
-      }, 2500);
+      }, 2800);
       // console.log("data.diaryNo : " + data.diaryNo);
       // console.log("data.content : " + data.content);
       // console.log("data.diaryExList : " + data.diaryExList);
@@ -458,7 +499,7 @@ const resetForm = () => {
   diaryNo.value = "";
   content.value = "";
   addedVideoList.value = [];
-  isExist.value = false;
+  isUpdate.value = false;
 };
 
 // 폼 초기화 함수 - 내용만 초기화
