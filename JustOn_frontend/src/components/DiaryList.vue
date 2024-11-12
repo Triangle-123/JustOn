@@ -156,14 +156,15 @@ const isDiaryDetailShow = ref(false);
 
 const diaryDetailShow = (diary) => {
   selectedDiary.value = diary;
-  isDiaryDetailShow.value = !isDiaryDetailShow.value;
+  isDiaryDetailShow.value = true;
   isShowRegisterForm.value = false;
+  
 };
 
 // 다이어리 기록 창
 const isShowRegisterForm = ref(false);
 const showRegisterForm = () => {
-  isShowRegisterForm.value = !isShowRegisterForm.value;
+  isShowRegisterForm.value = true;
   isDiaryDetailShow.value = false;
 };
 
@@ -172,12 +173,13 @@ const closeDetail = () => {
   selectedDiary.value = null;
 };
 
-// openModifyDiary
+// openModifyDiary 
 const modifyDiary = ref({});
 const openModifyDiary = (diary) => {
   modifyDiary.value = diary;
   isShowRegisterForm.value = true;
   isDiaryDetailShow.value = false;
+  
 } 
 </script>
 

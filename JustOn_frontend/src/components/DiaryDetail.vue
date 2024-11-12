@@ -70,7 +70,7 @@
 </template>
 
 <script setup>
-// import { defineProps, defineEmits } from "vue";
+import { watch, defineEmits } from "vue";
 const emit = defineEmits(["closeDetail", 'openModifyDiary']);
 
 const props = defineProps({
@@ -97,10 +97,15 @@ async function deleteDiary() {
 }
 
 const diary = props.diary;
-const openModifyDiary = (diary) => {
+const openModifyDiary = () => {
   emit('openModifyDiary', diary)
-  
 }
+
+watch(diary, (newValue) => {
+  diary.value = newValue;
+  console.log('반영완료');
+},{immediate : true});
+
 </script>
 
 <style scoped></style>

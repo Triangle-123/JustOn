@@ -232,32 +232,10 @@ const props = defineProps({
 // const isUpdate = ref(false);
 
 // 수정해야하는 다이어리 반영
-const modifyDiary = props.modifyDiary;
-console.log("modifyDiary : " + modifyDiary)
-watch(modifyDiary, async (newModifyDiary) => {
-  console.dir("newModifyDiary.diaryNo : " + newModifyDiary.diaryNo)
-  if (newModifyDiary) {
-    console.log("조회 실행되었습니다.");
-    diaryNo.value = newModifyDiary.diaryNo;
-    date.value = newModifyDiary.date; 
-    content.value = newModifyDiary.content;
+const modifyDiary = ref({});
+modifyDiary.value = props.modifyDiary;
+console.dir(modifyDiary.value)
 
-    // diaryExList 배열 처리
-    if (Array.isArray(newModifyDiary.diaryExList)) {
-      addedVideoList.value = newModifyDiary.diaryExList.map((item) => ({
-        diaryExNo: item.diaryExNo,
-        title: item.title,
-        playNum: item.playNum,
-      }));
-    } else {
-      addedVideoList.value = [];
-      console.warn("diaryExList is not an array:", data.diaryExList);
-    }
-
-    isUpdate.value = true;
-
-  }
-});
 
 
 import Multiselect from "vue-multiselect";
@@ -530,6 +508,32 @@ onMounted(async () => {
     scrollbarInstance.value = OverlayScrollbars(elements, options);
   }
 });
+
+
+watch(() => modifyDiary.value, async (newModifyDiary) => {
+console.dir("newModifyDiary.diaryNo : " + newModifyDiary.diaryNo)
+if (newModifyDiary) {
+  console.log("실행되었습니다.");
+  diaryNo.value = newModifyDiary.diaryNo;
+  date.value = newModifyDiary.regDate; 
+  content.value = newModifyDiary.content;
+
+  // // diaryExList 배열 처리
+  // if (Array.isArray(newModifyDiary.diaryExList)) {
+  //   addedVideoList.value = newModifyDiary.diaryExList.map((item) => ({
+  //     diaryExNo: item.diaryExNo,
+  //     title: item.title,
+  //     playNum: item.playNum,
+  //   }));
+  // } else {
+  //   addedVideoList.value = [];
+  //   console.warn("diaryExList is not an array:", date.diaryExList);
+  // }
+
+  isUpdate.value = true;
+}
+
+}, {immediate : true});
 </script>
 
 <style scoped>
