@@ -15,11 +15,11 @@ public interface VideoDao {
 	// 영상 삭제
 	int deleteVideo(int videoNo);
 	
-	// 영상 번호로 조회(수정용)
+	// 영상 번호로 조회
 	Video selectVideoByNo(int videoNo);
 	
 	// 영상 수정
-	int updateVideo(int videoNo);
+	int updateVideo(Video video);
 
 	// 영상 조회(그룹(카테고리)별)
 	List<Video> selectVideoByGroup(VideoGroup videoGroup);
@@ -48,7 +48,11 @@ public interface VideoDao {
 	// 영상에 대한 운동정보 등록
 	int insertVideoEx(AddVideoDTO addVideoDto);
 	
-	// 영상의 운동 정보 삭제(수정용)
+	List<String> selectVideoExColumnName();
+	
+	List<VideoEx> selectVideoEx(List<String> column, int videoNo);
+	
+	// 영상의 운동 정보 삭제
 	int deleteVideoEx(int videoNo);
 	
 }

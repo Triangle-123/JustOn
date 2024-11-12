@@ -22,9 +22,10 @@ public class VideoServiceImpl implements VideoService {
 	
 	@Override
 	public boolean addVideo(AddVideoDTO addVideoDto) {
-		int videoCnt = videoDao.insertVideo(addVideoDto.getVideo());
-		int videoExCnt = videoDao.insertVideoEx(addVideoDto);
-		return videoCnt >= 1 && videoExCnt >= 1;
+		int insertVideo = videoDao.insertVideo(addVideoDto.getVideo());
+		if(insertVideo == 0) return false;
+		int insertEx = videoDao.insertVideoEx(addVideoDto);
+		return insertVideo >= 1 && insertEx >= 1;
 		
 	}
 
@@ -34,15 +35,22 @@ public class VideoServiceImpl implements VideoService {
 	}
 
 	@Override
-	public Video selectVideo(int videoNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, Object> getVideoInfo(int videoNo) {
+		Map<String, Object> result = new HashMap<>();
+		result.put("video", videoDao.selectVideoByNo(videoNo));
+		List<String> column = videoDao.selectVideoExColumnName();
+		result.put("videoEx", videoDao.selectVideoEx(column, videoNo));
+		return result;
 	}
 	
 	@Override
 	public boolean modifyVideo(int videoNo, AddVideoDTO addVideoDto) {
-		// TODO Auto-generated method stub
-		return false;
+		addVideoDto.getVideo().setVideoNo(videoNo);
+		int updateVideo = videoDao.updateVideo(addVideoDto.getVideo());
+		if(updateVideo == 0) return false;
+		int deleteEx = videoDao.deleteVideoEx(videoNo);
+		int insertEx = videoDao.insertVideoEx(addVideoDto);
+		return updateVideo >= 1 && deleteEx >= 1 && insertEx >= 1;
 	}
 	
 	@Override
