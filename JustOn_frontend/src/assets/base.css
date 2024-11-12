@@ -1,3 +1,18 @@
+/* CUSTOM color var For JustOn */
+:root {
+  --juston-black: #251f25;
+  --juston-gradient-1: linear-gradient(to right, #d4c6ff, #ffd8dc, #d5e2ff);
+
+  --juston-bg-b: #424242;
+  --juston-bg-w: #f9f9f9;
+  --juston-bg-g: #f5f1f0;
+
+  --txt-basic: #232323;
+  --txt-basic45: #454545;
+  --txt-basic7: #777;
+  --txt-basic9: #999;
+}
+
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
   --vt-c-white: #ffffff;

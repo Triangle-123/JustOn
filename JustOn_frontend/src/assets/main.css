@@ -48,25 +48,142 @@ a {
 RESET - E
 **********/
 
-#app {
-  max-width: 100%;
-  padding: 30px;
-  height: 100vh;
-  font-weight: normal;
+/**********
+COMMON - S
+**********/
+h2 {
+  font-size: 24px;
+  font-weight: 700;
 }
+
+.hover-effect:hover {
+  background: var(--juston-gradient-1);
+  background-size: 300% 100%; /* 그라데이션 반복을 위한 배경 크기 설정 */
+  animation: gradient-move 2s ease infinite; /* 5초간 부드럽게 반복 */
+  font-weight: 800;
+}
+
+.juston-gradient-1 {
+  background: var(--juston-gradient-1);
+  background-size: 300% 100%; /* 그라데이션 반복을 위한 배경 크기 설정 */
+  animation: gradient-move 2s ease infinite; /* 5초간 부드럽게 반복 */
+  font-weight: 800;
+}
+.content-wrap .juston-gradient-text {
+  background: linear-gradient(to right, #e0d6ff, #ffeaec, #eaf0fe);
+  background-size: 300% 100%; /* 배경 크기 설정 */
+  -webkit-background-clip: text; /* 텍스트에 배경을 클리핑 */
+  color: transparent; /* 텍스트 색상을 투명으로 설정 */
+  animation: gradient-move 2s ease infinite; /* 애니메이션 적용 */
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  padding: 30px;
+  background-color: #f5f1f0;
+  display: flex;
+  justify-content: space-between;
+  place-items: center;
+  font-size: 16px;
+}
+
+#app {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  font-weight: normal;
+  gap: 26px;
+  grid-template-columns: 380px 1fr 1fr;
+}
+
+.content-wrap {
+  height: 100%;
+  border: 1px solid #eee;
+  border-radius: 36px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+  padding: 36px;
+}
+
+.content-wrap-np {
+  border: 1px solid #eee;
+  border-radius: 36px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+}
+
+article {
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.btn-m-black {
+  height: 52px;
+  border-radius: 16px;
+  padding: 14px 20px;
+  background-color: var(--juston-black);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.btn-m-white {
+  height: 52px;
+  border-radius: 16px;
+  padding: 14px 20px;
+  background-color: #fff;
+  color: var(--juston-black);
+  font-size: 16px;
+  font-weight: 700;
+  border: 2px solid rgb(222, 217, 223);
+}
+
+textarea {
+  resize: none;
+}
+
+.ellipsis {
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* ...으로 표시 */
+}
+
+.rotate-180 {
+  transform: scaleX(-1);
+}
+/**********
+COMMON - E
+**********/
+
+/*************
+ANIMATION - S
+*************/
+
+@keyframes gradient-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+/*************
+ANIMATION - E
+*************/
 
 @media (hover: hover) {
 }
 
 @media (min-width: 1024px) {
-  body {
+  /* body {
     display: flex;
     place-items: center;
-  }
+  } */
 
   #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
   }
 }
