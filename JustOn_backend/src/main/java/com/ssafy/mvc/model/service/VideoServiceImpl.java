@@ -23,16 +23,28 @@ public class VideoServiceImpl implements VideoService {
 	@Override
 	public boolean addVideo(AddVideoDTO addVideoDto) {
 		int videoCnt = videoDao.insertVideo(addVideoDto.getVideo());
-		int videoExCnt = videoDao.insertVideoEx(addVideoDto.getVideoExList(), addVideoDto.getVideo().getVideoNo());
+		int videoExCnt = videoDao.insertVideoEx(addVideoDto);
 		return videoCnt >= 1 && videoExCnt >= 1;
 		
 	}
 
 	@Override
-	public boolean removeVideo(int no) {
-		return videoDao.deleteVideo(no) >= 1;
+	public boolean removeVideo(int videoNo) {
+		return videoDao.deleteVideo(videoNo) >= 1;
 	}
 
+	@Override
+	public Video selectVideo(int videoNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public boolean modifyVideo(int videoNo, AddVideoDTO addVideoDto) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 	@Override
 	public List<Video> videoList(VideoGroup videoGroup) {
 		return videoDao.selectVideoByGroup(videoGroup);

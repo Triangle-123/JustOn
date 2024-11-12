@@ -13,8 +13,12 @@ public interface VideoService {
 		boolean addVideo(AddVideoDTO addVideoDto);
 		
 		// 영상 삭제
-		boolean removeVideo(int no);
+		boolean removeVideo(int videoNo);
 
+		Video selectVideo(int videoNo);
+		
+		boolean modifyVideo(int videoNo, AddVideoDTO addVideoDto);
+		
 		// 영상 조회(그룹(카테고리)별)
 		List<Video> videoList(VideoGroup videoGroup);
 		

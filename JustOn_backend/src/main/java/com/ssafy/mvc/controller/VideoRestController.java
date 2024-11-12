@@ -22,7 +22,7 @@ import com.ssafy.mvc.model.service.VideoService;
 
 
 @RestController
-@RequestMapping("/api/video")
+@RequestMapping("/api-video")
 @CrossOrigin
 public class VideoRestController {
 	
@@ -48,10 +48,12 @@ public class VideoRestController {
 		}
 	}
 	
+	
+	
 	@DeleteMapping("{no}")
-	public ResponseEntity<String> removeVideo(@PathVariable("no") int no) {
+	public ResponseEntity<String> removeVideo(@PathVariable("no") int videoNo) {
 		try {
-			if(videoService.removeVideo(no)) {
+			if(videoService.removeVideo(videoNo)) {
 				return ResponseEntity.ok("영상이 삭제되었습니다.");
 			}
 			throw new Exception();

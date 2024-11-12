@@ -10,9 +10,18 @@
 	</insert>
 	
 	<delete id="deleteVideo" parameterType="int">
-		
+		DELETE FROM video
+		WHERE video_no = #{videoNo}
 	</delete>
 		
+	<select id="selectVideoByNo">
+	
+	</select>
+	
+	<update id="updateVideo">
+	
+	</update>
+	
 	
 	<select id="selectVideoByGroup" resultType="Video" parameterType="VideoGroup">
 		
@@ -55,7 +64,21 @@
 	</delete>
 	
 	<insert id="insertVideoEx">
-		INSERT INTO video_ex_list
-		VALUE 
+		INSERT INTO video_ex_list(
+		<foreach collection="videoExList" item="ex" separator="," index="idx">
+		${ex.part}
+		<if test="idx == videoExList.size - 1">, ex_weight, video_no, user_id</if>
+		</foreach>
+		)
+		VALUE (
+		<foreach collection="videoExList" item="ex" separator="," index="idx">
+		#{ex.selCnt}
+		<if test="idx == videoExList.size - 1">, #{ex.exWeight}, #{video.videoNo}, #{video.userId}</if>
+		</foreach>
+		)
 	</insert>
+	
+	<delete id="deleteVideoEx">
+	
+	</delete>
 </mapper>

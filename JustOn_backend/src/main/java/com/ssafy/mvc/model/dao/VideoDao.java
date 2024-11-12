@@ -2,6 +2,7 @@ package com.ssafy.mvc.model.dao;
 
 import java.util.List;
 
+import com.ssafy.mvc.model.dto.AddVideoDTO;
 import com.ssafy.mvc.model.dto.Video;
 import com.ssafy.mvc.model.dto.VideoEx;
 import com.ssafy.mvc.model.dto.VideoGroup;
@@ -12,7 +13,13 @@ public interface VideoDao {
 	int insertVideo(Video video);
 	
 	// 영상 삭제
-	int deleteVideo(int no);
+	int deleteVideo(int videoNo);
+	
+	// 영상 번호로 조회(수정용)
+	Video selectVideoByNo(int videoNo);
+	
+	// 영상 수정
+	int updateVideo(int videoNo);
 
 	// 영상 조회(그룹(카테고리)별)
 	List<Video> selectVideoByGroup(VideoGroup videoGroup);
@@ -35,8 +42,13 @@ public interface VideoDao {
 	// 재생목록 삭제
 	int deleteVideoGroup(VideoGroup videoGroup);
 
+	// 재생목록에 해당 영상이 있는지 확인
 	List<String> selectRegistedVideoGroup(int videoNo);
 	
-	int insertVideoEx(List<VideoEx> videoExList, int videoNo, String userId);
+	// 영상에 대한 운동정보 등록
+	int insertVideoEx(AddVideoDTO addVideoDto);
+	
+	// 영상의 운동 정보 삭제(수정용)
+	int deleteVideoEx(int videoNo);
 	
 }
