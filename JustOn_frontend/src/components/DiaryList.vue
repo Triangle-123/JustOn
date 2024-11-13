@@ -64,14 +64,34 @@
       </article>
 
       <!-- 페이징 영역 : 임시, 페이징 적용 필요 -->
-      <div class="paging flex justify-center gap-5">
-        <button><i class="bi bi-chevron-left"></i></button>
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>4</button>
-        <button>5</button>
-        <button><i class="bi bi-chevron-right"></i></button>
+      <div
+        v-show="diaryList.length !== 0"
+        class="paging-controls paging flex justify-center gap-5"
+      >
+        <button
+          v-if="pr.prev"
+          @click="changePage(pr.page - 1)"
+          class="btn-prev"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <button
+          v-for="page in pageNumbers"
+          :key="page"
+          @click="changePage(page)"
+          :class="['btn-page', { active: page === pr.page }]"
+        >
+          {{ page }}
+        </button>
+
+        <button
+          v-if="pr.next"
+          @click="changePage(pr.page + 1)"
+          class="btn-next"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
       </div>
     </div>
 
@@ -98,15 +118,25 @@
     -->
   </div>
 
-  <DiaryRegistForm v-if="isShowRegisterForm" @update-list="updateList" :modifyDiary="modifyDiary" :isUpdate="isUpdate" />
-  <DiaryDetail v-if="isDiaryDetailShow"
-    @closeDetail="closeDetail" @openModifyDiary="openModifyDiary"
-    :diary="selectedDiary" 
+  <DiaryRegistForm
+    v-if="isShowRegisterForm"
+    @update-list="updateList"
+    :modifyDiary="modifyDiary"
+    :isModify="isModify"
+    ref="diaryRegistFormRef"
+    :reset="reset"
+  />
+  <DiaryDetail
+    v-if="isDiaryDetailShow"
+    @closeDetail="closeDetail"
+    @openModifyDiary="openModifyDiary"
+    @update-list="updateList"
+    :diaryForDetail="selectedDiary"
   />
 </template>
 
 <script setup>
-import { onMounted, ref, onBeforeMount } from "vue";
+import { onMounted, ref, computed, onBeforeMount } from "vue";
 import axios from "axios";
 import DiaryRegistForm from "./DiaryRegistForm.vue";
 import DiaryDetail from "./DiaryDetail.vue";
@@ -115,22 +145,78 @@ import FlatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 
 const diaryList = ref([]);
+const list = ref([]);
+const pr = ref({
+  page: 1,
+  beginPage: 1,
+  endPage: 5,
+  lastPage: 10,
+  prev: false,
+  next: true,
+});
 
 async function getUserDiaryList() {
-  const { data } = await axios.get("http://localhost:8080/api-diary/diary");
+  const { data } = await axios.get(`http://localhost:8080/api-diary/diary`);
   // diaryList.value = data.list;
-  diaryList.value = data.list.sort(
-    (a, b) => new Date(b.regDate) - new Date(a.regDate)
-  );
+  console.log(data.list);
+  if (data.list !== undefined) {
+    if (data.list.length > 1) {
+      diaryList.value = data.list.sort(
+        (a, b) => new Date(b.regDate) - new Date(a.regDate)
+      );
+    } else if (data.list.length === 1) {
+      diaryList.value = data.list;
+    }
+    pr.value = data.pr;
+  } else {
+    diaryList.value = [];
+    // pr.value = data.pr;
+  }
 }
 getUserDiaryList();
 
 const updateList = () => {
+  console.log("updateList들어옴");
   getUserDiaryList();
 };
 
 // 페이징 구현
 const curPage = ref(1);
+
+// 페이징을 위한 페이지 번호 배열 계산
+const pageNumbers = computed(() => {
+  const pages = [];
+  for (let i = pr.value.beginPage; i <= pr.value.endPage; i++) {
+    pages.push(i);
+  }
+  return pages;
+});
+
+// 페이지 변경 함수
+const changePage = async (page) => {
+  // if (page < 1 || page > pr.value.lastPage) return;
+  // 페이지 변경 시 새로운 데이터를 불러옴
+  try {
+    const { data } = await axios.get(
+      `http://localhost:8080/api-diary/diary?page=${page}`
+    );
+
+    if (data.list !== undefined) {
+      if (data.list.length > 1) {
+        diaryList.value = data.list.sort(
+          (a, b) => new Date(b.regDate) - new Date(a.regDate)
+        );
+      } else if (data.list.length === 1) {
+        diaryList.value = data.list;
+      }
+      pr.value = data.pr;
+    } else {
+      diaryList.value = [];
+    }
+  } catch (error) {
+    console.error("페이지 불러오기 실패", error);
+  }
+};
 
 // 날짜로 조회하기
 const date = ref("");
@@ -156,33 +242,37 @@ const isDiaryDetailShow = ref(false);
 
 const diaryDetailShow = (diary) => {
   selectedDiary.value = diary;
+  modifyDiary.value = diary;
   isDiaryDetailShow.value = true;
   isShowRegisterForm.value = false;
-  
+  reset.value = false;
 };
 
-// 다이어리 기록 창
+// 다이어리 기록 창 (기록하기 클릭 시)
 const isShowRegisterForm = ref(false);
-const isUpdate = ref(false);
+const isModify = ref(false);
+const reset = ref(false);
 const showRegisterForm = () => {
-  isShowRegisterForm.value = true;
   isDiaryDetailShow.value = false;
-  isUpdate = false;
+  isShowRegisterForm.value = true;
+  isModify.value = false;
+  reset.value = true;
 };
 
 // closeDetail
 const closeDetail = () => {
-  selectedDiary.value = null;
+  selectedDiary.value = {};
+  isDiaryDetailShow.value = false;
 };
 
-// openModifyDiary 
+// openModifyDiary
 const modifyDiary = ref({});
 const openModifyDiary = (diary) => {
   modifyDiary.value = diary;
+  isModify.value = true;
   isShowRegisterForm.value = true;
   isDiaryDetailShow.value = false;
-  
-} 
+};
 </script>
 
 <style scoped></style>

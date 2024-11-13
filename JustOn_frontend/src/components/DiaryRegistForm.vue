@@ -150,7 +150,7 @@
           >
             수정하기
           </button>
-          <button @click="resetForm2" class="btn-m-white ml-3 w-[200px]">
+          <button @click="resetForm" class="btn-m-white ml-3 w-[200px]">
             초기화
           </button>
         </div>
@@ -224,20 +224,18 @@ const props = defineProps({
     type: Object,
     Required: true,
   },
-  isUpdate: {
-    type : Boolean,
-  }
+  isModify: {
+    type: Boolean,
+  },
+  reset: {
+    type: Boolean,
+  },
 });
-
-// const date = ref("");
-// const content = ref("");
-// const diaryNo = ref("");
-// const isUpdate = ref(false);
 
 // 수정해야하는 다이어리 반영
 const modifyDiary = ref({});
 modifyDiary.value = props.modifyDiary;
-console.dir(modifyDiary.value)
+console.dir(modifyDiary.value);
 
 import Multiselect from "vue-multiselect";
 
@@ -251,6 +249,8 @@ const date = ref("");
 const content = ref("");
 const diaryNo = ref("");
 const isUpdate = ref(false);
+isUpdate.value = props.isModify;
+console.log(isUpdate.value);
 
 // 다이어리 Ex 추가 관련 변수
 const title = ref("");
@@ -388,7 +388,7 @@ const updateDiary = async () => {
     diaryExList: addedVideoList.value,
     userId: "ssafy",
   };
-  if (!diary.content.value) {
+  if (!diary.content) {
     alert("운동소감을 입력해주세요.");
     return null;
   }
@@ -436,56 +436,38 @@ watch(date, async (newDate) => {
     console.log("조회 실행되었습니다.");
     const data = await selectDiaryByRegDate();
     if (data) {
-      isLoading.value = true;
-
+      // isLoading.value = true;
       console.log("Retrieved diary data:", data);
       console.log("data-type : " + typeof data);
 
       diaryNo.value = data[0].diaryNo ?? "";
       content.value = data[0].content ?? "";
       // diaryExList 배열 처리
-      if (Array.isArray(data.diaryExList)) {
-        addedVideoList.value = data.diaryExList.map((item) => ({
-          diaryExNo: item.diaryExNo,
-          title: item.title,
-          playNum: item.playNum,
-        }));
-      } else {
-        addedVideoList.value = [];
-        isUpdate.value = false;
-        console.warn("diaryExList is not an array:", data.diaryExList);
-      }
-
-      isUpdate.value = true;
+      // if (Array.isArray(data.diaryExList)) {
+      //   addedVideoList.value = data.diaryExList.map((item) => ({
+      //     diaryExNo: item.diaryExNo,
+      //     title: item.title,
+      //     playNum: item.playNum,
+      //   }));
+      // } else {
+      //   addedVideoList.value = [];
+      //   isUpdate.value = false;
+      //   console.warn("diaryExList is not an array:", data.diaryExList);
+      // }
+      // isUpdate.value = true;
       // 3초 후 로딩 상태 false로 변경
-      setTimeout(() => {
-        isLoading.value = false;
-      }, 2800);
-      // console.log("data.diaryNo : " + data.diaryNo);
-      // console.log("data.content : " + data.content);
-      // console.log("data.diaryExList : " + data.diaryExList);
-      // diaryNo.value = data.diaryNo;
-      // content.value = data.content;
-      // addedVideoList.value = data.diaryExList;
-    } else {
+      // setTimeout(() => {
+      //   isLoading.value = false;
+      // }, 2800);
+    } else if (!data && isUpdate) {
       resetForm();
     }
   }
 });
 
 // 폼 초기화 함수
-const resetForm = () => {
-  diaryNo.value = "";
-  content.value = "";
-  addedVideoList.value = [];
-  isUpdate.value = false;
-};
 
 // 폼 초기화 함수 - 내용만 초기화
-const resetForm2 = () => {
-  content.value = "";
-  addedVideoList.value = [];
-};
 
 // 스크롤 바
 import { OverlayScrollbars } from "overlayscrollbars";
@@ -510,31 +492,62 @@ onMounted(async () => {
   }
 });
 
+watch(
+  () => modifyDiary.value,
+  async (newModifyDiary) => {
+    console.dir("newModifyDiary.diaryNo : " + newModifyDiary.diaryNo);
+    if (newModifyDiary) {
+      console.log("실행되었습니다.");
+      diaryNo.value = newModifyDiary.diaryNo;
+      date.value = newModifyDiary.regDate;
+      content.value = newModifyDiary.content;
 
-watch(() => modifyDiary.value, async (newModifyDiary) => {
-console.dir("newModifyDiary.diaryNo : " + newModifyDiary.diaryNo)
-if (newModifyDiary) {
-  console.log("실행되었습니다.");
-  diaryNo.value = newModifyDiary.diaryNo;
-  date.value = newModifyDiary.regDate; 
-  content.value = newModifyDiary.content;
+      // // diaryExList 배열 처리
+      // if (Array.isArray(newModifyDiary.diaryExList)) {
+      //   addedVideoList.value = newModifyDiary.diaryExList.map((item) => ({
+      //     diaryExNo: item.diaryExNo,
+      //     title: item.title,
+      //     playNum: item.playNum,
+      //   }));
+      // } else {
+      //   addedVideoList.value = [];
+      //   console.warn("diaryExList is not an array:", date.diaryExList);
+      // }
 
-  // // diaryExList 배열 처리
-  // if (Array.isArray(newModifyDiary.diaryExList)) {
-  //   addedVideoList.value = newModifyDiary.diaryExList.map((item) => ({
-  //     diaryExNo: item.diaryExNo,
-  //     title: item.title,
-  //     playNum: item.playNum,
-  //   }));
-  // } else {
-  //   addedVideoList.value = [];
-  //   console.warn("diaryExList is not an array:", date.diaryExList);
-  // }
+      isUpdate.value = true;
+    }
+  },
+  { immediate: true }
+);
 
-  isUpdate.value = true;
+const resetFormAll = () => {
+  date.value = "";
+  diaryNo.value = "";
+  content.value = "";
+  addedVideoList.value = [];
+  isUpdate.value = false;
+};
+
+const resetForm = () => {
+  content.value = "";
+  addedVideoList.value = [];
+};
+
+// const reset = ref(false);
+// reset.value = props.reset;
+if (props.reset) {
+  resetFormAll();
 }
-
-}, {immediate : true});
+watch(
+  () => props.reset,
+  (newReset) => {
+    console.log("reset###");
+    if (newReset) {
+      resetFormAll();
+    }
+  }
+  // { immediate: true }
+);
 </script>
 
 <style scoped>

@@ -15,7 +15,7 @@
         <h3 class="font-bold text-xl mr-6 mb-5">
           <span class="bg-[var(--juston-black)] text-white px-2 py-1 mr-1"
             ><strong class="font-[900] juston-gradient-text"
-              >DATE &nbsp;{{ diary.regDate }}</strong
+              >DATE &nbsp;{{ diaryForDetail.regDate }}</strong
             ></span
           >
         </h3>
@@ -25,9 +25,10 @@
           <p
             class="w-[100%] h-[200px] border-solid border-2 border-gray-200 rounded-[16px] px-4 py-2 mb-6"
           >
-            <span class="text-gray-300" v-if="diary.content === ''"
-              >입력된 소감이 없습니다.</span>
-            {{ diary.content }}
+            <span class="text-gray-300" v-if="diaryForDetail.content === ''"
+              >입력된 소감이 없습니다.</span
+            >
+            {{ diaryForDetail.content }}
           </p>
         </div>
 
@@ -45,7 +46,7 @@
             <tbody>
               <tr
                 class="border-solid border-r-[1px] border-gray-200 p-1"
-                v-for="ex in diary.diaryExList"
+                v-for="ex in diaryForDetail.diaryExList"
               >
                 <td>{{ ex.title }}</td>
                 <td>{{ ex.playNum }}</td>
@@ -56,11 +57,11 @@
       </div>
 
       <div class="flex justify-center">
-        <button @click="openModifyDiary" class="btn-m-black w-[300px] mr-3">
-          수정하기
+        <button @click="openModifyDiary" class="btn-m-black w-[100px] mr-3">
+          수정
         </button>
-        <button @click="deleteDiary" class="btn-m-white">
-          <i class="bi bi-trash3 text-[18px]"></i>
+        <button @click="deleteDiary" class="btn-m-white flex items-center">
+          <i class="bi bi-trash3 text-[18px] mr-1"></i>삭제
         </button>
       </div>
       <!-- 내용시작 -->
@@ -70,42 +71,51 @@
 </template>
 
 <script setup>
-import { watch, defineEmits } from "vue";
-const emit = defineEmits(["closeDetail", 'openModifyDiary']);
+import { watch } from "vue";
+import axios from "axios";
+const emit = defineEmits(["closeDetail", "openModifyDiary", "updateList"]);
 
 const props = defineProps({
-  diary: {
+  diaryForDetail: {
     type: Object,
     Required: true,
   },
 });
+const diary = props.diaryForDetail;
 
 async function deleteDiary() {
   if (diary.diaryNo) {
     try {
-      await axios.delete(
-        "http://localhost:8080/api-diary/diary/list/" + diary.diaryNo
-      );
-      console.log("삭제완료");
+      if (confirm("삭제하시겠습니까?")) {
+        await axios.delete(
+          "http://localhost:8080/api-diary/diary/" + diary.diaryNo
+        );
+        console.log("삭제완료");
+        emit("closeDetail");
+        emit("updateList");
+      } else {
+        return null;
+      }
     } catch (error) {
       console.error("삭제 오류", error);
     }
   } else {
-    // getUserDiaryList();
-    // emit("closeDetail");
   }
 }
 
-const diary = props.diary;
 const openModifyDiary = () => {
-  emit('openModifyDiary', diary)
-}
+  emit("openModifyDiary", diary);
+};
 
-watch(diary, (newValue) => {
-  diary.value = newValue;
-  console.log('반영완료');
-},{immediate : true});
-
+// 다이어리 변화 감지
+// watch(
+//   diary,
+//   (newValue) => {
+//     diary.value = newValue;
+//     console.log("반영완료");
+//   },
+//   { immediate: true }
+// );
 </script>
 
 <style scoped></style>
