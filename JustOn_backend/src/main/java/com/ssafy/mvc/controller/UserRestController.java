@@ -1,8 +1,8 @@
 package com.ssafy.mvc.controller;
 
+
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/api/user")
 @CrossOrigin
 public class UserRestController {
+	
 	private final UserService userService;
 	private final JwtUtil jwtUtil;
 
@@ -30,7 +31,7 @@ public class UserRestController {
 		this.userService = userService;
 		this.jwtUtil = jwtUtil;
 	}
-	
+
 	@GetMapping("/login")
 	public String loginForm() {
 		return "/user/loginform";
