@@ -15,11 +15,6 @@ CREATE TABLE `user` (
     birth DATE NOT NULL
 );
 
-INSERT INTO `user`
-VALUES('ssafy', '1234', '김싸피', 'ssafy@ssafy.com', 'M', '대전 유성구', 'KimSSAFY', '2024-07-02');
-
-SELECT * FROM user;
-
 # 유저 선호운동 정보
 CREATE TABLE user_like_ex (
 	ex_id VARCHAR(6) PRIMARY KEY,
@@ -49,13 +44,6 @@ CREATE TABLE diary (
     FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
 
-INSERT INTO `diary` (content, reg_date, user_id)
-VALUES ('내용입니다1', '2024-11-11', 'ssafy'),
-	   ('내용입니다2', '2024-11-12', 'ssafy'),
-       ('내용입니다3', '2024-11-13', 'ssafy');
-
-SELECT * FROM diary;
-
 # 운동일기 상의 운동기록
 CREATE TABLE diary_ex (
 	diary_ex_no INT AUTO_INCREMENT PRIMARY KEY,
@@ -66,10 +54,6 @@ CREATE TABLE diary_ex (
     # FOREIGN KEY(video_no) REFERENCES video(video_no)
 );
 
-INSERT INTO `diary_ex` (play_num, diary_no, video_no)
-VALUES (3, 2, 1),
-	   (3, 2, 2),
-       (3, 2, 3);
 
 SELECT * FROM diary_ex;
 
@@ -94,11 +78,12 @@ CREATE TABLE music (
 
 # 영상 카테고리 정보
 CREATE TABLE IF NOT EXISTS video_group(
-    category_name VARCHAR(30),
+    category_name VARCHAR(30) NOT NULL,
     user_id VARCHAR(100) NOT NULL,
     group_desc VARCHAR(100),
-    PRIMARY KEY(category_name),
-    FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE,
+    PRIMARY KEY(category_name, user_id)
 );
 
 
@@ -106,10 +91,11 @@ CREATE TABLE IF NOT EXISTS video_group(
 CREATE TABLE IF NOT EXISTS video(
     video_no INT NOT NULL AUTO_INCREMENT,
     video_id VARCHAR(50) NOT NULL,
-    src VARCHAR(200),
-    title VARCHAR(50),
-    view_cnt INT,
-    user_id VARCHAR(100),
+    src VARCHAR(200) NOT NULL,
+    title VARCHAR(200) NOT NULL,
+    view_cnt INT DEFAULT 0,
+    user_id VARCHAR(100) NOT NULL,
+    thumb VARCHAR(200) NOT NULL,
     PRIMARY KEY(video_no),
     FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
@@ -120,6 +106,7 @@ CREATE TABLE IF NOT EXISTS video_review(
     content VARCHAR(300) NOT NULL,
     writer VARCHAR(100) NOT NULL,
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    parent_no INT,
     video_no INT,
     user_id VARCHAR(100),
     PRIMARY KEY(review_no),
@@ -144,8 +131,14 @@ CREATE TABLE IF NOT EXISTS ex_record(
 # 사용자가 등록한 운동영상에 포함된 운동 정보
 CREATE TABLE IF NOT EXISTS video_ex_list(
     video_ex_no INT NOT NULL AUTO_INCREMENT, 
-    part VARCHAR(30),
-    ex_nums INT,
+    shoulder INT,
+    leg INT,
+    abs INT,
+    chest INT,
+    back INT,
+    arm INT,
+    stretching INT,
+    cardio INT,
     ex_weight INT,
     video_no INT,
     user_id VARCHAR(100),
@@ -157,14 +150,35 @@ CREATE TABLE IF NOT EXISTS video_ex_list(
 
 # 영상별 소속된 플레이리스트 정보
 CREATE TABLE IF NOT EXISTS category_video(
-  video_no INT NOT NULL AUTO_INCREMENT, 
-  category_name VARCHAR(30),
-  FOREIGN KEY(video_no) REFERENCES video(video_no) ON DELETE CASCADE,
-  FOREIGN KEY(category_name) REFERENCES video_group(category_name) ON DELETE CASCADE
+    video_no INT NOT NULL, 
+    category_name VARCHAR(30) NOT NULL,
+    FOREIGN KEY(video_no) REFERENCES video(video_no) ON DELETE CASCADE,
+    FOREIGN KEY(category_name) REFERENCES video_group(category_name) ON DELETE CASCADE,
+    PRIMARY KEY(video_no, category_name)
 );
 
+INSERT INTO `user`
+VALUES('ssafy', '1234', '김싸피', 'ssafy@ssafy.com', 'M', '대전 유성구', 'KimSSAFY', '2024-07-02');
+
+INSERT INTO `diary` (content, reg_date, user_id)
+VALUES ('내용입니다1', '2024-11-11', 'ssafy'),
+	   ('내용입니다2', '2024-11-12', 'ssafy'),
+       ('내용입니다3', '2024-11-13', 'ssafy');
 
 SELECT count(*)
 FROM user
 WHERE user_id = 'ssafy';
 
+SELECT * FROM diary;
+
+SELECT * FROM user;
+
+SELECT * FROM video;
+
+SELECT * FROM video_review;
+
+SELECT * FROM video_group;
+
+SELECT * FROM category_video;
+
+SELECT * FROM video_ex_list;

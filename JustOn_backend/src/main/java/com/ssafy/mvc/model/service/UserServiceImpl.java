@@ -21,15 +21,5 @@ public class UserServiceImpl implements UserService {
 	public boolean signUp(User user) {
 		return userDao.insertUser(user) == 1;
 	}
-	
-	@Override
-	public User login(String id, String password) {
-		Map<String, String> info = new HashMap<>();
-		info.put("id", id);
-		info.put("password", password);
-		User tmp = userDao.selectUser(info);
-		return tmp;
-	}
-	
 
 }
