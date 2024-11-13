@@ -4,8 +4,9 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.mvc.model.dao.UserDao">
 	
+	<!-- select pw 빼기  -->
 	<select id="selectUser" parameterType="Map" resultType="User">
-		SELECT id,  password, name, email, gender, address, nickname, birth, userProfile 
+		SELECT id, password, name, email, gender, address, nickname, birth, userProfile 
 		FROM users
 		WHERE id = #{id} AND password = #{password}
 	</select>

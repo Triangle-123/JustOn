@@ -1,5 +1,6 @@
 package com.ssafy.mvc.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.mvc.model.dto.Diary;
@@ -55,7 +57,7 @@ public class DiaryRestController {
 	
 	// 특정 유저의 다이어리 전체 조회 
 	@GetMapping("/diary") // @RequestBody(required = false) 
-	public ResponseEntity<?> getUserDiaryList(DiarySearch diarySearch, HttpSession session, @ModelAttribute User user) {
+	public ResponseEntity<?> getUserDiaryList(DiarySearch diarySearch, HttpSession session, User user) {
 		
 		// 체크 필요 : 일반적인 방식 session.getAttribute("userId")
 //		String userId = session.getId();
@@ -65,15 +67,21 @@ public class DiaryRestController {
 		
 		System.out.println(userId);
 		System.out.println(pw);
+		
 		Map<String, Object> result = diaryService.selectAllDiary(diarySearch, userId);
 		// 이게 맞나??
 		List<Diary> list = (List<Diary>) result.get("list");
 //		List<Diary> list = diaryService.selectAllDiary(userId);
+		
+		System.out.println(list);
 		if(list == null || list.size() == 0) {
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No diaries found");
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
+	
+	
+	
 
 	// 다이어리 날짜 선택 조회
 	@GetMapping("/diary/list/{regDate}")
