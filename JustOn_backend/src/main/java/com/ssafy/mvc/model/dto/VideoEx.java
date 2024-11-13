@@ -1,23 +1,23 @@
 package com.ssafy.mvc.model.dto;
 
-public class VideoExList {
+public class VideoEx {
 	private int videoExNo;
 	private String part;
-	private int exNums;
 	private int exWeight;
 	private int videoNo;
+	private int selCnt;
 	private String userId;
-	public VideoExList() {
+	public VideoEx() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public VideoExList(int videoExNo, String part, int exNums, int exWeight, int videoNo, String userId) {
+	public VideoEx(int videoExNo, String part, int exWeight, int videoNo, int selCnt, String userId) {
 		super();
 		this.videoExNo = videoExNo;
 		this.part = part;
-		this.exNums = exNums;
 		this.exWeight = exWeight;
 		this.videoNo = videoNo;
+		this.selCnt = selCnt;
 		this.userId = userId;
 	}
 	public int getVideoExNo() {
@@ -32,12 +32,6 @@ public class VideoExList {
 	public void setPart(String part) {
 		this.part = part;
 	}
-	public int getExNums() {
-		return exNums;
-	}
-	public void setExNums(int exNums) {
-		this.exNums = exNums;
-	}
 	public int getExWeight() {
 		return exWeight;
 	}
@@ -50,6 +44,12 @@ public class VideoExList {
 	public void setVideoNo(int videoNo) {
 		this.videoNo = videoNo;
 	}
+	public int getSelCnt() {
+		return selCnt;
+	}
+	public void setSelCnt(int selCnt) {
+		this.selCnt = selCnt;
+	}
 	public String getUserId() {
 		return userId;
 	}
@@ -58,9 +58,8 @@ public class VideoExList {
 	}
 	@Override
 	public String toString() {
-		return "VideoExList [videoExNo=" + videoExNo + ", part=" + part + ", exNums=" + exNums + ", exWeight="
-				+ exWeight + ", videoNo=" + videoNo + ", userId=" + userId + "]";
+		return "VideoEx [videoExNo=" + videoExNo + ", part=" + part + ", exWeight=" + exWeight + ", videoNo=" + videoNo
+				+ ", selCnt=" + selCnt + ", userId=" + userId + "]";
 	}
-	
 	
 }

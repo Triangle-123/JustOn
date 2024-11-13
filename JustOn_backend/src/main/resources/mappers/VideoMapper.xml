@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.mvc.model.dao.VideoDao">
+	<insert id="insertVideo" parameterType="Video" useGeneratedKeys="true" keyProperty="videoNo">
+		INSERT INTO video(video_id, src, title, user_id, thumb)
+		SELECT #{videoId}, #{src}, #{title}, #{userId}, #{thumb} FROM DUAL
+		WHERE #{videoId} NOT IN (SELECT video_id FROM video WHERE user_id = #{userId})
+	</insert>
+	
+	<delete id="deleteVideo" parameterType="int">
+		DELETE FROM video
+		WHERE video_no = #{videoNo}
+	</delete>
+		
+	<select id="selectVideoByNo">
+	
+	</select>
+	
+	<update id="updateVideo">
+	
+	</update>
+	
+	
+	<select id="selectVideoByGroup" resultType="Video" parameterType="VideoGroup">
+		
+	</select>
+	
+	<select id="selectVideoTitle" resultType="Video" parameterType="String">
+		SELECT video_no, title FROM video
+		WHERE user_id = #{Id}
+	</select>
+	
+	<insert id="insertVideoToGroup">
+		INSERT INTO category_video(category_name, video_no)
+		VALUES (#{categoryName}, #{videoNo})
+	</insert>
+	
+	<delete id="deleteVideoFromGroup">
+		DELETE FROM category_video
+		WHERE category_name = #{categoryName} AND video_no = #{videoNo}
+	</delete>
+	
+	<select id="selectVideoGroup" resultType="VideoGroup" parameterType="String">
+		SELECT category_name, group_desc FROM video_group
+		WHERE user_id = #{userId}
+		ORDER BY create_date
+	</select>
+	
+	<select id="selectRegistedVideoGroup" resultType="String" parameterType="int">
+		SELECT category_name FROM category_video
+		WHERE video_no = #{videoNo}
+	</select>
+		
+	<insert id="insertVideoGroup" parameterType="VideoGroup">
+		INSERT INTO video_group(category_name, user_id, group_desc)
+		VALUES (#{categoryName}, #{userId}, #{groupDesc})
+	</insert>
+	
+	<delete id="deleteVideoGroup" parameterType="VideoGroup">
+		DELETE FROM video_group
+		WHERE category_name = #{categoryName} AND user_id = #{userId}
+	</delete>
+	
+	<insert id="insertVideoEx">
+		INSERT INTO video_ex_list(
+		<foreach collection="videoExList" item="ex" separator="," index="idx">
+		${ex.part}
+		<if test="idx == videoExList.size - 1">, ex_weight, video_no, user_id</if>
+		</foreach>
+		)
+		VALUE (
+		<foreach collection="videoExList" item="ex" separator="," index="idx">
+		#{ex.selCnt}
+		<if test="idx == videoExList.size - 1">, #{ex.exWeight}, #{video.videoNo}, #{video.userId}</if>
+		</foreach>
+		)
+	</insert>
+	
+	<delete id="deleteVideoEx">
+	
+	</delete>
+</mapper>

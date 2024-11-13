@@ -1,10 +1,16 @@
 package com.ssafy.mvc.controller;
 
+<<<<<<< HEAD
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+=======
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+>>>>>>> origin/hong
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,30 +26,44 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/user")
+@CrossOrigin
 public class UserRestController {
 	
+<<<<<<< HEAD
 	
 	private final UserService userService;
 	private final JwtUtil jwtUtil;
+=======
+	private final UserService userService;
+>>>>>>> origin/hong
 
 	public UserRestController(UserService userService, JwtUtil jwtUtil) {
 		this.userService = userService;
 		this.jwtUtil = jwtUtil;
 	}
 	
+<<<<<<< HEAD
 	@GetMapping("/login")
 	public String loginForm() {
 		return "/user/loginform";
 	}
 	
 	// 사용자 로그인
+=======
+//	@GetMapping("/login")
+//	public String loginForm() {
+//		return "/user/loginform";
+//	}
+//	
+>>>>>>> origin/hong
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody User user, HttpSession session) {
 		User tmp = userService.login(user.getUserId(), user.getPassword());
 		if(tmp == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 아이디 입니다.");
 		}
-		session.setAttribute("loginUser", tmp.getName());
+		user.setPassword(null);
+		session.setAttribute("loginUser", tmp);
 		return ResponseEntity.ok().build();
 	}
 	
@@ -77,6 +97,17 @@ public class UserRestController {
         }	
 	}
 	
+	@PostMapping("/signup")
+	public ResponseEntity<String> signUp(@RequestBody User user) {
+		try {
+			if(userService.signUp(user)) {
+				return ResponseEntity.ok("회원가입이 완료되었습니다.");
+			}
+			return ResponseEntity.internalServerError().body("회원가입에 실패하였습니다.");			
+		} catch(Exception e) {
+			return ResponseEntity.internalServerError().body("회원가입에 실패하였습니다.");	
+		}
+	}
 	
 	
 	

@@ -5,22 +5,38 @@
 <mapper namespace="com.ssafy.mvc.model.dao.VideoReviewDao">
 	
 	<insert id="insertReview" parameterType="VideoReview">
-		INSERT
+		INSERT INTO video_review(content, writer, video_no, user_id, parent_no)
+		VALUES (#{content}, #{writer}, #{videoNo}, #{userId}, #{parentNo})
 	</insert>
 	
-	<select id="selectReview">
-	
+	<select id="selectReview" resultType="VideoReview" parameterType="ReviewSearch">
+		SELECT * FROM video_review
+		WHERE parent_no = 0
+		ORDER BY reg_date
+		LIMIT #{offset}, #{listSize}
 	</select>
 	
-	<update id="updateReview">
+	<!-- 게시물 목록 카운트 -->
+	<select id="selectReviewCount" resultType="int" parameterType="ReviewSearch">
+		SELECT count(*)
+		FROM video_review
+		WHERE parent_no = 0
+	</select>
 	
+	<update id="updateReview" parameterType="VideoReview">
+		UPDATE video_review
+		SET content = #{content}, reg_date = now()
+		WHERE review_no = #{reviewNo}
 	</update>
 
-	<delete id="deleteReview">
-	
+	<delete id="deleteReview" parameterType="int">
+		DELETE FROM video_review
+		WHERE review_no = #{reviewNo} OR parent_no = #{reviewNo};
 	</delete>
 	
-	<select id="selectReply">
-	
+	<select id="selectReply" resultType="VideoReview" parameterType="int">
+		SELECT * FROM video_review
+		WHERE parent_no = #{parentNo}
+		ORDER BY reg_date 
 	</select>
 </mapper>
