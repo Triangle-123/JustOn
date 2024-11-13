@@ -16,9 +16,4 @@
 		VALUES(#{userId}, #{password}, #{name}, #{email}, #{gender}, #{address}, #{nickname}, #{birth})
 	</insert> 
 	
-	
-	
-	
-	
-	
 </mapper>
