@@ -1,58 +1,74 @@
 package com.ssafy.mvc.model.dto;
 
+import java.util.List;
+
 public class Diary {
 	private int diaryNo;
-	private String title;
+//	private String title;
 	private String content;
 	private String regDate;
 	private String userId;
+	private List<DiaryEx> diaryExList;
+	
 	public Diary() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Diary(int no, String title, String content, String regDate, String id) {
+
+	public Diary(int diaryNo, String content, String regDate, String userId, List<DiaryEx> diaryExList) {
 		super();
-		this.diaryNo = no;
-		this.title = title;
+		this.diaryNo = diaryNo;
 		this.content = content;
 		this.regDate = regDate;
-		this.userId = id;
+		this.userId = userId;
+		this.diaryExList = diaryExList;
 	}
-	public int getNo() {
+
+	public int getDiaryNo() {
 		return diaryNo;
 	}
-	public void setNo(int no) {
-		this.diaryNo = no;
+
+	public void setDiaryNo(int diaryNo) {
+		this.diaryNo = diaryNo;
 	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
+
 	public String getRegDate() {
 		return regDate;
 	}
+
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
 	}
-	public String getId() {
+
+	public String getUserId() {
 		return userId;
 	}
-	public void setId(String id) {
-		this.userId = id;
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
+
+	public List<DiaryEx> getDiaryExList() {
+		return diaryExList;
+	}
+
+	public void setDiaryExList(List<DiaryEx> diaryExList) {
+		this.diaryExList = diaryExList;
+	}
+
 	@Override
 	public String toString() {
-		return "diary [no=" + diaryNo + ", title=" + title + ", content=" + content + ", regDate=" + regDate + ", id=" + userId
-				+ "]";
+		return "Diary [diaryNo=" + diaryNo + ", content=" + content + ", regDate=" + regDate + ", userId=" + userId
+				+ ", diaryExList=" + diaryExList + "]";
 	}
-	
+
 	
 }

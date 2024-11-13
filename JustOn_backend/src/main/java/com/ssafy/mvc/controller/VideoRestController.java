@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.mvc.model.dto.AddVideoDTO;
@@ -52,7 +50,7 @@ public class VideoRestController {
 	
 	
 	
-	@DeleteMapping("/{no}")
+	@DeleteMapping("{no}")
 	public ResponseEntity<String> removeVideo(@PathVariable("no") int videoNo) {
 		try {
 			if(videoService.removeVideo(videoNo)) {
@@ -76,34 +74,6 @@ public class VideoRestController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.internalServerError().body("영상 목록 불러오기 실패");
-		}
-	}
-	
-	@GetMapping("/{no}")
-	public ResponseEntity<?> getVideoInfo(@PathVariable("no") int videoNo) {
-		try {
-			Map<String, Object> result = videoService.getVideoInfo(videoNo);	
-			if(result != null && !result.isEmpty()) {
-				return ResponseEntity.ok(result);
-			}
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("영상이 없습니다.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.internalServerError().body("영상 불러오기 실패");
-		}
-	}
-	
-	@PutMapping("/{no}")
-	public ResponseEntity<String> modifyVideo(@PathVariable("no") int videoNo, @RequestBody AddVideoDTO addVideoDto) {
-		try {
-			addVideoDto.getVideo().setUserId("ssafy");
-			if(videoService.modifyVideo(videoNo, addVideoDto)) {
-				return ResponseEntity.ok("영상 수정을 완료했습니다.");
-			}
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 등록된 영상입니다.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.internalServerError().body("영상 수정에 실패하였습니다.");
 		}
 	}
 	

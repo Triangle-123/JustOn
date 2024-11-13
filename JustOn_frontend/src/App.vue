@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <VideoTest/>
-  </div>
+  <SideHeader />
+  <DiaryList />
 </template>
-  
-<script setup>
-  import VideoTest from '@/components/VideoTest.vue';
-</script>
-  
-<style scoped>
 
-</style>
+<script setup>
+import SideHeader from "./components/SideHeader.vue";
+import DiaryList from "./components/DiaryList.vue";
+// import VideoTest from '@/components/VideoTest.vue';
+</script>
+
+<style></style>

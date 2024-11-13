@@ -14,15 +14,12 @@
 		WHERE video_no = #{videoNo}
 	</delete>
 		
-	<select id="selectVideoByNo" resultType="Video" parameterType="int">
-		SELECT * FROM video
-		WHERE video_no = #{videoNo}
+	<select id="selectVideoByNo">
+	
 	</select>
 	
-	<update id="updateVideo" parameterType="Video">
-		UPDATE video
-		SET video_id = #{videoId}, src = #{src}, title = #{title}, thumb = #{thumb}
-		WHERE video_no = #{videoNo} AND #{videoId} NOT IN (SELECT video_id FROM (SELECT video_id FROM video WHERE user_id = #{userId} AND video_no != #{videoNo}) as v)
+	<update id="updateVideo">
+	
 	</update>
 	
 	
@@ -81,21 +78,7 @@
 		)
 	</insert>
 	
-	<select id="selectVideoExColumnName" resultType="String">
-		SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-		WHERE TABLE_NAME = 'video_ex_list' AND COLUMN_NAME NOT IN ('video_no', 'user_id', 'video_ex_no', 'ex_weight');
-	</select>
+	<delete id="deleteVideoEx">
 	
-	<select id="selectVideoEx" resultType="VideoEx">
-		<foreach collection="column" item="colName" separator="UNION ALL">
-			SELECT #{colName} as part, ${colName} as selCnt, ex_weight
-			FROM video_ex_list
-			WHERE video_no = #{videoNo}
-		</foreach>
-	</select>
-	
-	<delete id="deleteVideoEx" parameterType="int">
-		DELETE FROM video_ex_list
-		WHERE video_no = #{videoNo}
 	</delete>
 </mapper>

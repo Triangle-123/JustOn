@@ -15,7 +15,7 @@ public interface VideoService {
 		// 영상 삭제
 		boolean removeVideo(int videoNo);
 
-		Map<String, Object> getVideoInfo(int videoNo);
+		Video selectVideo(int videoNo);
 		
 		boolean modifyVideo(int videoNo, AddVideoDTO addVideoDto);
 		
