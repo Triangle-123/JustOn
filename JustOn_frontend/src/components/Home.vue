@@ -85,6 +85,33 @@
 // Swiper
 // import { Swiper, SwiperSlide } from "swiper/vue";
 // Swiper 스타일 임포트
+
+import { ref, computed, onMounted } from "vue";
+import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import "swiper/css/swiper.css";
+
+const mySwiper = ref(null);
+
+const swiperOptions = {
+  pagination: {
+    el: ".swiper-pagination",
+  },
+  navigation: {
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev",
+  },
+};
+
+function slideChangeTransitionStart() {
+  console.log(mySwiper.value.swiper.activeIndex);
+}
+
+const swiper = computed(() => mySwiper.value?.swiper);
+
+onMounted(() => {
+  console.log("Current Swiper instance object", swiper.value);
+  // swiper.value.slideTo(3, 1000, false); // 특정 슬라이드로 이동 예제
+});
 </script>
 
 <style scoped>
