@@ -5,7 +5,7 @@ import { createPinia } from "pinia";
 
 import App from "./App.vue";
 // import router from './router'
-import vClickOutside from 'click-outside-vue3'
+import vClickOutside from "click-outside-vue3";
 import Toast, { POSITION } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 const app = createApp(App);
@@ -32,3 +32,5 @@ const options = {
 };
 
 OverlayScrollbars(document.querySelector(".my-scrollbar"), options);
+
+// import "swiper/swiper-bundle.min.css";
