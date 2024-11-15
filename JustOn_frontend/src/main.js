@@ -32,5 +32,3 @@ const options = {
 };
 
 OverlayScrollbars(document.querySelector(".my-scrollbar"), options);
-
-// import "swiper/swiper-bundle.min.css";
