@@ -9,6 +9,7 @@ public class User {
 	private String address;
 	private String nickname;
 	private String birth;
+	private String role;
 	
 	private UserProfile userProfile;
 
@@ -17,10 +18,10 @@ public class User {
 		// TODO Auto-generated constructor stub
 	}
 
-	public User(String id, String password, String name, String email, String gender, String address, String nickname,
-			String birth, UserProfile userProfile) {
+	public User(String userId, String password, String name, String email, String gender, String address,
+			String nickname, String birth, String role, UserProfile userProfile) {
 		super();
-		this.userId = id;
+		this.userId = userId;
 		this.password = password;
 		this.name = name;
 		this.email = email;
@@ -28,6 +29,7 @@ public class User {
 		this.address = address;
 		this.nickname = nickname;
 		this.birth = birth;
+		this.role = role;
 		this.userProfile = userProfile;
 	}
 
@@ -35,8 +37,8 @@ public class User {
 		return userId;
 	}
 
-	public void setUserId(String id) {
-		this.userId = id;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getPassword() {
@@ -71,11 +73,11 @@ public class User {
 		this.gender = gender;
 	}
 
-	public String getaddress() {
+	public String getAddress() {
 		return address;
 	}
 
-	public void setaddress(String address) {
+	public void setAddress(String address) {
 		this.address = address;
 	}
 
@@ -95,6 +97,14 @@ public class User {
 		this.birth = birth;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	public UserProfile getUserProfile() {
 		return userProfile;
 	}
@@ -105,10 +115,10 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + ", gender="
-				+ gender + ", address=" + address + ", nickname=" + nickname + ", birth=" + birth + ", userProfile="
-				+ userProfile + "]";
+		return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + ", gender="
+				+ gender + ", address=" + address + ", nickname=" + nickname + ", birth=" + birth + ", role=" + role
+				+ ", userProfile=" + userProfile + "]";
 	}
-	
+
 	
 }

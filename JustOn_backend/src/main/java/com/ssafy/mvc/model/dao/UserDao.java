@@ -9,8 +9,14 @@ public interface UserDao {
 	// 회원가입
 	int insertUser(User user);
 	
+	// 회원가입 전 id가 이미 있는지 확인
+	String existsById(String userId);
+	
+	// userid로 회원을 조회
+	User findByUserId(String userId);
+	
 	// 로그인 검사
-	User selectUser(Map<String, String> info);
+	User selectUser(String userId);
 	
 	// 회원정보 수정
 	void updateUser(User user);

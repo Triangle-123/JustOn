@@ -5,15 +5,25 @@
 <mapper namespace="com.ssafy.mvc.model.dao.UserDao">
 	
 	<!-- select pw 빼기  -->
-	<select id="selectUser" parameterType="Map" resultType="User">
-		SELECT id, password, name, email, gender, address, nickname, birth, userProfile 
-		FROM users
-		WHERE id = #{id} AND password = #{password}
+	<select id="selectUser" parameterType="String" resultType="User">
+		SELECT user_id, name, email, gender, address, nickname, birth, role
+		FROM user
+		WHERE user_id = #{userId}
+	</select>
+	
+	<select id="existsById" resultType="String" parameterType="String">
+		SELECT user_id FROM user
+		WHERE user_id = #{userId}
+	</select>
+	
+	<select id="findByUserId" resultType="User" parameterType="String">
+		SELECT * FROM user
+		WHERE user_id = #{userId}
 	</select>
 	
 	<insert id="insertUser" parameterType="User">
 		INSERT INTO user
-		VALUES(#{userId}, #{password}, #{name}, #{email}, #{gender}, #{address}, #{nickname}, #{birth})
+		VALUES(#{userId}, #{password}, #{name}, #{email}, #{gender}, #{address}, #{nickname}, #{birth}, #{role})
 	</insert> 
 	
 	<update id="updateUser" parameterType="User">
@@ -31,5 +41,4 @@
 		DELETE FROM user_profile_img
 		WHERE user_id = #{id}
 	</delete>
-	
 </mapper>

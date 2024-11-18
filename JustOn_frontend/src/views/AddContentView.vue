@@ -246,10 +246,12 @@ const modifyVideoView = async (no) => {
   console.dir(data);
   URL.value = data.video.src;
   modifyState.value = true;
-  for (const index in exData.value) {
-    exData.value[index].selCnt = data.videoEx[index].selCnt;
-    if (exData.value[index].selCnt !== 0) {
-      exData.value[index].selected = true;
+  for (const index in data.videoEx) {
+    if(data.videoEx[index].selCnt !== 0) {
+      console.log(data.videoEx[index].part);
+      console.log(exData.value.indexOf(data.videoEx[index].part));
+      exData.value[exData.value.indexOf(data.videoEx[index].part)].selCnt = 1;
+      exData.value[exData.value.indexOf(data.videoEx[index].part)].selected = true;
     }
   }
   weight.value = data.videoEx[0].exWeight;
@@ -278,7 +280,7 @@ const modifyVideo = async () => {
   const noEmbed = "https://noembed.com/embed?url=";
   const fullURL = noEmbed + URL.value;
   // console.log(fullURL);
-  const { data } = await axios.get(fullURL);
+  const { data } = await oriAxios.get(fullURL);
   // console.dir(data);
   const { url, thumbnail_url, title } = data;
   console.log(url);
