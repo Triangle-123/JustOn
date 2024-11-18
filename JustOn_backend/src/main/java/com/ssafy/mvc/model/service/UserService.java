@@ -1,10 +1,14 @@
 package com.ssafy.mvc.model.service;
 
+import java.util.Map;
+
 import com.ssafy.mvc.model.dto.User;
 
 public interface UserService {
 
-	User login(String id, String password);
+	User userInfo(String userId);
+	
+//	User login(String id, String password);
 	
 	boolean signUp(User user);
 	

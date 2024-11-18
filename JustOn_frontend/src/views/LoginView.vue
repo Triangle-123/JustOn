@@ -36,9 +36,7 @@ const login = async () => {
         if (token) {
             try {
                 // 사용자 정보를 서버에서 가져오기
-                const resInfo = await axios.get('api-user/userInfo', {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                const resInfo = await axios.get('api-user/userInfo');
 
                 console.dir(resInfo);
                 if (resInfo.status === 200) {

@@ -46,7 +46,7 @@
 
 <script setup>
 import { ref, watch } from "vue";
-import axios from "axios";
+import axios from "@/axios/index";
 import { useToast } from "vue-toastification";
 
 const Toast = useToast();
@@ -64,7 +64,7 @@ const registedPlaylist = ref([]);
 const isOpenPlaylistView = ref(false);
 const requestPlaylist = async () => {
   const { data } = await axios.get(
-    "http://localhost:8080/api-video/playlist/" + props.videoNo
+    "api-video/playlist/" + props.videoNo
   );
   console.dir(data);
   playlist.value = data.list;
@@ -92,7 +92,7 @@ const deletePlaylist = async (categoryName) => {
   if (confirm(`재생목록명 : ${categoryName}\n 재생목록을 삭제하시겠습니까?`)) {
     try {
       await axios.delete(
-        "http://localhost:8080/api-video/playlist/" + categoryName
+        "api-video/playlist/" + categoryName
       );
       emit("deletePlaylist");
     } catch (error) {
@@ -106,7 +106,7 @@ const insertOrDeleteVideo = async (registed, categoryName) => {
   if (!registed) {
     try {
       await axios.post(
-        `http://localhost:8080/api-video/${categoryName}/${props.videoNo}`
+        `api-video/${categoryName}/${props.videoNo}`
       );
       requestPlaylist();
       Toast(`[${categoryName}] 재생목록에 영상이 추가되었습니다.`, {
@@ -130,7 +130,7 @@ const insertOrDeleteVideo = async (registed, categoryName) => {
   } else {
     try {
       await axios.delete(
-        `http://localhost:8080/api-video/${categoryName}/${props.videoNo}`
+        `api-video/${categoryName}/${props.videoNo}`
       );
       requestPlaylist();
       Toast("재생목록에서 영상이 삭제되었습니다.", {

@@ -37,7 +37,7 @@
 
 <script setup>
 import { ref } from "vue";
-import axios from "axios";
+import axios from "@/axios/index";
 import { useToast } from "vue-toastification";
 
 const Toast = useToast();
@@ -58,7 +58,7 @@ const addPlaylist = async () => {
       return false;
     }
     const { response } = await axios.post(
-      "http://localhost:8080/api-video/playlist",
+      "api-video/playlist",
       playlist.value
     );
     Toast(`[${playlist.value.categoryName}] 재생목록이 추가되었습니다.`, {
