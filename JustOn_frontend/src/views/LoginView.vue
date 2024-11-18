@@ -11,16 +11,21 @@
         </a>
       </div>
       <h3 class="text-4xl text-center mb-6">LOGIN</h3>
-      <form @submit.prevent="login" >
+      <form @submit.prevent="login">
         <label for="id">아이디</label>
         <input
           id="id"
           class="input-style-h60 block mb-3 w-[100%]"
-          type="text" 
-          v-model="userId"
+          type="text"
+          v-model="userName"
         />
         <label for="pw">비밀번호</label>
-        <input id="pw" class="input-style-h60 w-[100%]" type="password" v-model="password" />
+        <input
+          id="pw"
+          class="input-style-h60 w-[100%]"
+          type="password"
+          v-model="password"
+        />
         <div class="btn-box flex justify-center">
           <a href="">회원가입</a>
           <a href="">비밀번호 찾기</a>
@@ -49,11 +54,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import axios from '@/axios/index.js';
-import { useUserStore } from '@/stores/user';
-import { useRouter } from 'vue-router';
-const userId = ref("");
+import { ref } from "vue";
+import axios from "@/axios/index.js";
+import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
+const userName = ref("");
 const password = ref("");
 const userStore = useUserStore();
 const router = useRouter();
@@ -61,38 +66,36 @@ const router = useRouter();
 const imgUrl = import.meta.env.VITE_IMAGE_URL;
 
 const login = async () => {
-    const response = await axios.post("api-user/login", {
-        userId: userId.value,
-        password: password.value,
-    })
+  const response = await axios.post("api-user/login", {
+    userName: userName.value,
+    password: password.value,
+  });
 
-    // console.dir(response);
-    if (response.status === 200) {
-        localStorage.setItem('jwt', response.headers.authorization.split(' ')[1]);
-        const token = localStorage.getItem('jwt');
-        if (token) {
-            try {
-                // 사용자 정보를 서버에서 가져오기
-                const resInfo = await axios.get('api-user/userInfo');
+  // console.dir(response);
+  if (response.status === 200) {
+    localStorage.setItem("jwt", response.headers.authorization.split(" ")[1]);
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      try {
+        // 사용자 정보를 서버에서 가져오기
+        const resInfo = await axios.get("api-user/userInfo");
 
-                console.dir(resInfo);
-                if (resInfo.status === 200) {
-                    const userData = resInfo.data;
-                    userStore.setUser(userData); // 사용자 정보 저장
-                    router.push({name: 'home'});
-                } else {
-                    userStore.logout(); // 인증 실패 시 로그아웃 처리
-                }
-            } catch (error) {
-                console.error(error);
-                userStore.logout();
-            }
+        console.dir(resInfo);
+        if (resInfo.status === 200) {
+          const userData = resInfo.data;
+          userStore.setUser(userData); // 사용자 정보 저장
+          router.push({ name: "home" });
+        } else {
+          userStore.logout(); // 인증 실패 시 로그아웃 처리
         }
-
+      } catch (error) {
+        console.error(error);
+        userStore.logout();
+      }
     }
-    // console.log(localStorage.getItem('jwt'));
-}
-
+  }
+  // console.log(localStorage.getItem('jwt'));
+};
 </script>
 
 <style scoped>
@@ -111,5 +114,3 @@ const login = async () => {
   border-radius: 16px;
 }
 </style>
-
-
