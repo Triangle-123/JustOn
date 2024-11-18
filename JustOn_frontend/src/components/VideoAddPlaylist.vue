@@ -10,7 +10,7 @@
           <div class="flex flex-col mb-4">
             <label class="mb-1">재생목록명</label>
             <input
-              class="w-[100%]"
+              class="w-[100%] input-style-h52"
               type="text"
               v-model="playlist.categoryName"
             />
@@ -38,6 +38,10 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+import { useToast } from "vue-toastification";
+
+const Toast = useToast();
+
 
 const playlist = ref({
   categoryName: "",
@@ -57,11 +61,27 @@ const addPlaylist = async () => {
       "http://localhost:8080/api-video/playlist",
       playlist.value
     );
+    Toast(`[${playlist.value.categoryName}] 재생목록이 추가되었습니다.`, {
+        position: "top-right",
+        timeout: 3000,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: false,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: true,
+        closeButton: false,
+        icon: false,
+        rtl: false,
+        toastClassName: "toast",
+      });
     emit("successAdd");
   } catch (error) {
   } finally {
     playlist.value.categoryName = "";
     playlist.value.groupDesc = "";
+    closeAddPlaylistView();
   }
 };
 </script>

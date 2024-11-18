@@ -260,13 +260,15 @@ const addedVideoList = ref([]);
 
 // 운동 영상 검색 관련 변수
 const isSearch = ref(false);
-const exercises = [
+
+
+const exercises = ref([
   { title: "팔 굽혀 펴기" },
   { title: "스쿼트" },
   { title: "윗몸 일으키기" },
   { title: "자전거 타기" },
   { title: "등산" },
-];
+]);
 
 // 운동 영상 검색 관련 함수
 const openSch = () => {
@@ -289,21 +291,20 @@ const handleSearch = (query) => {
 
 // 사용자가 등록한 운동 영상 리스트 중 검색해서 받아오기
 async function schVideoList() {
-  if (!date.value) return null;
-
   try {
-    const { data } = await axios.get(
-      `http://localhost:8080/api-diary/diary/list/${date.value}`
-    );
 
-    // 응답 데이터 유효성 검사
-    if (data && typeof data === "object") {
-      console.log("API Response:", data);
-      return data;
-    } else {
-      console.warn("Invalid response data format:", response.data);
-      return null;
-    }
+    const { data } = await axios.get("http://localhost:8080/api-video");
+    exercises.value = data;
+
+    console.dir(exercises.value);
+    // // 응답 데이터 유효성 검사
+    // if (data) {
+    //   console.log("API Response:", data);
+    //   return data;
+    // } else {
+    //   console.warn("Invalid response data format:", response.data);
+    //   return null;
+    // }
   } catch (error) {
     console.error("데이터 불러오는 중 오류", error);
     return null;
@@ -334,7 +335,7 @@ const addList = () => {
   if (title.value && playNum.value > 0) {
     addedVideoList.value.push({
       diaryExNo: diaryExNoCount.value++,
-      title: title.value,
+      title: title.value.title,
       playNum: playNum.value,
     });
     // 필드 초기화
@@ -405,7 +406,8 @@ const updateDiary = async () => {
   }
 };
 
-// 날짜 선택 시, 해당 다이어리가 있는지 확인 -> isUpdate 값이 true 일 경우 수정이 보여지도록, 수정 버튼 클릭시에는 수정 메서드 진행
+// 날짜 선택 시, 해당 다이어리가 있는지 확인 
+// -> isUpdate 값이 true 일 경우 수정이 보여지도록, 수정 버튼 클릭시에는 수정 메서드 진행
 async function selectDiaryByRegDate() {
   if (!date.value) return null;
 
@@ -419,7 +421,6 @@ async function selectDiaryByRegDate() {
       console.log("API Response:", data);
       return data;
     } else {
-      console.warn("Invalid response data format:", response.data);
       return null;
     }
   } catch (error) {
@@ -435,10 +436,11 @@ watch(date, async (newDate) => {
   if (newDate) {
     console.log("조회 실행되었습니다.");
     const data = await selectDiaryByRegDate();
+    schVideoList();
     if (data) {
       // isLoading.value = true;
-      console.log("Retrieved diary data:", data);
-      console.log("data-type : " + typeof data);
+      // console.log("Retrieved diary data:", data);
+      // console.log("data-type : " + typeof data);
 
       diaryNo.value = data[0].diaryNo ?? "";
       content.value = data[0].content ?? "";
@@ -454,7 +456,7 @@ watch(date, async (newDate) => {
       //   isUpdate.value = false;
       //   console.warn("diaryExList is not an array:", data.diaryExList);
       // }
-      // isUpdate.value = true;
+      isUpdate.value = true;
       // 3초 후 로딩 상태 false로 변경
       // setTimeout(() => {
       //   isLoading.value = false;
@@ -495,13 +497,13 @@ onMounted(async () => {
 watch(
   () => modifyDiary.value,
   async (newModifyDiary) => {
+    schVideoList();
     console.dir("newModifyDiary.diaryNo : " + newModifyDiary.diaryNo);
     if (newModifyDiary) {
-      console.log("실행되었습니다.");
+      console.log("newModifyDiary 실행되었습니다.");
       diaryNo.value = newModifyDiary.diaryNo;
       date.value = newModifyDiary.regDate;
       content.value = newModifyDiary.content;
-
       // // diaryExList 배열 처리
       // if (Array.isArray(newModifyDiary.diaryExList)) {
       //   addedVideoList.value = newModifyDiary.diaryExList.map((item) => ({

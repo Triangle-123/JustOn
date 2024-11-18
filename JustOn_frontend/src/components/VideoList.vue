@@ -86,9 +86,9 @@ const doClosePlayList = (video) => {
   video.selected = false;
 };
 
-const videoList = ref([]);
+const videoList = ref([]); //http://192.168.210.75:8081/
 const requestVideoList = async () => {
-  const { data } = await axios.get("http://localhost:8080/api-video");
+  const { data } = await axios.get("http://192.168.210.75:8080/api-video");
   // console.dir(data);
   videoList.value = data;
   for (const video of videoList.value) {
@@ -146,6 +146,7 @@ const deleteVideo = async (videoNo) => {
 const modifyVideo = (videoNo) => {
   emit("modifyVideo", videoNo);
 };
+
 </script>
 
 <style scoped>

@@ -78,14 +78,14 @@
           :key="index"
           class="menu-item bg-[#fff] p-4 rounded-[16px] block hover-effect"
           href="#none"
-          @click="setActive(index)"
+          @click="setActive(index); navigateTo(menu.routerName);"
           :class="{ 'juston-gradient-1-2': activeIndex === index }"
         >
           <i
             v-show="activeIndex === index"
             class="bi bi-arrow-right-circle mr-3"
           ></i
-          >{{ menu }}
+          >{{ menu.menuName }}
         </a>
       </nav>
 
@@ -112,16 +112,34 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from 'vue-router';
 
 const isSizeChange = ref(false);
 const rotate = ref(false);
-const menus = ["Home", "컨텐츠 등록", "운동 다이어리"];
+const menus = [
+  {
+  menuName : "Home",
+  routerName :"home",
+},
+  {
+  menuName : "컨텐츠 등록",
+  routerName :"addContent",
+},
+  {
+  menuName : "운동 다이어리",
+  routerName :"diaryList",
+},
+];
 const sMenus = [
   { iconClass: "bi bi-house-heart", text: "홈" },
   { iconClass: "bi bi-patch-plus-fill", text: "컨텐츠 등록" },
   { iconClass: "bi bi-journal-plus", text: "운동 다이어리" },
   { iconClass: "", text: "PlayList 등록" },
 ];
+const router = useRouter();
+const navigateTo = (routeName)  => {
+  router.push({ name: routeName });
+}
 
 const activeIndex = ref(0);
 const setActive = (index) => {

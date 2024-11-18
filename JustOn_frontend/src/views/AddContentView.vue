@@ -17,7 +17,7 @@
           <div class="flex flex-col gap-[20px]">
             <div class="addVideo flex flex-col items-start">
               <label class="label font-bold text-lg mb-2">URL 입력</label>
-              <input class="w-[100%]" type="text" v-model.trim="URL" />
+              <input class="w-[100%] input-style-h52" type="text" v-model.trim="URL" />
             </div>
 
             <div>
@@ -95,8 +95,8 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import VideoList from "./VideoList.vue";
-import MusicList from "./MusicList.vue";
+import VideoList from "@/components/VideoList.vue";
+import MusicList from "@/components/MusicList.vue";
 
 const modifyState = ref(false);
 
@@ -359,6 +359,7 @@ button {
   cursor: pointer;
 }
 .playList {
+  width: 80%;
   border: 1px solid #ccc;
   border-radius: 20px;
   display: flex;
