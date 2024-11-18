@@ -37,7 +37,8 @@
     
 <script setup>
     import {ref} from 'vue';
-    import axios from 'axios';
+    import oriAxios from 'axios';
+    import axios from '@/axios/index'
     import VideoList from './VideoList.vue';
     
     const modifyState = ref(false);
@@ -124,7 +125,7 @@
         const noEmbed = 'https://noembed.com/embed?url=';
         const fullURL = noEmbed + URL.value;
         // console.log(fullURL);
-        const{ data } = await axios.get(fullURL);
+        const{ data } = await oriAxios.get(fullURL);
         // console.dir(data);
         const { url, thumbnail_url, title } = data;
         console.log(url);
@@ -149,7 +150,7 @@
         }
 
         try {
-            await axios.post("http://localhost:8080/api-video", {
+            await axios.post("api-video", {
                 video: youtube.value,
                 videoExList : exData.value
             });
@@ -179,7 +180,7 @@
     const videoNo = ref(-1);
 
     const modifyVideoView = async (no) => {
-        const {data} = await axios.get("http://localhost:8080/api-video/" + no);
+        const {data} = await axios.get("api-video/" + no);
         console.dir(data);
         URL.value = data.video.src;
         modifyState.value = true;
@@ -239,7 +240,7 @@
         }
 
         try {
-            await axios.put("http://localhost:8080/api-video/" + videoNo.value, {
+            await axios.put("api-video/" + videoNo.value, {
             video: youtube.value,
             videoExList : exData.value
             });

@@ -33,7 +33,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import axios from 'axios';
+import axios from '@/axios/index';
 import VideoPlaylist from './VideoPlaylist.vue';
 import VideoAddPlaylist from './VideoAddPlaylist.vue';
 const addListView = ref(false);
@@ -53,7 +53,7 @@ const doCloseAddPlaylist = () => {
 
 const videoList = ref([]);
 const requestVideoList = async () => {
-    const { data } = await axios.get("http://localhost:8080/api-video");
+    const { data } = await axios.get("api-video");
     // console.dir(data);
     videoList.value = data;
     for (const video of videoList.value) {
@@ -97,7 +97,7 @@ const closeMenu = () => {
 const deleteVideo = async (videoNo) => {
     try {
         if(confirm("영상 삭제 시 재생목록 내에서도 지워집니다.\n삭제하시겠습니까?")) {
-            await axios.delete("http://localhost:8080/api-video/" + videoNo);
+            await axios.delete("api-video/" + videoNo);
             emit('deleteVideo');
         }
     } catch (error) {
