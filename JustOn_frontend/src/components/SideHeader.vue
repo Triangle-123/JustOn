@@ -46,12 +46,25 @@
     <div
       class="login-sign text-lg btn-box mt-4 mb-6 mx-6 flex gap-3 bg-[--juston-bg-w] rounded-2xl px-4 py-3"
     >
-      <RouterLink class="font-bold flex-1 text-center" :to="{name: 'login'}"
-        ><i class="bi bi-chat-right-heart mr-1.5"></i>로그인</RouterLink
+      <RouterLink class="font-bold flex-1 text-center" :to="{ name: 'login' }"
+        ><i class="bi bi-box-arrow-in-right mr-1.5"></i>로그인</RouterLink
       >
       <em class="w-[1px] bg-[#ccc]"></em>
-      <a class="font-bold flex-1 text-center" href=""
-        ><i class="bi bi-person-plus-fill mr-1.5"></i>회원가입</a
+      <RouterLink class="font-bold flex-1 text-center" :to="{ name: 'login' }"
+        ><i class="bi bi-person-plus-fill mr-1.5"></i>회원가입</RouterLink
+      >
+    </div>
+
+    <!-- 로그아웃 마이페이지 -->
+    <div
+      class="login-sign text-lg btn-box mt-4 mb-6 mx-6 flex gap-3 bg-[--juston-bg-w] rounded-2xl px-4 py-3"
+    >
+      <RouterLink class="font-bold flex-1 text-center" :to="{ name: 'login' }"
+        ><i class="bi bi-box-arrow-right mr-1.5"></i>로그아웃</RouterLink
+      >
+      <em class="w-[1px] bg-[#ccc]"></em>
+      <RouterLink class="font-bold flex-1 text-center" :to="{ name: 'login' }"
+        ><i class="bi bi-person-fill mr-1.5"></i>마이페이지</RouterLink
       >
     </div>
 
@@ -77,10 +90,13 @@
           v-for="(menu, index) in menus"
           :key="index"
           class="menu-item bg-[#fff] p-4 rounded-[16px] block hover-effect"
-          @click="setActive(index); navigateTo(menu.routerName);"
+          @click="
+            setActive(index);
+            navigateTo(menu.routerName);
+          "
           :class="{ 'juston-gradient-1-2': activeIndex === index }"
         >
-        <i
+          <i
             v-show="activeIndex === index"
             class="bi bi-arrow-right-circle mr-3"
           ></i
@@ -111,23 +127,23 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const isSizeChange = ref(false);
 const rotate = ref(false);
 const menus = [
   {
-  menuName : "Home",
-  routerName :"home",
-},
+    menuName: "Home",
+    routerName: "home",
+  },
   {
-  menuName : "컨텐츠 등록",
-  routerName :"addContent",
-},
+    menuName: "컨텐츠 등록",
+    routerName: "addContent",
+  },
   {
-  menuName : "운동 다이어리",
-  routerName :"diaryList",
-},
+    menuName: "운동 다이어리",
+    routerName: "diaryList",
+  },
 ];
 const sMenus = [
   { iconClass: "bi bi-house-heart", text: "홈" },
@@ -139,7 +155,7 @@ const router = useRouter();
 const navigateTo = (routeName) => {
   console.log(routeName);
   router.push({ name: routeName });
-}
+};
 
 const activeIndex = ref(0);
 const setActive = (index) => {
