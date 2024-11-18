@@ -63,16 +63,18 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import axios from "axios";
-import VideoPlaylist from "./VideoPlaylist.vue";
-import VideoAddPlaylist from "./VideoAddPlaylist.vue";
+import { ref, watch } from 'vue';
+import axios from '@/axios/index';
+import VideoPlaylist from './VideoPlaylist.vue';
+import VideoAddPlaylist from './VideoAddPlaylist.vue';
+
 const addListView = ref(false);
 const listView = ref(false);
 const playlistAddCount = ref(0);
 
 const props = defineProps(["count"]);
 const emit = defineEmits(["deleteVideo", "modifyVideo"]);
+
 
 const doOpenAddPlaylist = () => {
   addListView.value = true;
@@ -86,16 +88,16 @@ const doClosePlayList = (video) => {
   video.selected = false;
 };
 
-const videoList = ref([]);
+const videoList = ref([]); //http://192.168.210.75:8081/
 const requestVideoList = async () => {
-  const { data } = await axios.get("http://localhost:8080/api-video");
-  // console.dir(data);
-  videoList.value = data;
-  for (const video of videoList.value) {
-    video.selected = false;
-    video.menuView = false;
-  }
-};
+    const { data } = await axios.get("api-video");
+    // console.dir(data);
+    videoList.value = data;
+    for (const video of videoList.value) {
+        video.selected = false;
+        video.menuView = false;
+    }
+}
 
 watch(
   () => props.count,
@@ -131,21 +133,20 @@ const closeMenu = () => {
   }
 };
 const deleteVideo = async (videoNo) => {
-  try {
-    if (
-      confirm("영상 삭제 시 재생목록 내에서도 지워집니다.\n삭제하시겠습니까?")
-    ) {
-      await axios.delete("http://localhost:8080/api-video/" + videoNo);
-      emit("deleteVideo");
+    try {
+        if(confirm("영상 삭제 시 재생목록 내에서도 지워집니다.\n삭제하시겠습니까?")) {
+            await axios.delete("api-video/" + videoNo);
+            emit('deleteVideo');
+        }
+    } catch (error) {
+        alert("영상 삭제에 실패하였습니다.");
     }
-  } catch (error) {
-    alert("영상 삭제에 실패하였습니다.");
-  }
-};
+}
 
 const modifyVideo = (videoNo) => {
   emit("modifyVideo", videoNo);
 };
+
 </script>
 
 <style scoped>

@@ -17,7 +17,7 @@
           <div class="flex flex-col gap-[20px]">
             <div class="addVideo flex flex-col items-start">
               <label class="label font-bold text-lg mb-2">URL 입력</label>
-              <input class="w-[100%]" type="text" v-model.trim="URL" />
+              <input class="w-[100%] input-style-h52" type="text" v-model.trim="URL" />
             </div>
 
             <div>
@@ -94,11 +94,15 @@
 
 <script setup>
 import { ref } from "vue";
-import axios from "axios";
-import VideoList from "./VideoList.vue";
-import MusicList from "./MusicList.vue";
+import oriAxios from 'axios';
+import axios from '@/axios/index'
+import VideoList from "@/components/VideoList.vue";
+import MusicList from "@/components/MusicList.vue";
 
 const modifyState = ref(false);
+
+
+
 
 const URL = ref("");
 const youtube = ref({
@@ -184,7 +188,7 @@ const insertVideo = async () => {
   const noEmbed = "https://noembed.com/embed?url=";
   const fullURL = noEmbed + URL.value;
   // console.log(fullURL);
-  const { data } = await axios.get(fullURL);
+  const { data } = await oriAxios.get(fullURL);
   // console.dir(data);
   const { url, thumbnail_url, title } = data;
   console.log(url);
@@ -209,7 +213,7 @@ const insertVideo = async () => {
   }
 
   try {
-    await axios.post("http://localhost:8080/api-video", {
+    await axios.post("api-video", {
       video: youtube.value,
       videoExList: exData.value,
     });
@@ -238,7 +242,7 @@ const deleteVideo = () => {
 const videoNo = ref(-1);
 
 const modifyVideoView = async (no) => {
-  const { data } = await axios.get("http://localhost:8080/api-video/" + no);
+  const { data } = await axios.get("api-video/" + no);
   console.dir(data);
   URL.value = data.video.src;
   modifyState.value = true;
@@ -299,7 +303,7 @@ const modifyVideo = async () => {
   }
 
   try {
-    await axios.put("http://localhost:8080/api-video/" + videoNo.value, {
+    await axios.put("api-video/" + videoNo.value, {
       video: youtube.value,
       videoExList: exData.value,
     });
@@ -359,6 +363,7 @@ button {
   cursor: pointer;
 }
 .playList {
+  width: 80%;
   border: 1px solid #ccc;
   border-radius: 20px;
   display: flex;

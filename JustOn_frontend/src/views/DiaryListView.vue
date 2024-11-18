@@ -146,8 +146,8 @@
 <script setup>
 import { onMounted, ref, computed, onBeforeMount } from "vue";
 import axios from "axios";
-import DiaryRegistForm from "./DiaryRegistForm.vue";
-import DiaryDetail from "./DiaryDetail.vue";
+import DiaryRegistForm from "@/components/DiaryRegistForm.vue";
+import DiaryDetail from "@/components/DiaryDetail.vue";
 
 import FlatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
