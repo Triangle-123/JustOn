@@ -46,8 +46,8 @@
     <div
       class="login-sign text-lg btn-box mt-4 mb-6 mx-6 flex gap-3 bg-[--juston-bg-w] rounded-2xl px-4 py-3"
     >
-      <a class="font-bold flex-1 text-center" href=""
-        ><i class="bi bi-chat-right-heart mr-1.5"></i>로그인</a
+      <RouterLink class="font-bold flex-1 text-center" :to="{name: 'login'}"
+        ><i class="bi bi-chat-right-heart mr-1.5"></i>로그인</RouterLink
       >
       <em class="w-[1px] bg-[#ccc]"></em>
       <a class="font-bold flex-1 text-center" href=""
@@ -77,11 +77,10 @@
           v-for="(menu, index) in menus"
           :key="index"
           class="menu-item bg-[#fff] p-4 rounded-[16px] block hover-effect"
-          href="#none"
           @click="setActive(index); navigateTo(menu.routerName);"
           :class="{ 'juston-gradient-1-2': activeIndex === index }"
         >
-          <i
+        <i
             v-show="activeIndex === index"
             class="bi bi-arrow-right-circle mr-3"
           ></i
@@ -137,7 +136,8 @@ const sMenus = [
   { iconClass: "", text: "PlayList 등록" },
 ];
 const router = useRouter();
-const navigateTo = (routeName)  => {
+const navigateTo = (routeName) => {
+  console.log(routeName);
   router.push({ name: routeName });
 }
 

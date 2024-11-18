@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AddContentView from '@/views/AddContentView.vue'
 import DiaryListView from '@/views/DiaryListView.vue'
+import LoginView from '@/views/LoginView.vue'
+import { useUserStore } from '@/stores/user'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,12 +18,26 @@ const router = createRouter({
       path: '/addcontent',
       name: 'addContent',
       component: AddContentView,
+      beforeEnter: async (to, from) => {
+        const userStore = useUserStore();
+        await userStore.getUser();
+        console.log(userStore.user);
+        if(!userStore.user) {
+          return {name: 'login'};
+        }
+        return true;
+      }
     },
     {
       path: '/diaryList',
       name: 'diaryList',
       component: DiaryListView,
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
+    }
   ],
 })
 

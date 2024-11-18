@@ -67,12 +67,14 @@ import { ref, watch } from 'vue';
 import axios from '@/axios/index';
 import VideoPlaylist from './VideoPlaylist.vue';
 import VideoAddPlaylist from './VideoAddPlaylist.vue';
+
 const addListView = ref(false);
 const listView = ref(false);
 const playlistAddCount = ref(0);
 
 const props = defineProps(["count"]);
 const emit = defineEmits(["deleteVideo", "modifyVideo"]);
+
 
 const doOpenAddPlaylist = () => {
   addListView.value = true;

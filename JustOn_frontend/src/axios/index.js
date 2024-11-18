@@ -10,7 +10,7 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use((config) => {
     const token = localStorage.getItem('jwt'); // JWT 토큰을 localStorage에서 가져옴
     if (token) {
-        console.log(token);
+        // console.log(token);
         config.headers.Authorization = `Bearer ${token}`; // Authorization 헤더에 토큰 추가
     }
     return config;
