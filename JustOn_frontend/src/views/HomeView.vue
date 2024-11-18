@@ -182,7 +182,6 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   background-color: var(--balck-to-trans);
-  /* background-color: #f00; */
   position: absolute;
   left: 0;
   top: 0;
