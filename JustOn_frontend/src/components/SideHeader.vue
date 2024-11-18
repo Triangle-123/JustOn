@@ -1,12 +1,18 @@
 <template>
-  <header class="flex flex-col content-wrap-np">
+  <header
+    :class="isSizeChange ? 'w-change w-change-css' : ''"
+    class="w-[380px] flex flex-col content-wrap-np"
+  >
     <div class="top-logo pt-8 px-6 mb-11 flex justify-between">
-      <a class="logo" href=""
-        ><span class="mr-2">날 위한 운동 메이트</span>
+      <a class="logo flex items-end" href="">
+        <span class="mr-2 leading-[16px]">날 위한 운동 메이트</span>
         <img class="inline-block" src="../assets/logo.svg" alt="" />
       </a>
       <i
-        @click="[(rotate = !rotate), sizeChange]"
+        @click="
+          rotate = !rotate;
+          sizeChange();
+        "
         :class="{ 'rotate-180': rotate }"
         class="bi bi-arrow-left-circle cursor-pointer"
       ></i>
@@ -38,7 +44,7 @@
 
     <!-- 로그인 회원가입 -->
     <div
-      class="text-lg btn-box mt-4 mb-6 mx-6 flex gap-3 bg-[--juston-bg-w] rounded-2xl px-4 py-3"
+      class="login-sign text-lg btn-box mt-4 mb-6 mx-6 flex gap-3 bg-[--juston-bg-w] rounded-2xl px-4 py-3"
     >
       <a class="font-bold flex-1 text-center" href=""
         ><i class="bi bi-chat-right-heart mr-1.5"></i>로그인</a
@@ -51,9 +57,11 @@
 
     <!-- BLACK 영역 -->
     <div
-      class="py-10 px-6 flex flex-col flex-1 bg-[--juston-black] rounded-[36px] gap-8"
+      class="menus py-10 px-6 flex flex-col flex-1 bg-[--juston-black] rounded-[36px] gap-8"
     >
-      <div class="text-[#fff] text-center flex flex-col items-center text-base">
+      <div
+        class="txt-box text-[#fff] text-center flex flex-col items-center text-base"
+      >
         <img
           on-click=""
           class="w-[60px] h-[60px] mb-4 fill-white cursor-pointer"
@@ -64,51 +72,175 @@
         </p>
       </div>
       <!-- 메뉴 -->
-      <nav class="w-[100%] text-lg flex flex-col flex-grow gap-3">
+      <nav class="big-menu w-[100%] text-lg flex flex-col flex-grow gap-3">
         <a
           v-for="(menu, index) in menus"
           :key="index"
           class="menu-item bg-[#fff] p-4 rounded-[16px] block hover-effect"
           href="#none"
-          @click="setActive(index)"
-          :class="{ 'juston-gradient-1': activeIndex === index }"
+          @click="setActive(index); navigateTo(menu.routerName);"
+          :class="{ 'juston-gradient-1-2': activeIndex === index }"
         >
           <i
             v-show="activeIndex === index"
             class="bi bi-arrow-right-circle mr-3"
           ></i
-          >{{ menu }}
+          >{{ menu.menuName }}
+        </a>
+      </nav>
+
+      <nav
+        class="small-menu hidden w-[100%] text-lg flex justify-center items-center flex-col flex-grow gap-3"
+      >
+        <a
+          v-for="(menu, index) in sMenus"
+          :key="index"
+          class="menu-item rounded-[16px] block"
+          href="#none"
+          @click="setActive(index)"
+        >
+          <i :class="menu.iconClass" class="mr-3"></i>
         </a>
       </nav>
       <!-- CopyRight -->
-      <span class="text-white text-end flex-self-end">ⓒ HONG & YEON</span>
+      <span class="copyright text-white text-end flex-self-end"
+        >ⓒ HONG & YEON</span
+      >
     </div>
-
   </header>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from 'vue-router';
 
+const isSizeChange = ref(false);
 const rotate = ref(false);
-const menus = ["Home", "컨텐츠 등록", "운동 다이어리", "PlayList 등록"];
+const menus = [
+  {
+  menuName : "Home",
+  routerName :"home",
+},
+  {
+  menuName : "컨텐츠 등록",
+  routerName :"addContent",
+},
+  {
+  menuName : "운동 다이어리",
+  routerName :"diaryList",
+},
+];
+const sMenus = [
+  { iconClass: "bi bi-house-heart", text: "홈" },
+  { iconClass: "bi bi-patch-plus-fill", text: "컨텐츠 등록" },
+  { iconClass: "bi bi-journal-plus", text: "운동 다이어리" },
+  { iconClass: "", text: "PlayList 등록" },
+];
+const router = useRouter();
+const navigateTo = (routeName)  => {
+  router.push({ name: routeName });
+}
+
 const activeIndex = ref(0);
 const setActive = (index) => {
   activeIndex.value = index;
 };
 const width = ref();
-const sizeChange = () => {};
+const sizeChange = () => {
+  console.log("w-ch");
+  isSizeChange.value = !isSizeChange.value;
+};
+</script>
+
+<script>
+let window_scrolling;
+
+window.addEventListener("scroll", () => {
+  if (!window_scrolling) {
+    console.log("start wheeling!");
+    document.documentElement.classList.remove("scroll-hidden");
+  }
+
+  // 일정시간 뒤에 스크롤 동작 멈춤을 감지
+  clearTimeout(window_scrolling);
+  window_scrolling = setTimeout(() => {
+    console.log("stop wheeling!");
+    window_scrolling = undefined;
+    document.documentElement.classList.add("scroll-hidden");
+  }, 400);
+});
 </script>
 
 <style scoped>
 header {
   width: 380px;
   height: 100%;
+  overflow: hidden;
+  transition: all 0.8s;
   > div {
     display: flex;
   }
 }
+.w-change {
+  width: 70px;
+  overflow: hidden;
+}
+.w-change .top-logo {
+  flex-direction: column;
+  justify-content: center;
+}
+.w-change .top-logo a {
+  order: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+.w-change .top-logo a span {
+  margin-right: 0;
+  vertical-align: center;
+  text-align: center;
+}
+.w-change .top-logo a img {
+  max-width: 70px;
+  height: 30px;
+  transform: rotate(90deg);
+}
+.w-change .top-logo > i {
+  order: 0;
+  margin-bottom: 10px;
+}
 
+.w-change .profile {
+  display: none;
+}
+
+.w-change .login-sign {
+  display: none;
+}
+
+.w-change .menus {
+  justify-content: center;
+}
+.w-change .menus .big-menu {
+  display: none;
+}
+.w-change .menus .small-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.w-change .small-menu i {
+  margin-right: 0;
+  color: white;
+}
+.small-menu a:hover {
+}
+.w-change .menus .txt-box > p {
+  display: none;
+}
+.w-change .copyright {
+  writing-mode: vertical-rl;
+}
 em {
   font-weight: 800;
 }

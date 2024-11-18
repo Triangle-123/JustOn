@@ -1,16 +1,42 @@
 /* CUSTOM color var For JustOn */
 :root {
   --juston-black: #251f25;
-  --juston-gradient-1: linear-gradient(to right, #d4c6ff, #ffd8dc, #d5e2ff);
+  --juston-gradient-1: linear-gradient(
+    to right,
+    #d4c6ff,
+    #ffd8dc,
+    #faf8e0,
+    #d1efe2,
+    #d5e2ff,
+    #d4c6ff
+  );
+  --juston-gradient-3: linear-gradient(
+    to right,
+    #ffd7dd,
+    #e6cde8,
+    #c29bd8,
+    #ffebec,
+    #fde2f2
+  );
+  --juston-gradient-2: conic-gradient(
+    #d4c6ff 0% 25%,
+    #ffd8dc 25% 50%,
+    #d5e2ff 50% 75%,
+    #d1ffec 75% 100%
+  );
 
   --juston-bg-b: #424242;
   --juston-bg-w: #f9f9f9;
   --juston-bg-g: #f5f1f0;
+  --juston-bg-white: #fff;
 
   --txt-basic: #232323;
   --txt-basic45: #454545;
   --txt-basic7: #777;
   --txt-basic9: #999;
+  --txt-white: #fff;
+
+  --balck-to-trans: #251f25;
 }
 
 /* color palette from <https://github.com/vuejs/theme> */
