@@ -38,16 +38,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean signUp(User user) {
-		String exist = userDao.existsById(user.getUserId());
-		System.out.println("isExist : " + exist);
-		if(exist != null) {
-			System.out.println("id 중복");
-			return false;
-		}
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		user.setRole("USER");
-		
-		System.out.println(user);
 		return userDao.insertUser(user) == 1;
 	}
 

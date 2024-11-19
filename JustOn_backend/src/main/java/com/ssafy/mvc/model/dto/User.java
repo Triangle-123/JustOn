@@ -151,7 +151,6 @@ public class User {
 				+ ", detailAddress=" + detailAddress + ", nickname=" + nickname + ", birth=" + birth + ", role=" + role
 				+ ", userProfile=" + userProfile + "]";
 	}
-
 	
 	
 }

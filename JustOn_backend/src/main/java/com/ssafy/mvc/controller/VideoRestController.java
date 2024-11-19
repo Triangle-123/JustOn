@@ -39,7 +39,8 @@ public class VideoRestController {
 	@PostMapping
 	public ResponseEntity<String> addVideo(@RequestBody AddVideoDTO addVideoDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			addVideoDto.getVideo().setUserId(userDetails.getUsername());
+			
+			addVideoDto.getVideo().setUserId("ssafy");
 //			System.out.println(addDto.video);
 			if(videoService.addVideo(addVideoDto)) {
 				return ResponseEntity.ok("영상이 등록되었습니다.");
