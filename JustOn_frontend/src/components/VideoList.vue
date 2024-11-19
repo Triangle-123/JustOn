@@ -2,14 +2,13 @@
   <div class="container overflow-hidden">
     <div class="list-wrap my-scrollbar" v-if="videoList !== ''">
       <div
+        @click="modifyVideo(video.videoNo)"
         class="list p-3 flex justify-between items-center relative border-solid border-gray-200 border-b rounded-[16px] hover:bg-[#f6f6f6] cursor-pointer"
         v-for="video in videoList"
       >
-        <span
-          @click="modifyVideo(video.videoNo)"
-          class="ellipsis w-[400px] inline-block"
-          >{{ video.title }}</span
-        >
+        <span class="ellipsis max-width-[600px] inline-block">{{
+          video.title
+        }}</span>
 
         <div class="flex items-center">
           <button class="add-btn mr-3" @click="selectVideo(video)">
@@ -63,10 +62,10 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import axios from '@/axios/index';
-import VideoPlaylist from './VideoPlaylist.vue';
-import VideoAddPlaylist from './VideoAddPlaylist.vue';
+import { ref, watch } from "vue";
+import axios from "@/axios/index";
+import VideoPlaylist from "./VideoPlaylist.vue";
+import VideoAddPlaylist from "./VideoAddPlaylist.vue";
 
 const addListView = ref(false);
 const listView = ref(false);
@@ -74,7 +73,6 @@ const playlistAddCount = ref(0);
 
 const props = defineProps(["count"]);
 const emit = defineEmits(["deleteVideo", "modifyVideo"]);
-
 
 const doOpenAddPlaylist = () => {
   addListView.value = true;
@@ -90,14 +88,14 @@ const doClosePlayList = (video) => {
 
 const videoList = ref([]); //http://192.168.210.75:8081/
 const requestVideoList = async () => {
-    const { data } = await axios.get("api-video");
-    // console.dir(data);
-    videoList.value = data;
-    for (const video of videoList.value) {
-        video.selected = false;
-        video.menuView = false;
-    }
-}
+  const { data } = await axios.get("api-video");
+  // console.dir(data);
+  videoList.value = data;
+  for (const video of videoList.value) {
+    video.selected = false;
+    video.menuView = false;
+  }
+};
 
 watch(
   () => props.count,
@@ -133,20 +131,21 @@ const closeMenu = () => {
   }
 };
 const deleteVideo = async (videoNo) => {
-    try {
-        if(confirm("영상 삭제 시 재생목록 내에서도 지워집니다.\n삭제하시겠습니까?")) {
-            await axios.delete("api-video/" + videoNo);
-            emit('deleteVideo');
-        }
-    } catch (error) {
-        alert("영상 삭제에 실패하였습니다.");
+  try {
+    if (
+      confirm("영상 삭제 시 재생목록 내에서도 지워집니다.\n삭제하시겠습니까?")
+    ) {
+      await axios.delete("api-video/" + videoNo);
+      emit("deleteVideo");
     }
-}
+  } catch (error) {
+    alert("영상 삭제에 실패하였습니다.");
+  }
+};
 
 const modifyVideo = (videoNo) => {
   emit("modifyVideo", videoNo);
 };
-
 </script>
 
 <style scoped>

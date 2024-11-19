@@ -89,7 +89,7 @@
         <a
           v-for="(menu, index) in menus"
           :key="index"
-          class="menu-item bg-[#fff] p-4 rounded-[16px] block hover-effect"
+          class="menu-item bg-[#fff] p-4 rounded-[16px] block hover-effect cursor-pointer"
           @click="
             setActive(index);
             navigateTo(menu.routerName);

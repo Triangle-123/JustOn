@@ -1,6 +1,6 @@
 <template>
   <div class="content-wrap relative" :class="{ dark: isDarkMode }">
-    <div :class="{ hidden: isHidden }" class="black-box"></div>
+    <!-- <div :class="{ hidden: isHidden }" class="black-box"></div> -->
     <div
       class="content-scroll width-[1200px] flex flex-col items-center gap-[80px]"
     >
@@ -13,7 +13,7 @@
               toggleDarkMode();
               toggleDarkMode2();
             "
-            class="inline-block fixed z-1000 p-7 bg-white rounded-[50%] border-solid border-2 border-gray-100 shadow-xl mb-6 cursor-pointer"
+            class="inline-block fixed z-1000 p-7 bg-white rounded-[50%] border-solid border-2 border-gray-100 shadow-xl mb-6 cursor-pointer juston-gradient-1-2"
           >
             <img src="../assets/on-mark.svg" alt="" />
           </div>
