@@ -1,52 +1,60 @@
 <template>
-  <div class="container">
-    <div class="list-wrap">
+  <div class="container overflow-hidden">
+    <div class="list-wrap my-scrollbar" v-if="musicList !== ''">
       <div
+        @click="modifyMusic(music.musicNo)"
         class="list p-3 flex justify-between items-center relative border-solid border-gray-200 border-b rounded-[16px] hover:bg-[#f6f6f6] cursor-pointer"
-        v-for="video in videoList"
+        v-for="music in musicList"
       >
-        <span
-          @click="modifyVideo(video.videoNo)"
-          class="ellipsis w-[500px] inline-block"
-          >{{ video.title }}</span
-        >
-        <button class="add-btn mr-3" @click="selectVideo(video)">
-          재생목록설정
-        </button>
-        <i
-          @click="openMenu(video)"
-          class="three-dot cursor-pointer bi bi-three-dots-vertical"
-        ></i>
-        <div
-          class="menu-box absolute right-0 top-0"
-          v-if="video.menuView"
-          v-click-outside="closeMenu"
-        >
-          <div @click="modifyVideo(video.videoNo)">
-            <p>수정</p>
-          </div>
-          <hr />
-          <div @click="deleteVideo(video.videoNo)">
-            <p>삭제</p>
+        <span class="ellipsis max-width-[600px] inline-block">{{
+          music.title
+        }}</span>
+
+        <div class="flex items-center">
+          <button class="add-btn mr-3" @click="selectMusic(music)">
+            PlayList설정
+          </button>
+          <div>
+            <i
+              @click="openMenu(music)"
+              class="three-dot cursor-pointer bi bi-three-dots-vertical"
+            ></i>
+            <div
+              class="menu-box absolute right-[50px] top-0 z-50"
+              v-if="music.menuView"
+              v-click-outside="closeMenu"
+            >
+              <div @click="modifyMusic(music.musicNo)">
+                <p>수정</p>
+              </div>
+              <hr />
+              <div @click="deleteMusic(music.musicNo)">
+                <p>삭제</p>
+              </div>
+            </div>
           </div>
         </div>
-        <hr />
       </div>
       <!-- 재생목록 선택 -->
     </div>
-    <div class="" v-for="video in videoList">
-      <VideoPlaylist
-        v-if="video.selected"
+
+    <div class="" v-for="music in musicList">
+      <MusicPlaylist
+        v-if="music.selected"
         @deletePlaylist="playlistAddCount--"
         :count="playlistAddCount"
-        :videoNo="video.videoNo"
+        :musicNo="music.musicNo"
         @open-add-playlist-view="doOpenAddPlaylist"
-        @close-playlist-view="doClosePlayList(video)"
+        @close-playlist-view="doClosePlayList(music)"
       />
     </div>
-    <div v-if="videoList === ''">등록된 영상이 없습니다.</div>
+
+    <div class="text-center text-lg my-6" v-if="musicList === ''">
+      등록된 영상이 없습니다.
+    </div>
   </div>
-  <VideoAddPlaylist
+
+  <MusicAddPlaylist
     @success-add="playlistAddCount++"
     @close-add-playlist-view="doCloseAddPlaylist"
     v-if="addListView"
@@ -55,15 +63,16 @@
 
 <script setup>
 import { ref, watch } from "vue";
-import axios from "axios";
-import VideoPlaylist from "./VideoPlaylist.vue";
-import VideoAddPlaylist from "./VideoAddPlaylist.vue";
+import axios from "@/axios/index";
+import MusicPlaylist from "./MusicPlaylist.vue";
+import MusicAddPlaylist from "./MusicAddPlaylist.vue";
+
 const addListView = ref(false);
 const listView = ref(false);
 const playlistAddCount = ref(0);
 
 const props = defineProps(["count"]);
-const emit = defineEmits(["deleteVideo", "modifyVideo"]);
+const emit = defineEmits(["deleteMusic", "modifyMusic"]);
 
 const doOpenAddPlaylist = () => {
   addListView.value = true;
@@ -73,81 +82,81 @@ const doCloseAddPlaylist = () => {
   addListView.value = false;
 };
 
-const doClosePlayList = (video) => {
-  video.selected = false;
+const doClosePlayList = (music) => {
+  music.selected = false;
 };
 
-const videoList = ref([]);
-const requestVideoList = async () => {
-  const { data } = await axios.get("http://localhost:8080/api-video");
+const musicList = ref([]); //http://192.168.210.75:8081/
+const requestMusicList = async () => {
+  const { data } = await axios.get("api-music");
   // console.dir(data);
-  videoList.value = data;
-  for (const video of videoList.value) {
-    video.selected = false;
-    video.menuView = false;
+  musicList.value = data;
+  for (const music of musicList.value) {
+    music.selected = false;
+    music.menuView = false;
   }
 };
 
 watch(
   () => props.count,
   () => {
-    requestVideoList();
+    requestMusicList();
   }
 );
-requestVideoList();
+requestMusicList();
 
-const selectVideo = (selectedVideo) => {
-  if (selectedVideo.selected) {
-    selectedVideo.selected = false;
+const selectMusic = (selectedMusic) => {
+  if (selectedMusic.selected) {
+    selectedMusic.selected = false;
   } else {
-    for (const video of videoList.value) {
-      video.selected = false;
+    for (const music of musicList.value) {
+      music.selected = false;
     }
-    selectedVideo.selected = true;
+    selectedMusic.selected = true;
   }
 };
-const openMenu = (selectedVideo) => {
-  if (selectedVideo.menuView) {
-    selectedVideo.menuView = false;
+const openMenu = (selectedMusic) => {
+  if (selectedMusic.menuView) {
+    selectedMusic.menuView = false;
   } else {
-    for (const video of videoList.value) {
-      video.menuView = false;
+    for (const music of musicList.value) {
+      music.menuView = false;
     }
-    selectedVideo.menuView = true;
+    selectedMusic.menuView = true;
   }
 };
 const closeMenu = () => {
-  for (const video of videoList.value) {
-    video.menuView = false;
+  for (const music of musicList.value) {
+    music.menuView = false;
   }
 };
-const deleteVideo = async (videoNo) => {
+const deleteMusic = async (musicNo) => {
   try {
     if (
-      confirm("영상 삭제 시 재생목록 내에서도 지워집니다.\n삭제하시겠습니까?")
+      confirm(
+        "해당 음악 영상 삭제 시 재생목록 내에서도 지워집니다.\n삭제하시겠습니까?"
+      )
     ) {
-      await axios.delete("http://localhost:8080/api-video/" + videoNo);
-      emit("deleteVideo");
+      await axios.delete("api-music/" + musicNo);
+      emit("deleteMusic");
     }
   } catch (error) {
-    alert("영상 삭제에 실패하였습니다.");
+    alert("해당 영상 삭제에 실패하였습니다.");
   }
 };
 
-const modifyVideo = (videoNo) => {
-  emit("modifyVideo", videoNo);
+const modifyMusic = (musicNo) => {
+  emit("modifyMusic", musicNo);
 };
 </script>
 
 <style scoped>
 .container {
-  display: flex;
+  /* display: flex; */
 }
 
 .list {
-  margin: 1vh 0;
   position: relative;
-  width: 40vw;
 }
 
 .add-btn {
@@ -201,5 +210,14 @@ span {
   height: 30px;
   background-color: #eee;
   border-radius: 30px;
+}
+.list-wrap {
+  /* background-color: #eee; */
+  overflow-y: scroll;
+  height: 100%;
+}
+.content {
+  height: 100%;
+  overflow-y: scroll;
 }
 </style>
