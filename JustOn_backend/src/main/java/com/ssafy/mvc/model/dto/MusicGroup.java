@@ -1,26 +1,26 @@
 package com.ssafy.mvc.model.dto;
 
 public class MusicGroup {
-	private int playlistNo;
-	private String userId;
 	private String playlistName;
+	private String userId;
 	private String groupDesc;
+	private String createDate;
 	public MusicGroup() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public MusicGroup(int no, String userId, String name, String groupDesc) {
+	public MusicGroup(String playlistName, String userId, String groupDesc, String createDate) {
 		super();
-		this.playlistNo = no;
+		this.playlistName = playlistName;
 		this.userId = userId;
-		this.playlistName = name;
 		this.groupDesc = groupDesc;
+		this.createDate = createDate;
 	}
-	public int getNo() {
-		return playlistNo;
+	public String getPlaylistName() {
+		return playlistName;
 	}
-	public void setNo(int no) {
-		this.playlistNo = no;
+	public void setPlaylistName(String playlistName) {
+		this.playlistName = playlistName;
 	}
 	public String getUserId() {
 		return userId;
@@ -28,21 +28,23 @@ public class MusicGroup {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getName() {
-		return playlistName;
-	}
-	public void setName(String name) {
-		this.playlistName = name;
-	}
 	public String getGroupDesc() {
 		return groupDesc;
 	}
 	public void setGroupDesc(String groupDesc) {
 		this.groupDesc = groupDesc;
 	}
+	public String getCreateDate() {
+		return createDate;
+	}
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
+	}
 	@Override
 	public String toString() {
-		return "MusicGroup [no=" + playlistNo + ", userId=" + userId + ", name=" + playlistName + ", groupDesc=" + groupDesc + "]";
+		return "MusicGroup [playlistName=" + playlistName + ", userId=" + userId + ", groupDesc=" + groupDesc
+				+ ", createDate=" + createDate + "]";
 	}
+	
 	
 }

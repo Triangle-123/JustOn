@@ -217,7 +217,7 @@ import FlatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 
 import { ref, onMounted, nextTick, watch } from "vue";
-import axios from "axios";
+import axios from "@/axios/index";
 
 const props = defineProps({
   modifyDiary: {
@@ -293,7 +293,7 @@ const handleSearch = (query) => {
 async function schVideoList() {
   try {
 
-    const { data } = await axios.get("http://localhost:8080/api-video");
+    const { data } = await axios.get("api-video");
     exercises.value = data;
 
     console.dir(exercises.value);
@@ -360,11 +360,10 @@ const registDiary = async () => {
     regDate: date.value,
     content: content.value,
     diaryExList: addedVideoList.value,
-    userId: "ssafy",
   };
   try {
     const response = await axios.post(
-      "http://localhost:8080/api-diary/diary",
+      "api-diary/diary",
       diary
     );
     emit("update-list");
@@ -387,7 +386,6 @@ const updateDiary = async () => {
     regDate: date.value,
     content: content.value,
     diaryExList: addedVideoList.value,
-    userId: "ssafy",
   };
   if (!diary.content) {
     alert("운동소감을 입력해주세요.");
@@ -395,7 +393,7 @@ const updateDiary = async () => {
   }
   try {
     const response = await axios.put(
-      `http://localhost:8080/api-diary/diary/${diary.diaryNo}`,
+      `api-diary/diary/${diary.diaryNo}`,
       diary
     );
     emit("update-list");
@@ -413,7 +411,7 @@ async function selectDiaryByRegDate() {
 
   try {
     const { data } = await axios.get(
-      `http://localhost:8080/api-diary/diary/list/${date.value}`
+      `api-diary/diary/list/${date.value}`
     );
 
     // 응답 데이터 유효성 검사

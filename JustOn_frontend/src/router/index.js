@@ -4,6 +4,7 @@ import AddContentView from '@/views/AddContentView.vue'
 import DiaryListView from '@/views/DiaryListView.vue'
 import LoginView from '@/views/LoginView.vue'
 import { useUserStore } from '@/stores/user'
+import SignUpView from '@/views/SignUpView.vue'
 
 
 const router = createRouter({
@@ -37,6 +38,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: SignUpView,
     }
   ],
 })

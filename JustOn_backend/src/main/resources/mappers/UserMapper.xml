@@ -6,7 +6,7 @@
 	
 	<!-- select pw 빼기  -->
 	<select id="selectUser" parameterType="String" resultType="User">
-		SELECT user_id, name, email, gender, address, nickname, birth, role
+		SELECT user_id, name, email, gender, post_code, address, extra_address, detail_address, nickname, birth, role
 		FROM user
 		WHERE user_id = #{userId}
 	</select>
@@ -22,13 +22,21 @@
 	</select>
 	
 	<insert id="insertUser" parameterType="User">
-		INSERT INTO user
-		VALUES(#{userId}, #{password}, #{name}, #{email}, #{gender}, #{address}, #{nickname}, #{birth}, #{role})
+		INSERT INTO user(user_id, password, name, email, gender, post_code, address, 
+		<if test="extraAddress != null">
+		extra_address,
+		</if>
+		detail_address, nickname, birth, role)
+		VALUES(#{userId}, #{password}, #{name}, #{email}, #{gender}, #{postCode}, #{address}, 
+		<if test="extraAddress != null">
+		#{extraAddress},
+		</if>
+		#{detailAddress}, #{nickname}, #{birth}, #{role})
 	</insert> 
 	
 	<update id="updateUser" parameterType="User">
 		UPDATE user
-		SET email = #{email}, gender = #{gender}, address = #{address}, nickname = #{nickname}, birth = #{birth}
+		SET email = #{email}, gender = #{gender}, post_code = #{postCode}, address = #{address}, extra_address = #{extraAddress}, detail_address = #{detailAddress}, nickname = #{nickname}, birth = #{birth}
 		WHERE user_id = #{userId}
 	</update>
 	

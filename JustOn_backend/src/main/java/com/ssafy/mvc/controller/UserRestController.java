@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +50,19 @@ public class UserRestController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();
+		}
+	}
+	
+	@GetMapping("/{userId}")	
+	public ResponseEntity<?> checkExisted(@PathVariable("userId") String userId) {
+		try {
+			if(userService.checkExisted(userId)) {
+				return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 아이디입니다.");
+			}
+			return ResponseEntity.ok("사용 가능한 아이디입니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("서버에 연결할 수 없습니다. 다시 시도해주세요.");
 		}
 	}
 	

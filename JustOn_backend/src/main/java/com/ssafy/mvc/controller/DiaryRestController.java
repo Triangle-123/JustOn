@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.mvc.model.dto.CustomUserDetails;
 import com.ssafy.mvc.model.dto.Diary;
 import com.ssafy.mvc.model.dto.DiaryEx;
 import com.ssafy.mvc.model.dto.DiarySearch;
@@ -39,17 +41,23 @@ public class DiaryRestController {
 	// 다이어리 등록 
 	// 등록 시 동시에 부위별 테이블 등록
 	@PostMapping("/diary")
-	public ResponseEntity<?> insertDiary(@RequestBody Diary diary) {
+	public ResponseEntity<?> insertDiary(@RequestBody Diary diary, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		
-		boolean isInsert = diaryService.writeDiary(diary);
+		diary.setUserId(userDetails.getUsername());
+		
 		// DiaryExList 추가하기
 		List<DiaryEx> ExList = diary.getDiaryExList();
 		
 		// 등록 후 조회에 사용될 수 있도록 diaryNo 받아서 return
-		int diaryNo = diary.getDiaryNo();
-		if(isInsert) {
-			return ResponseEntity.status(HttpStatus.CREATED).body(diaryNo);
-		} else {
+		try {
+			if(diaryService.writeDiary(diary)) {
+				int diaryNo = diary.getDiaryNo();
+				return ResponseEntity.status(HttpStatus.CREATED).body(diaryNo);
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("All Insert Failed");
+			}
+			
+		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("All Insert Failed");
 		}
 	}
@@ -57,27 +65,26 @@ public class DiaryRestController {
 	
 	// 특정 유저의 다이어리 전체 조회 
 	@GetMapping("/diary") // @RequestBody(required = false) 
-	public ResponseEntity<?> getUserDiaryList(DiarySearch diarySearch, HttpSession session, User user) {
+	public ResponseEntity<?> getUserDiaryList(DiarySearch diarySearch, HttpSession session, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		
 		// 체크 필요 : 일반적인 방식 session.getAttribute("userId")
 //		String userId = session.getId();
 //		String userId = user.getUserId();
-		String userId = "ssafy";
-		String pw = user.getPassword();
 		
-		System.out.println(userId);
-		System.out.println(pw);
-		
-		Map<String, Object> result = diaryService.selectAllDiary(diarySearch, userId);
+		Map<String, Object> result = diaryService.selectAllDiary(diarySearch, userDetails.getUsername());
 		// 이게 맞나??
 		List<Diary> list = (List<Diary>) result.get("list");
 //		List<Diary> list = diaryService.selectAllDiary(userId);
 		
 		System.out.println(list);
-		if(list == null || list.size() == 0) {
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+		try {
+			if(list == null || list.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+			}
+			return ResponseEntity.status(HttpStatus.OK).body(result);			
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 	
 	
@@ -85,14 +92,18 @@ public class DiaryRestController {
 
 	// 다이어리 날짜 선택 조회
 	@GetMapping("/diary/list/{regDate}")
-	public ResponseEntity<?> getUserDiaryListByRegDate(@PathVariable("regDate") String regDate, HttpSession session) {
+	public ResponseEntity<?> getUserDiaryListByRegDate(@PathVariable("regDate") String regDate, HttpSession session, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		
 //		List<Diary> list = diaryService.selectDiaryByRegDate(session.getId(), regDate);
-		List<Diary> list = diaryService.selectDiaryByRegDate("ssafy", regDate);
-		if(list == null || list.size() == 0) {
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No diaries found by regDate");
+		List<Diary> list = diaryService.selectDiaryByRegDate(userDetails.getUsername(), regDate);
+		try {
+			if(list == null || list.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No diaries found by regDate");
+			}
+			return ResponseEntity.status(HttpStatus.OK).body(list);			
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(list);		
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(list);
 	}
 	
 	// 특정 다이어리 상세 조회 

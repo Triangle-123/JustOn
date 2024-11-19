@@ -6,7 +6,10 @@ public class User {
 	private String name;
 	private String email;
 	private String gender;
+	private int postCode;
 	private String address;
+	private String extraAddress;
+	private String detailAddress;	
 	private String nickname;
 	private String birth;
 	private String role;
@@ -18,15 +21,19 @@ public class User {
 		// TODO Auto-generated constructor stub
 	}
 
-	public User(String userId, String password, String name, String email, String gender, String address,
-			String nickname, String birth, String role, UserProfile userProfile) {
+	public User(String userId, String password, String name, String email, String gender, int postCode, String address,
+			String extraAddress, String detailAddress, String nickname, String birth, String role,
+			UserProfile userProfile) {
 		super();
 		this.userId = userId;
 		this.password = password;
 		this.name = name;
 		this.email = email;
 		this.gender = gender;
+		this.postCode = postCode;
 		this.address = address;
+		this.extraAddress = extraAddress;
+		this.detailAddress = detailAddress;
 		this.nickname = nickname;
 		this.birth = birth;
 		this.role = role;
@@ -73,12 +80,36 @@ public class User {
 		this.gender = gender;
 	}
 
+	public int getPostCode() {
+		return postCode;
+	}
+
+	public void setPostCode(int postCode) {
+		this.postCode = postCode;
+	}
+
 	public String getAddress() {
 		return address;
 	}
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getExtraAddress() {
+		return extraAddress;
+	}
+
+	public void setExtraAddress(String extraAddress) {
+		this.extraAddress = extraAddress;
+	}
+
+	public String getDetailAddress() {
+		return detailAddress;
+	}
+
+	public void setDetailAddress(String detailAddress) {
+		this.detailAddress = detailAddress;
 	}
 
 	public String getNickname() {
@@ -116,9 +147,11 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + ", gender="
-				+ gender + ", address=" + address + ", nickname=" + nickname + ", birth=" + birth + ", role=" + role
+				+ gender + ", postCode=" + postCode + ", address=" + address + ", extraAddress=" + extraAddress
+				+ ", detailAddress=" + detailAddress + ", nickname=" + nickname + ", birth=" + birth + ", role=" + role
 				+ ", userProfile=" + userProfile + "]";
 	}
 
+	
 	
 }

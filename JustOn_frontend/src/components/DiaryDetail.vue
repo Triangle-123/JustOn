@@ -72,7 +72,7 @@
 
 <script setup>
 import { watch } from "vue";
-import axios from "axios";
+import axios from "@/axios/index";
 const emit = defineEmits(["closeDetail", "openModifyDiary", "updateList"]);
 
 const props = defineProps({
@@ -88,7 +88,7 @@ async function deleteDiary() {
     try {
       if (confirm("삭제하시겠습니까?")) {
         await axios.delete(
-          "http://localhost:8080/api-diary/diary/" + diary.diaryNo
+          "api-diary/diary/" + diary.diaryNo
         );
         console.log("삭제완료");
         emit("closeDetail");

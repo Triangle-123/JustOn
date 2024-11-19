@@ -44,11 +44,10 @@ public class UserServiceImpl implements UserService {
 			System.out.println("id 중복");
 			return false;
 		}
-		System.out.println(user.getPassword());	
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		user.setRole("USER");
 		
-		
+		System.out.println(user);
 		return userDao.insertUser(user) == 1;
 	}
 
@@ -56,6 +55,15 @@ public class UserServiceImpl implements UserService {
 	public void modifyInfo(User user) {
 		userDao.updateUser(user);
 		
+	}
+
+	@Override
+	public boolean checkExisted(String userId) {
+		String exist = userDao.existsById(userId);
+		if(exist != null) {
+			return true;
+		}
+		return false;
 	}
 	
 }

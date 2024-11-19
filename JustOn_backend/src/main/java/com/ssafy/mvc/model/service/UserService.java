@@ -13,4 +13,6 @@ public interface UserService {
 	boolean signUp(User user);
 	
 	void modifyInfo(User user);
+	
+	boolean checkExisted(String userId);
 }

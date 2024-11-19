@@ -73,7 +73,7 @@
             class="input-style-h60"
             type="text"
             id="user_name"
-            v-model="formData.userName"
+            v-model="formData.name"
             placeholder="이름을 입력하세요"
             required
           />
@@ -105,7 +105,7 @@
                 type="radio"
                 id="gender-male"
                 v-model="formData.gender"
-                value="male"
+                value="M"
               />
               <!-- <span class="radio"></span> -->
               <span
@@ -119,7 +119,7 @@
                 type="radio"
                 id="gender-female"
                 v-model="formData.gender"
-                value="female"
+                value="F"
               />
               <span
                 class="block h-[60px] leading-10 border-solid border-2 border-gray-200 py-2 px-4 text-center cursor-pointer relative"
@@ -176,9 +176,9 @@
             <input
               class="input-style-h60 flex-1"
               type="text"
-              id="sample6_postcode"
+              id="sample6_postCode"
               placeholder="우편번호"
-              v-model="formData.address.postcode"
+              v-model="formData.postCode"
               required
             />
             <button
@@ -194,7 +194,7 @@
             type="text"
             id="sample6_address"
             placeholder="주소"
-            v-model="formData.address.adr"
+            v-model="formData.address"
             required
           />
           <div class="flex gap-3">
@@ -203,15 +203,14 @@
               type="text"
               id="sample6_extraAddress"
               placeholder="참고항목"
-              v-model="formData.address.extraAddress"
-              required
+              v-model="formData.extraAddress"
             />
             <input
               class="input-style-h60"
               type="text"
               id="sample6_detailAddress"
               placeholder="상세주소"
-              v-model="formData.address.detailAddress"
+              v-model="formData.detailAddress"
               required
             />
           </div>
@@ -432,7 +431,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, reactive, onMounted, computed, watch } from "vue";
+import axios from '@/axios/index';
 
 const isPwComplete = ref(false);
 
@@ -457,15 +457,13 @@ const selectedExercises = reactive({
 const formData = reactive({
   userId: "",
   password: "",
-  userName: "",
+  name: "",
   email: "",
   gender: "",
-  address: {
-    postcode: "",
-    adr: "",
-    detailAddress: "",
-    extraAddress: "",
-  },
+  postCode: "", 
+  address: "",
+  detailAddress: "",
+  extraAddress: "",
   nickname: "",
   birth: "",
 });
@@ -484,7 +482,7 @@ const signUpData = {
 
 // 아이디 중복 검사 결과
 const userIdError = ref(null);
-
+const userIdAvailable = ref(false);
 // 아이디 중복 검사 함수
 const checkUserIdAvailability = async (event) => {
   event.preventDefault(); // 폼 제출을 막음
@@ -497,18 +495,27 @@ const checkUserIdAvailability = async (event) => {
 
   try {
     // 서버로 중복 검사 요청을 보냄 (예시 URL, 실제 API 엔드포인트로 수정 필요)
-    const response = await fetch(`/api/check-user-id?userId=${userId}`);
-    const data = await response.json();
-
-    if (!data.isAvailable) {
-      userIdError.value = "사용 가능한 아이디입니다."; // 사용가능 아이디
-    } else {
-      userIdError.value = "이미 사용 중인 아이디입니다."; // 중복 아이디
-    }
+    console.log("check");
+    const response = await axios.get('api-user/' + formData.userId);
+    console.dir(response);
+    userIdError.value = response.data;
+    userIdAvailable.value = true;
+    // if (response.status === 200) {
+    //    // 사용가능 아이디
+    // } else {
+    //   userIdError.value = "이미 사용 중인 아이디입니다."; // 중복 아이디
+    // }
   } catch (error) {
-    userIdError.value = "서버에 연결할 수 없습니다. 다시 시도해주세요.";
+    console.log(error);
+    userIdError.value = error.response.data;
+    userIdAvailable.value = false;
   }
 };
+
+// 중복검사 후 아이디 변경 시 중복검사 해제
+watch(() => formData.userId, () => {
+  userIdAvailable.value = false;
+})
 
 //==========================
 // 비밀번호 유효성 검사
@@ -596,7 +603,7 @@ const isPasswordValid = computed(
     passwordRegex.test(formData.password) &&
     formData.password === confirmPassword
 );
-const isUsernameValid = computed(() => formData.userName.length >= 5);
+const isnameValid = computed(() => formData.name.length >= 5);
 const isEmailValid = computed(() => emailPattern.test(formData.email));
 
 // ** 약관동의 및 개인정보
@@ -608,11 +615,13 @@ const canSubmit = computed(() => {
   return (
     formData.userId && // ★ ID 중복검사
     isPasswordValid && // 비밀번호 Valid
-    isUsernameValid && // 성명 Valid
+    isnameValid && // 성명 Valid
     isEmailValid && // 이메일 Valid
     formData.gender && // 성별
     formData.nickname && // 닉네임
     formData.birth && // 생일
+    formData.postCode && // 우편번호
+    formData.address && // 주소
     isTermsAccepted.value && // 이용약관
     isPrivacyAccepted.value // 개인정보
   );
@@ -623,10 +632,17 @@ const canSubmit = computed(() => {
 //=======================
 const responseMessage = ref("");
 const handleSignup = async () => {
+  if(!userIdAvailable.value) {
+    responseMessage.value = "아이디 중복 검사를 진행해주세요.";
+    alert(responseMessage.value);
+    return;
+  }
+  console.dir(formData);
   try {
     // axios로 POST 요청 보내기
-    const response = await axios.post("/api/signup", signUpData);
-
+    // const response = await axios.post("api-user/signup", signUpData);
+    const response = await axios.post("api-user/signup", formData);
+  
     // 서버 응답 성공 시 처리
     responseMessage.value = "회원가입 성공! 환영합니다.";
     alert(responseMessage.value);
@@ -690,17 +706,17 @@ function openAddressSearch() {
         }
         // 조합된 참고항목을 해당 필드에 넣는다.
         // document.getElementById("sample6_extraAddress").value = extraAddr;
-        formData.address.extraAddress = extraAddr;
+        formData.extraAddress = extraAddr;
       } else {
         // document.getElementById("sample6_extraAddress").value = "";
-        formData.address.extraAddress = "";
+        formData.extraAddress = "";
       }
 
       // 우편번호와 주소 정보를 해당 필드에 넣는다.
-      // document.getElementById("sample6_postcode").value = data.zonecode;
-      formData.address.postcode = data.zonecode;
+      // document.getElementById("sample6_postCode").value = data.zonecode;
+      formData.postCode = data.zonecode;
       // document.getElementById("sample6_address").value = addr;
-      formData.address.adr = addr;
+      formData.address = addr;
 
       // 커서를 상세주소 필드로 이동한다.
       document.getElementById("sample6_detailAddress").focus();

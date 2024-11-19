@@ -145,7 +145,7 @@
 
 <script setup>
 import { onMounted, ref, computed, onBeforeMount } from "vue";
-import axios from "axios";
+import axios from "@/axios/index";
 import DiaryRegistForm from "@/components/DiaryRegistForm.vue";
 import DiaryDetail from "@/components/DiaryDetail.vue";
 
@@ -164,7 +164,7 @@ const pr = ref({
 });
 
 async function getUserDiaryList() {
-  const { data } = await axios.get(`http://localhost:8080/api-diary/diary`);
+  const { data } = await axios.get(`api-diary/diary`);
   // diaryList.value = data.list;
   console.log(data.list);
   if (data.list !== undefined) {
@@ -206,7 +206,7 @@ const changePage = async (page) => {
   // 페이지 변경 시 새로운 데이터를 불러옴
   try {
     const { data } = await axios.get(
-      `http://localhost:8080/api-diary/diary?page=${page}`
+      `api-diary/diary?page=${page}`
     );
 
     if (data.list !== undefined) {
@@ -233,7 +233,7 @@ async function selectDiaryByRegDate() {
     try {
       console.log("실행됨");
       const { data } = await axios.get(
-        "http://localhost:8080/api-diary/diary/list/" + date.value
+        "api-diary/diary/list/" + date.value
       );
       diaryList.value = data;
     } catch (error) {

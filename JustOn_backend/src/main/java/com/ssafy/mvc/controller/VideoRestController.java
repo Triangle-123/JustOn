@@ -39,7 +39,6 @@ public class VideoRestController {
 	@PostMapping
 	public ResponseEntity<String> addVideo(@RequestBody AddVideoDTO addVideoDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			
 			addVideoDto.getVideo().setUserId(userDetails.getUsername());
 //			System.out.println(addDto.video);
 			if(videoService.addVideo(addVideoDto)) {
