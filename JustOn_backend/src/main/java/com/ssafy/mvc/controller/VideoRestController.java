@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.mvc.model.dto.AddVideoDTO;
+import com.ssafy.mvc.model.dto.CustomUserDetails;
 import com.ssafy.mvc.model.dto.Video;
 import com.ssafy.mvc.model.dto.VideoEx;
 import com.ssafy.mvc.model.dto.VideoGroup;
@@ -35,10 +37,9 @@ public class VideoRestController {
 	}	
 	
 	@PostMapping
-	public ResponseEntity<String> addVideo(@RequestBody AddVideoDTO addVideoDto) {
+	public ResponseEntity<String> addVideo(@RequestBody AddVideoDTO addVideoDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			
-			addVideoDto.getVideo().setUserId("ssafy");
+			addVideoDto.getVideo().setUserId(userDetails.getUsername());
 //			System.out.println(addDto.video);
 			if(videoService.addVideo(addVideoDto)) {
 				return ResponseEntity.ok("영상이 등록되었습니다.");
@@ -66,9 +67,9 @@ public class VideoRestController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<?> titleList() {
+	public ResponseEntity<?> titleList(@AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			List<Video> list = videoService.titleList("ssafy");
+			List<Video> list = videoService.titleList(userDetails.getUsername());
 			if(list != null && !list.isEmpty()) {
 				return ResponseEntity.ok(list);
 			}
@@ -94,9 +95,9 @@ public class VideoRestController {
 	}
 	
 	@PutMapping("/{no}")
-	public ResponseEntity<String> modifyVideo(@PathVariable("no") int videoNo, @RequestBody AddVideoDTO addVideoDto) {
+	public ResponseEntity<String> modifyVideo(@PathVariable("no") int videoNo, @RequestBody AddVideoDTO addVideoDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			addVideoDto.getVideo().setUserId("ssafy");
+			addVideoDto.getVideo().setUserId(userDetails.getUsername());
 			if(videoService.modifyVideo(videoNo, addVideoDto)) {
 				return ResponseEntity.ok("영상 수정을 완료했습니다.");
 			}
@@ -148,9 +149,9 @@ public class VideoRestController {
 	}
 	
 	@GetMapping("/playlist/{videoNo}")
-	public ResponseEntity<?> showPlaylist(@PathVariable("videoNo") int videoNo) {
+	public ResponseEntity<?> showPlaylist(@PathVariable("videoNo") int videoNo, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			Map<String, Object> result = videoService.showPlaylist(videoNo, "ssafy");
+			Map<String, Object> result = videoService.showPlaylist(videoNo, userDetails.getUsername());
 //			List<VideoGroup> list = (List<VideoGroup>) result.get("list");
 			if(result != null && !result.isEmpty()) {
 				return ResponseEntity.ok(result);
@@ -163,8 +164,8 @@ public class VideoRestController {
 	}
 	
 	@PostMapping("/playlist")
-	public ResponseEntity<String> addPlaylist(@RequestBody VideoGroup videoGroup) {
-		videoGroup.setUserId("ssafy");
+	public ResponseEntity<String> addPlaylist(@RequestBody VideoGroup videoGroup, @AuthenticationPrincipal CustomUserDetails userDetails) {
+		videoGroup.setUserId(userDetails.getUsername());
 		try {
 			if(videoService.addPlaylist(videoGroup)) {
 				return ResponseEntity.ok("재생목록이 추가되었습니다.");
@@ -177,10 +178,10 @@ public class VideoRestController {
 	}
 		
 	@DeleteMapping("/playlist/{categoryName}")
-	public ResponseEntity<String> removePlaylist(@PathVariable("categoryName") String categoryName) 	{
+	public ResponseEntity<String> removePlaylist(@PathVariable("categoryName") String categoryName, @AuthenticationPrincipal CustomUserDetails userDetails) 	{
 		VideoGroup videoGroup = new VideoGroup();
 		videoGroup.setCategoryName(categoryName);
-		videoGroup.setUserId("ssafy");
+		videoGroup.setUserId(userDetails.getUsername());
 		try {
 			if(videoService.removePlaylist(videoGroup)) {
 				return ResponseEntity.ok("재생목록이 삭제되었습니다.");

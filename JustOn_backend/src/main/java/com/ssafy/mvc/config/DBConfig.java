@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @MapperScan("com.ssafy.mvc.model.dao")
+
 public class DBConfig {
 //	@Bean
 //    DataSource datasource() {

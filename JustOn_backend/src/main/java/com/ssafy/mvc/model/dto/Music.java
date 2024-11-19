@@ -4,23 +4,25 @@ public class Music {
 	private int musicNo;
 	private String musicId;
 	private String src;
+	private String title;
 	private String userId;
 	public Music() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Music(int no, String musicId, String src, String userId) {
+	public Music(int musicNo, String musicId, String src, String title, String userId) {
 		super();
-		this.musicNo = no;
+		this.musicNo = musicNo;
 		this.musicId = musicId;
 		this.src = src;
+		this.title = title;
 		this.userId = userId;
 	}
-	public int getNo() {
+	public int getMusicNo() {
 		return musicNo;
 	}
-	public void setNo(int no) {
-		this.musicNo = no;
+	public void setMusicNo(int musicNo) {
+		this.musicNo = musicNo;
 	}
 	public String getMusicId() {
 		return musicId;
@@ -34,6 +36,12 @@ public class Music {
 	public void setSrc(String src) {
 		this.src = src;
 	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
 	public String getUserId() {
 		return userId;
 	}
@@ -42,7 +50,8 @@ public class Music {
 	}
 	@Override
 	public String toString() {
-		return "Music [no=" + musicNo + ", musicId=" + musicId + ", src=" + src + ", userId=" + userId + "]";
+		return "Music [musicNo=" + musicNo + ", musicId=" + musicId + ", src=" + src + ", title=" + title + ", userId="
+				+ userId + "]";
 	}
 	
 }
