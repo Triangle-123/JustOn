@@ -8,20 +8,26 @@
         <h2><i class="bi bi-arrow-right-circle-fill mr-3"></i>컨텐츠 등록</h2>
       </div>
     </div>
-    <div class="content-scroll">
-      <div class="mb-20">
+    <div class="content-scroll flex flex-col items-center">
+      <!-- 영상 Section -->
+      <div class="mb-20 max-w-screen-xl w-[100%]">
         <h3 class="mb-4">영상 추가/수정</h3>
 
-        <div class="flex flex-row gap-[40px]">
+        <div class="flex flex-row gap-[30px]">
           <!-- LEFT -->
           <div class="flex flex-col gap-[20px]">
             <div class="addVideo flex flex-col items-start">
               <label class="label font-bold text-lg mb-2">URL 입력</label>
-              <input class="w-[100%] input-style-h52" type="text" v-model.trim="URL" />
+              <input
+                placeholder="추가하실 운동 영상의 링크를 넣어주세요."
+                class="w-[100%] input-style-h52"
+                type="text"
+                v-model.trim="URL"
+              />
             </div>
 
             <div>
-              <label class="label">영상 운동 강도</label>
+              <label class="label mr-4">영상 운동 강도</label>
               <select
                 class="border-solid border-[1px] border-gray-300 p-3 rounded-[16px]"
                 v-model="weight"
@@ -88,23 +94,82 @@
 
         <!-- <img :src="youtube.thumb"/> -->
       </div>
+      <!-- 음악 Section -->
+      <div class="mb-20 max-w-screen-xl w-[100%]">
+        <h3 class="mb-4">음악 추가/수정</h3>
+
+        <div class="flex flex-col gap-[20px] w-[100%]">
+          <!-- TOP -->
+          <div class="flex gap-[14px]">
+            <div class="addMusic flex items-center">
+              <label class="label font-bold text-lg mb-2 whitespace-nowrap mr-4"
+                >URL 입력</label
+              >
+              <input
+                class="w-[100%] w-[500px] input-style-h52"
+                type="text"
+                v-model.trim="musicURL"
+                placeholder="추가하실 음악 영상의 링크를 넣어주세요."
+              />
+            </div>
+
+            <div>
+              <button
+                class="h-[80px] btn-m-black"
+                type="button"
+                @click="insertMusic"
+                v-if="!musicModifyState"
+              >
+                추가하기
+              </button>
+              <div class="flex justify-end" v-if="musicModifyState">
+                <button
+                  class="flex-1 btn-m-black mr-3"
+                  type="button"
+                  @click="modifyMusic"
+                >
+                  수정하기
+                </button>
+                <button
+                  class="flex-1 btn-m-black"
+                  type="button"
+                  @click="cancelMusicModify"
+                >
+                  취소
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOTTOM -->
+          <div class="misicPlayList">
+            <MusicList
+              @deleteVideo="deleteMusic"
+              @modifyMusic="modifyVideoView"
+              :count="count"
+            />
+          </div>
+        </div>
+
+        <!-- <img :src="youtube.thumb"/> -->
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import oriAxios from 'axios';
-import axios from '@/axios/index'
+import oriAxios from "axios";
+import axios from "@/axios/index";
 import VideoList from "@/components/VideoList.vue";
 import MusicList from "@/components/MusicList.vue";
 
 const modifyState = ref(false);
-
-
-
+const musicModifyState = ref(false); // 음악 상태
 
 const URL = ref("");
+const musicURL = ref(""); // 음악 url 담기
+
 const youtube = ref({
   videoId: null,
   src: null,
@@ -113,6 +178,18 @@ const youtube = ref({
   title: null,
 });
 
+// 음악 youtube data 객체
+const youtubeMusic = ref({
+  musicId: null,
+  src: null,
+  // author : null,
+  title: null,
+  // thumb: null,
+});
+
+// =======================
+// Video - S
+// =======================
 const weight = ref("none");
 const exData = ref([
   {
@@ -164,8 +241,9 @@ const exData = ref([
     selCnt: 0,
   },
 ]);
-
 const count = ref(0);
+
+// 영상 추가 --------------------------------------------------------------------
 const insertVideo = async () => {
   if (!URL.value) {
     alert("영상 URL을 입력해주세요.");
@@ -235,6 +313,7 @@ const insertVideo = async () => {
   }
 };
 
+// 영상 삭제 --------------------------------------------------------------------
 const deleteVideo = () => {
   count.value--;
   cancelModify();
@@ -245,15 +324,34 @@ const modifyVideoView = async (no) => {
   const { data } = await axios.get("api-video/" + no);
   console.dir(data);
   URL.value = data.video.src;
+
   modifyState.value = true;
+  for (const ex of exData.value) {
+    ex.selected = false;
+  }
+
   for (const index in data.videoEx) {
-    if(data.videoEx[index].selCnt !== 0) {
-      console.log(data.videoEx[index].part);
-      console.log(exData.value.indexOf(data.videoEx[index].part));
-      exData.value[exData.value.indexOf(data.videoEx[index].part)].selCnt = 1;
-      exData.value[exData.value.indexOf(data.videoEx[index].part)].selected = true;
+    const exDataIndex = exData.value.findIndex(
+      (item) => item.part === data.videoEx[index].part
+    );
+
+    if (data.videoEx[index].selCnt !== 0) {
+      // console.log(data.videoEx[index].part);
+      // console.log(exData.value.indexOf(data.videoEx[index].part));
+      exData.value[exDataIndex].selCnt = 1;
+      exData.value[exDataIndex].selected = true;
     }
   }
+  // for (const index in data.videoEx) {
+  //   if (data.videoEx[index].selCnt !== 0) {
+  //     console.log(data.videoEx[index].part);
+  //     console.log(exData.value.indexOf(data.videoEx[index].part));
+  //     exData.value[exData.value.indexOf(data.videoEx[index].part)].selCnt = 1; // ***
+  //     exData.value[
+  //       exData.value.indexOf(data.videoEx[index].part)
+  //     ].selected = true;
+  //   }
+  // }
   weight.value = data.videoEx[0].exWeight;
   videoNo.value = no;
 };
@@ -326,6 +424,122 @@ const cancelModify = () => {
   }
   weight.value = "none";
 };
+
+// =======================
+// Music - S
+// =======================
+//  INSERT Music - S
+
+const musicCount = ref(0);
+
+// 음악 추가 --------------------------------------------------------------------
+
+const insertMusic = async () => {
+  if (!musicURL.value) {
+    alert("음악 영상 URL을 입력해주세요.");
+    return;
+  }
+
+  const noEmbed = "https://noembed.com/embed?url=";
+  const fullURL = noEmbed + URL.value;
+  // console.log(fullURL);
+  const { data } = await oriAxios.get(fullURL);
+  // console.dir(data);
+  const { url, thumbnail_url, title } = data;
+  // console.log(url);
+  const repUrl = url.replace("https://youtu.be/", "");
+  let id = repUrl.replace("https://www.youtube.com/watch?v=", "");
+  if (id.indexOf("embed/") !== -1) {
+    id = id.split("embed/")[1];
+  }
+  id = id.split("?")[0];
+  id = id.split("&")[0];
+  // console.log(id);
+  youtubeMusic.value.musicId = id;
+  youtubeMusic.value.src = "https://www.youtube.com/embed/" + id;
+  // youtube.value.author = author_name;
+  // youtubeMusic.value.thumb = thumbnail_url;
+  youtubeMusic.value.title = title;
+  // console.log(youtube.value);
+
+  try {
+    await axios.post("api-music", {
+      music: youtubeMusic.value,
+    });
+    musicCount.value++;
+    musicURL.value = "";
+  } catch (error) {
+    // console.dir(error);
+    const { response } = error;
+    alert(response.data);
+    musicURL.value = "";
+  }
+};
+
+// 음악 삭제 --------------------------------------------------------------------
+const deleteMusic = () => {
+  musicCount.value--;
+  cancelMusicModify();
+};
+const musicNo = ref(-1);
+
+// 음악 영상 수정 데이터 전송--------------------------------------------------------------
+const modifyMusic = async () => {
+  if (!musicURL.value) {
+    alert("음악 영상 URL을 입력해주세요.");
+    return;
+  }
+
+  const noEmbed = "https://noembed.com/embed?url=";
+  const fullURL = noEmbed + URL.value;
+  // console.log(fullURL);
+  const { data } = await oriAxios.get(fullURL);
+  // console.dir(data);
+  const { url, thumbnail_url, title } = data;
+  // console.log(url);
+  const repUrl = url.replace("https://youtu.be/", "");
+  let id = repUrl.replace("https://www.youtube.com/watch?v=", "");
+  if (id.indexOf("embed/") !== -1) {
+    id = id.split("embed/")[1];
+  }
+  id = id.split("?")[0];
+  id = id.split("&")[0];
+  // console.log(id);
+  youtubeMusic.value.musicId = id;
+  youtubeMusic.value.src = "https://www.youtube.com/embed/" + id;
+  // youtube.value.author = author_name;
+  // youtube.value.thumb = thumbnail_url;
+  youtubeMusic.value.title = title;
+  // console.log(youtube.value);
+
+  try {
+    await axios.put("api-music/" + musicNo.value, {
+      music: youtubeMusic.value,
+    });
+    alert("음악 영상 수정을 완료했습니다.");
+    cancelMusicModify();
+    weight.value = "none";
+  } catch (error) {
+    const { response } = error;
+    alert(response.data);
+  }
+};
+
+// 음악 영상 수정 시 기존 데이터 세팅--------------------------------------------------------------
+const modifyMusicView = async (no) => {
+  const { data } = await axios.get("api-music/" + no);
+  console.dir(data);
+  musicURL.value = data.music.src;
+  musicModifyState.value = true;
+
+  musicNo.value = no;
+};
+
+// 음악 영상 Form 초기화  --------------------------------------------------------------
+const cancelMusicModify = () => {
+  musicModifyState.value = false;
+  musicURL.value = "";
+};
 </script>
 
 <style scoped>
@@ -335,6 +549,23 @@ const cancelModify = () => {
   row-gap: 24px;
 }
 .addVideo {
+  display: flex;
+  > div {
+    margin-left: 10px;
+    /* background-color: #ccc; */
+    /* border: 0; */
+    /* border-radius: 20px; */
+    /* height: 30px; */
+    /* width: 50vh; */
+    display: flex;
+    > input {
+      /* background: none; */
+      /* border: 0; */
+      /* width: 80%; */
+    }
+  }
+}
+.addMusic {
   display: flex;
   > div {
     margin-left: 10px;
@@ -365,15 +596,22 @@ button {
   cursor: pointer;
 }
 .playList {
-  width: 80%;
+  width: 100%;
   border: 1px solid #ccc;
   border-radius: 20px;
   display: flex;
   /* overflow-y: scroll; */
   height: 400px;
   padding: 10px 20px;
-  /* > div {
-  } */
+}
+.misicPlayList {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  display: flex;
+  /* overflow-y: scroll; */
+  height: 220px;
+  padding: 10px 20px;
 }
 .cbx {
   /* margin-right: 1.2vw; */
@@ -393,7 +631,7 @@ button {
   transition: 80ms;
 }
 .label {
-  margin-right: 0.8vw;
+  /* margin-right: 0.8vw; */
 }
 select {
   margin-right: 3vw;
