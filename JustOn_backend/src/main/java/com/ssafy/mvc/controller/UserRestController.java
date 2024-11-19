@@ -39,22 +39,51 @@ public class UserRestController {
 		this.authenticationManager = authenticationManager;
 	}
 
-	@GetMapping("/login")
-	public String loginForm() {
-		return "/user/loginform";
+	@GetMapping("/userInfo")
+	public ResponseEntity<?> userInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+		try {
+			User user = userService.userInfo(userDetails.getUsername());
+			if(user != null) {
+				return ResponseEntity.ok(user);
+			}
+			return ResponseEntity.noContent().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().build();
+		}
 	}
 	
-	// 사용자 로그인
-	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody User user, HttpSession session) {
-		User tmp = userService.login(user.getUserId(), user.getPassword());
-		if(tmp == null) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 아이디 입니다.");
+	@GetMapping("/{userId}")	
+	public ResponseEntity<?> checkExisted(@PathVariable("userId") String userId) {
+		try {
+			if(userService.checkExisted(userId)) {
+				return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 아이디입니다.");
+			}
+			return ResponseEntity.ok("사용 가능한 아이디입니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("서버에 연결할 수 없습니다. 다시 시도해주세요.");
 		}
-		user.setPassword(null);
-		session.setAttribute("loginUser", tmp);
-		return ResponseEntity.ok().build();
 	}
+	
+//	// 사용자 로그인
+//	@PostMapping("/login")
+//	public ResponseEntity<?> login(@RequestBody LoginDTO loginDto, HttpSession session) {
+//		
+//		System.out.println(loginDto);
+//		
+////		Authentication authentication = authenticationManager.authenticate(
+////	                new UsernamePasswordAuthenticationToken(loginDto.getUserName(), loginDto.getPassword()));
+////		System.out.println(authentication);
+//		//		User tmp = userService.login(user.getUserId(), user.getPassword());
+////		System.out.println(user);
+////		if(tmp == null) {
+////			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 아이디 입니다.");
+////		}
+////		user.setPassword(null);
+////		session.setAttribute("loginUser", tmp);
+//		return ResponseEntity.ok().build();
+//	}
 	
 	// 사용자 로그인  - JWT 적용
 //	@PostMapping("/login")
