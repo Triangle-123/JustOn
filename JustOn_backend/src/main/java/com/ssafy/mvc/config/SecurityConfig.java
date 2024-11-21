@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,6 +32,12 @@ public class SecurityConfig {
         this.authenticationConfiguration = authenticationConfiguration;
         this.corsConfigurationSource = corsConfigurationSource;
         this.jwtUtil = jwtUtil;
+    }
+    
+    // WebSecurityCustomizer Bean 등록
+    @Bean
+    WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/assets/**", "/js/**", "/img/**", "/uploads/**");
     }
 
     //AuthenticationManager Bean 등록
@@ -74,6 +81,7 @@ public class SecurityConfig {
 		// 경로별 인가 작업
 		http
 			.authorizeHttpRequests((auth) -> auth
+//					.requestMatchers("*").permitAll()
 					.requestMatchers("/api-user/login").permitAll()
 					.requestMatchers("/api-user/**").permitAll() // 모든 권한에 대해 허용
 //					.requestMatchers("/admin").hasRole("ADMIN") // ADMIN 권한을 가진 경우만 허용
@@ -93,5 +101,9 @@ public class SecurityConfig {
          	.sessionManagement((session) -> session
          			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); 
 		return http.build();
+		
+		
 	}
+	
+	
 }

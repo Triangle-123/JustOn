@@ -23,7 +23,6 @@
               <span class="font-bold text-lg mr-6">날짜 조회</span>
               <flat-pickr
                 v-model="date"
-                :config="config"
                 placeholder="조회할 다이어리 날짜 선택"
                 class="date-input mr-2 w-[50%] h-[52px] border-solid border-2 border-gray-200 rounded-[16px] px-4 py-2"
               ></flat-pickr>
@@ -49,6 +48,7 @@
                 <tr
                   class="hover:bg-[#f6f6f6] cursor-pointer"
                   v-for="diary in diaryList"
+                  :key="diary.diaryNo"
                   @click="diaryDetailShow(diary)"
                 >
                   <td class="p-3 w-[25%] text-center">
@@ -166,9 +166,11 @@ const pr = ref({
 async function getUserDiaryList() {
   const { data } = await axios.get(`api-diary/diary`);
   // diaryList.value = data.list;
+
+  console.log("getUserDiaryList => data.list.value");
   console.log(data.list);
   if (data.list !== undefined) {
-    if (data.list.length > 1) {
+    if (data.list.length > 0) {
       diaryList.value = data.list.sort(
         (a, b) => new Date(b.regDate) - new Date(a.regDate)
       );
@@ -205,9 +207,7 @@ const changePage = async (page) => {
   // if (page < 1 || page > pr.value.lastPage) return;
   // 페이지 변경 시 새로운 데이터를 불러옴
   try {
-    const { data } = await axios.get(
-      `api-diary/diary?page=${page}`
-    );
+    const { data } = await axios.get(`api-diary/diary?page=${page}`);
 
     if (data.list !== undefined) {
       if (data.list.length > 1) {
@@ -232,10 +232,15 @@ async function selectDiaryByRegDate() {
   if (date.value) {
     try {
       console.log("실행됨");
-      const { data } = await axios.get(
-        "api-diary/diary/list/" + date.value
-      );
-      diaryList.value = data;
+      const { data } = await axios.get("api-diary/diary/list/" + date.value);
+      diaryList.value.length = 0;
+      console.log("날짜 조회 다이어리 : ", diaryList.value);
+      if (data) {
+        diaryList.value.push(data);
+      }
+      console.log("날짜 조회 다이어리 : ", diaryList.value);
+      console.log("날짜 조회 다이어리 내용 : ", diaryList.value.content);
+      console.log(diaryList.value);
     } catch (error) {
       console.error("데이터 불러오는 중 오류", error);
     }
@@ -248,7 +253,17 @@ async function selectDiaryByRegDate() {
 const selectedDiary = ref({});
 const isDiaryDetailShow = ref(false);
 
-const diaryDetailShow = (diary) => {
+const diaryDetailShow = async (diary) => {
+  console.log("diaryDetailShow => diary");
+  console.log(diary);
+
+  // 받아온 다이어리의 No. 로 ExList 세팅 후 보내주기
+  // const diaryNo = diary.diaryNo;
+  // const { data } = await axios.get(`api-diary/diary/exlist/${diaryNo}`);
+  // console.log("### diaryDetailShow => data");
+  // console.log(data);
+  // modifyDiary.value = { ...diary, diaryExList: data };
+  // selectedDiary.value = { ...diary, diaryExList: data };
   selectedDiary.value = diary;
   modifyDiary.value = diary;
   isDiaryDetailShow.value = true;
@@ -276,6 +291,8 @@ const closeDetail = () => {
 // openModifyDiary
 const modifyDiary = ref({});
 const openModifyDiary = (diary) => {
+  console.log("diary");
+  console.log(diary);
   modifyDiary.value = diary;
   isModify.value = true;
   isShowRegisterForm.value = true;

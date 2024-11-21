@@ -56,12 +56,24 @@ public class DiaryServiceImpl implements DiaryService {
 
 	// 다이어리 날짜 선택 조회
 	@Override
-	public List<Diary> selectDiaryByRegDate(String userId, String regDate) {
+	public Diary selectDiaryByRegDate(String userId, String regDate) {
 		Map<String, String> info = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
+		
 		info.put("userId", userId);
 		info.put("regDate", regDate);
+		
+		Diary diary = diaryDao.selectDiaryByRegDate(info);
+		if(diary == null) return null;
+		int diaryNo = diary.getDiaryNo();
+		diary.setDiaryExList(diaryDao.selectDiaryExList(diaryNo));
+		return diary;
+		
+//		result.put("diary", diary);
+//		result.put("ExList", diaryDao.selectDiaryExList(diaryNo));
+		
 		// 확인 필요
-		return diaryDao.selectDiaryByRegDate(info);
+//		return result;
 	}
 	
 	// 다이어리 상세 조회
@@ -74,7 +86,16 @@ public class DiaryServiceImpl implements DiaryService {
 	@Override
 	public boolean modifyDiary(Diary diary) {
 		int result = diaryDao.modifyDiary(diary);
-		return result == 1;
+		// 기존 다이어리 Ex 삭제 후
+		int result2 = diaryDao.deleteDiaryExList(diary.getDiaryNo());
+		// 돌리면서 저장
+		int result3 = 1;
+		for(DiaryEx diaryEx : diary.getDiaryExList()) {
+			diaryEx.setDiaryNo(diary.getDiaryNo());
+			result3 = diaryDao.insertDiaryExList(diaryEx);
+		}
+//		int result3 = diaryDao.insertDiaryExList(diary.getDiaryExList());
+		return result >= 1 && result2 >= 1 && result3 >= 1;
 	}
 
 	// 다이어리 삭제
@@ -84,5 +105,11 @@ public class DiaryServiceImpl implements DiaryService {
 		return result == 1;
 	}
 
+	// 특정 다이어리의 운동 리스트 조회
+	@Override
+	public List<DiaryEx> selectDiaryExList(int diaryNo) {
+		List<DiaryEx> result = diaryDao.selectDiaryExList(diaryNo);
+		return result;
+	}
 
 }

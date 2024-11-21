@@ -596,7 +596,7 @@ button {
   cursor: pointer;
 }
 .playList {
-  width: 100%;
+  max-width: 700px;
   border: 1px solid #ccc;
   border-radius: 20px;
   display: flex;

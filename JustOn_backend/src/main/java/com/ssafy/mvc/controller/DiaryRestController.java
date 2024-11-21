@@ -46,7 +46,7 @@ public class DiaryRestController {
 		diary.setUserId(userDetails.getUsername());
 		
 		// DiaryExList 추가하기
-		List<DiaryEx> ExList = diary.getDiaryExList();
+		List<DiaryEx> exList = diary.getDiaryExList();
 		
 		// 등록 후 조회에 사용될 수 있도록 diaryNo 받아서 return
 		try {
@@ -93,16 +93,14 @@ public class DiaryRestController {
 	// 다이어리 날짜 선택 조회
 	@GetMapping("/diary/list/{regDate}")
 	public ResponseEntity<?> getUserDiaryListByRegDate(@PathVariable("regDate") String regDate, HttpSession session, @AuthenticationPrincipal CustomUserDetails userDetails) {
-		
-//		List<Diary> list = diaryService.selectDiaryByRegDate(session.getId(), regDate);
-		List<Diary> list = diaryService.selectDiaryByRegDate(userDetails.getUsername(), regDate);
 		try {
-			if(list == null || list.isEmpty()) {
+			Diary diary = diaryService.selectDiaryByRegDate(userDetails.getUsername(), regDate);
+			if(diary == null) {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No diaries found by regDate");
 			}
-			return ResponseEntity.status(HttpStatus.OK).body(list);			
+			return ResponseEntity.status(HttpStatus.OK).body(diary);			
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(list);		
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();		
 		}
 	}
 	
@@ -110,6 +108,8 @@ public class DiaryRestController {
 	@GetMapping("/diary/{diaryNo}")
 	public ResponseEntity<?> getUserDiaryList(@PathVariable("diaryNo") int diaryNo) {
 		Diary diary = diaryService.selectOneDiaryByNo(diaryNo);
+		diary.setDiaryExList(diaryService.selectDiaryExList(diaryNo));
+		System.out.println(diary);
 		// 이게 맞나??
 		if(diary == null) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No diaries found");
@@ -117,18 +117,18 @@ public class DiaryRestController {
 		return ResponseEntity.status(HttpStatus.OK).body(diary);
 	}
 	
-	
-	// 특정 유저의 다이어리 수정
-	@PutMapping("/diary/{diaryNo}")
-	public ResponseEntity<?> updateUserDiary(@PathVariable("diaryNo") int diaryNo, @RequestBody Diary diary) {
-		diary.setDiaryNo(diaryNo);
-		boolean isUpdated = diaryService.modifyDiary(diary);
-		if(isUpdated) {
-			return ResponseEntity.status(HttpStatus.OK).body(diaryNo);
-		}else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update Failed");
-		}
-	}
+
+    // 특정 유저의 다이어리 수정
+    @PutMapping("/diary/{diaryNo}")
+    public ResponseEntity<?> updateUserDiary(@PathVariable("diaryNo") int diaryNo, @RequestBody Diary diary) {
+        diary.setDiaryNo(diaryNo);
+        boolean isUpdated = diaryService.modifyDiary(diary);
+        if(isUpdated) {
+            return ResponseEntity.status(HttpStatus.OK).body(diaryNo);
+        }else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update Failed");
+        }
+    }
 	
 	// 다이어리 삭제 
 	@DeleteMapping("/diary/{diaryNo}")
@@ -139,6 +139,17 @@ public class DiaryRestController {
 		}else {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Deleted Failed");
 		}
+	}
+	
+	// 특정 유저의 다이어리에 등록된 exList 받아오기
+	@GetMapping("/diary/exlist/{diaryNo}")
+	public ResponseEntity<?> selectDiaryExList(@PathVariable("diaryNo") int diaryNo) {
+		List<DiaryEx> list = diaryService.selectDiaryExList(diaryNo);
+		if(list.size() < 0) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("ExList Server Error");
+		}
+		System.out.println("다이어리 운동 리스트 불러오기 성공");
+		return ResponseEntity.status(HttpStatus.OK).body(list);
 	}
 	
 	

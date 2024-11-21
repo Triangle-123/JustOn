@@ -23,11 +23,15 @@
         <div class="w-20 h-20 rounded-[50%]">
           <img class="" src="../assets/juston-default-profile.png" />
         </div>
-        <a class="absolute bottom-0 right-0" href=""
+        <!-- 유저 마이페이지 이동 -->
+        <RouterLink
+          :to="{ name: 'mypage' }"
+          class="absolute bottom-0 right-0"
+          href=""
           ><i
             class="bi bi-gear shadow-lg shadow-slate-800/10 bg-[#fff] block w-6 h-6 rounded-[50%] text-center leading-6"
           ></i
-        ></a>
+        ></RouterLink>
       </div>
 
       <div calss="profile-txt">
@@ -50,7 +54,7 @@
         ><i class="bi bi-box-arrow-in-right mr-1.5"></i>로그인</RouterLink
       >
       <em class="w-[1px] bg-[#ccc]"></em>
-      <RouterLink class="font-bold flex-1 text-center" :to="{ name: 'login' }"
+      <RouterLink class="font-bold flex-1 text-center" :to="{ name: 'signup' }"
         ><i class="bi bi-person-plus-fill mr-1.5"></i>회원가입</RouterLink
       >
     </div>
@@ -63,7 +67,7 @@
         ><i class="bi bi-box-arrow-right mr-1.5"></i>로그아웃</RouterLink
       >
       <em class="w-[1px] bg-[#ccc]"></em>
-      <RouterLink class="font-bold flex-1 text-center" :to="{ name: 'login' }"
+      <RouterLink class="font-bold flex-1 text-center" :to="{ name: 'mypage' }"
         ><i class="bi bi-person-fill mr-1.5"></i>마이페이지</RouterLink
       >
     </div>

@@ -50,38 +50,22 @@
             운동 내용 추가
           </legend>
           <!-- 추가 form -->
-          <div class="flex gap-2 justify-between items-end">
+          <div class="flex gap-3 justify-between items-end">
             <div class="flex-1">
               <div class="flex flex-col flex-1">
                 <label class="block font-bold text-s text-gray-500" for="sel-ex"
                   >운동 영상 선택</label
                 >
                 <div
-                  class="relative h-[52px] border-solid border-gray-200 border-2 rounded-[16px] pt-2 indent-4"
+                  class="relative bg-[rgba(0,0,0,0)] h-[52px] border-solid border-gray-200 border-2 rounded-[16px] indent-4 cursor-pointer"
+                  @click="openSchModal"
                 >
-                  <multiselect
-                    class="relative left-0 top-0 w-inherit leading-[32px] z-[1000] bg-white border-b-solid border-b-gray-200 border-2 rounded-[16px] text-gray-500"
-                    v-model="title"
-                    :options="filteredExercises"
-                    :searchable="true"
-                    :clearable="true"
-                    label="title"
-                    placeholder="입력하실 영상 제목을 입력해주세요 :)"
-                    @search="handleSearch"
-                  />
+                  <!-- 영상 검색 버튼 -->
+                  <input class="leading-[52px] w-[100%] relative z-[0]" v-model="title"  placeholder="영상을 검색해주세요." disabled></input>
+                  <button class="w-[52px] h-[52px] absolute right-0 top-0">
+                    <i class="bi bi-search text-[#000]"></i>
+                  </button>
                 </div>
-                <!-- <input @keydown.enter="addList" placeholder="오늘은 어떤 영상으로 운동 하셨나요?"
-                  class="video-sel w-[100%] h-[52px] border-solid border-2 border-gray-200 rounded-[16px] px-4 py-2"
-                  name=""
-                  id="sel-ex" v-model="title">
-                </input>
-                <button
-                  type="button"
-                  @click="openSch"
-                  class="sch-btn btn-m-white absolute right-0 top-0"
-                >
-                  <i class="bi bi-search"></i>
-                </button> -->
               </div>
             </div>
             <div>
@@ -170,29 +154,46 @@
         </div>
       </form>
 
-      <!-- 검색 및 영상 선택 모달창 -->
-      <!-- <div
+      <!-- 검색 및 영상 선택 모달창 " -->
+      <div
         :class="{ hidden: !isSearch }"
         class="fixed left-0 top-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.3)] flex justify-center items-center"
       >
-        <div class="con-title content-wrap pb-2 mb-6 w-[400px] h-[300px]">
+        <div class="con-title content-wrap pb-2 mb-6 w-[400px] h-[600px]">
           <div class="gap-2 items-end">
             <h2 class="mb-3">
               <i class="bi bi-chevron-right mr-2"></i>운동 영상 검색
             </h2>
-            <multiselect
-              class="border-solid border-gray-300 border-2 rounded-[16px] pl-4 text-gray-300"
-              v-model="selectedExercise"
-              :options="filteredExercises"
-              :searchable="true"
-              :clearable="true"
-              label="title"
-              placeholder="입력하실 영상 제목을 입력해주세요 :)"
-              @search="handleSearch"
+
+            <!-- 검색 인풋 -->
+            <input
+              type="text"
+              @input="handleSearch"
+              placeholder="영상 제목을 검색해주세요"
+              class="w-full border-2 border-gray-200 rounded-[16px] px-4 py-2 mb-4"
             />
+
+            <!-- 검색 결과 리스트 -->
+            <ul class="overflow-y-auto h-[300px] bg-[#ccc] max-h-[300px]">
+              <li
+                v-for="ex in filteredExercises"
+                :key="ex.videoNo"
+                @click="selectExercise(ex)"
+                class="bg-[#f00] p-2 hover:bg-gray-100 cursor-pointer"
+              >
+                <!-- {{ ex.videoNo || "제목없음" }} -->
+                {{ ex.title || "제목없음" }}
+              </li>
+            </ul>
+
+            <!-- 닫기 버튼 -->
+            <button @click="isSearch = false" class="w-full mt-4 btn-m-white">
+              닫기
+            </button>
+            <!-- ------- -->
           </div>
         </div>
-      </div> -->
+      </div>
       <!-- 모달 End -->
 
       <!-- 대기창 -->
@@ -213,12 +214,13 @@
 </template>
 
 <script setup>
+import { ref, onMounted, nextTick, watch, reactive, computed } from "vue";
 import FlatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
-
-import { ref, onMounted, nextTick, watch } from "vue";
+import Multiselect from "vue-multiselect";
 import axios from "@/axios/index";
 
+const emit = defineEmits(["update-list"]);
 const props = defineProps({
   modifyDiary: {
     type: Object,
@@ -232,25 +234,32 @@ const props = defineProps({
   },
 });
 
-// 수정해야하는 다이어리 반영
-const modifyDiary = ref({});
-modifyDiary.value = props.modifyDiary;
-console.dir(modifyDiary.value);
-
-import Multiselect from "vue-multiselect";
-
-const emit = defineEmits(["update-list"]);
-
-// 로딩 관련 변수
-const isLoading = ref(false);
-
 // 다이어리 내용 관련 변수
 const date = ref("");
 const content = ref("");
 const diaryNo = ref("");
 const isUpdate = ref(false);
 isUpdate.value = props.isModify;
-console.log(isUpdate.value);
+const userExercises = reactive([]); // 유저가 추가한 모든 영상
+const filteredExercises = reactive([]);
+const videoNo = ref("");
+// 검색에 따라 필터링된 영상들
+// ==========================//
+// 다이어리 수정
+// ==========================//
+const modifyDiary = ref({});
+modifyDiary.value = props.modifyDiary;
+date.value = modifyDiary.value.regDate;
+console.log("modifyDiary +++++++++++ ###",modifyDiary.value);
+console.log("modifyDiary +++++++++++ ###",date.value);
+
+
+// ---------로딩창 관련--------//
+const isLoading = ref(false);
+
+// =========================//
+// 다이어리 추가 및 영상 검색 기능
+// =========================//
 
 // 다이어리 Ex 추가 관련 변수
 const title = ref("");
@@ -258,61 +267,139 @@ const playNum = ref(1);
 const diaryExNoCount = ref(1);
 const addedVideoList = ref([]);
 
-// 운동 영상 검색 관련 변수
+// 운동 영상 검색 관련 변수/함수
 const isSearch = ref(false);
+const openSchModal = () => {
+  isSearch.value = true;
+  // userVideoList();
+  console.log("openSchModal -> userExercises.value");
+  console.dir(userExercises.value);
+  // filteredExercises.value = userExercises.value;
+  console.log("openSchModal -> filteredExercises.value");
+  // console.dir(filteredExercises.value);
+};
+
+// 사용자가 등록한 운동 영상 리스트 모두 받아옴
+async function userVideoList() {
+  try {
+    const { data } = await axios.get("api-video");
+    for (const d of data) {
+      filteredExercises.push(d);
+      userExercises.push(d);
+    }
+
+    // filteredExercises.value = data;
+    console.log("userExercises.value");
+    // console.dir(userExercises.value);
+    // console.dir(userExercises.value[0].title);
+  } catch (error) {
+    console.error("userExercises 데이터 불러오는 중 오류", error);
+    return null;
+  }
+}
+onMounted(() => {
+  userVideoList(); // 컴포넌트가 마운트될 때 데이터 로딩
+});
+
+// watch(
+//   () => filteredExercises.value,
+//   (newfilteredExercises) => {
+//     console.log("watch 발동");
+//     filteredExercises.value = newfilteredExercises;
+//   }
+// );
 
 
-const exercises = ref([
-  { title: "팔 굽혀 펴기" },
-  { title: "스쿼트" },
-  { title: "윗몸 일으키기" },
-  { title: "자전거 타기" },
-  { title: "등산" },
-]);
+// 사용자가 입력할 때마다 호출되는 검색 함수 multiselect @search="handleSearch"
+// const handleSearch = (query) => {
 
-// 운동 영상 검색 관련 함수
+//   // 제목을 기준으로 대소문자 구분 없이 필터링
+// filteredExercises.value = userExercises.value.filter((exercise) =>
+//   exercise.title.toLowerCase().includes(query.toLowerCase())
+// );
+
+//   // 쿼리와 일치하는 제목을 필터링
+// filteredExercises.value = userExercises
+//   .filter((exercise) => exercise.toLowerCase().includes(query.toLowerCase()))
+//   .map((exercise) => ({
+//     title: exercise.title,
+//     videoNo: exercise.videoNo,
+//   }));
+
+//   console.log("Filtered Object:", filteredExercises.value[0]);
+//   // filteredExercises.value = userExercises.filter((exercise) => {
+//   //   title = exercise.title.toLowerCase().includes(query.toLowerCase()),
+//   //   videoNo = exercise.videoNo,
+//   //   // return {
+//   //   //   title: exercise.title.toLowerCase().includes(query.toLowerCase()),
+//   //   //   videoNo: exercise.videoNo,
+//   //   // };
+//   // });
+// };
+
+const searchQuery = ref("");
+// const selectedExercise = ref("");
+
+const handleSearch = (query) => {
+  filteredExercises.splice(0, filteredExercises.length);
+  // userVideoList();
+  console.log("handleSearch -> userExercises.value");
+  console.dir(userExercises);
+  console.log("이벤트", query);
+  const Ex = userExercises.filter((exercise) =>
+    exercise.title.toLowerCase().includes(query.target.value.toLowerCase())
+  );
+  console.log("handleSearch -> Ex.value");
+  console.dir(Ex);
+  for (const e of Ex) {
+    filteredExercises.push(e);
+  }
+
+  // filteredExercises.value = userExercises.value;
+  // filteredExercises.value = userExercises.value.filter((exercise) =>
+  //   exercise.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  // );
+
+  // filteredExercises.value = userExercises.value.filter((exercise) =>
+  //   exercise.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  // );
+
+  // filteredExercises = computed(() =>
+  //   userExercises.value.filter((exercise) =>
+  //     exercise.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  //   )
+  // );
+};
+
+const selectExercise = (exercise) => {
+  title.value = exercise.title; // 전체 객체 할당
+  // searchQuery.value = ""; // 검색어 초기화
+  isSearch.value = false; // 모달 닫기
+  videoNo.value = exercise.videoNo;
+};
+
+// ----------- 운동 영상 추가 ------------- //
+const addList = () => {
+  if (title.value && playNum.value > 0) {
+    addedVideoList.value.push({
+      diaryExNo: diaryExNoCount.value++,
+      title: title.value,
+      videoNo: videoNo.value, // 선택한 영상 번호
+      playNum: playNum.value,
+    });
+    // 필드 초기화
+    title.value = "";
+    playNum.value = 1;
+  } else {
+    alert("영상 제목과 진행 횟수를 입력해주세요.");
+  }
+};
+
+// 모달 방식 관련
 const openSch = () => {
   isSearch.value = true;
 };
-
-// 검색된 운동 리스트
-const filteredExercises = ref(exercises);
-
-// 선택된 운동
-const selectedExercise = ref(null);
-
-// 사용자가 입력할 때마다 호출되는 검색 함수
-const handleSearch = (query) => {
-  // 쿼리와 일치하는 제목을 필터링
-  filteredExercises.value = exercises.filter((exercise) =>
-    exercise.title.toLowerCase().includes(query.toLowerCase())
-  );
-};
-
-// 사용자가 등록한 운동 영상 리스트 중 검색해서 받아오기
-async function schVideoList() {
-  try {
-
-    const { data } = await axios.get("api-video");
-    exercises.value = data;
-
-    console.dir(exercises.value);
-    // // 응답 데이터 유효성 검사
-    // if (data) {
-    //   console.log("API Response:", data);
-    //   return data;
-    // } else {
-    //   console.warn("Invalid response data format:", response.data);
-    //   return null;
-    // }
-  } catch (error) {
-    console.error("데이터 불러오는 중 오류", error);
-    return null;
-  }
-  // else {
-  //   alert("날짜를 선택해주세요.");
-  // }
-}
+const selectedExercise = ref(null); // 선택된 운동
 
 // 운동 영상 삭제
 const deleteList = (index) => {
@@ -327,22 +414,6 @@ const plus = () => {
 const minus = () => {
   if (playNum.value > 0) {
     playNum.value--;
-  }
-};
-
-// 운동 영상 추가하는 메서드
-const addList = () => {
-  if (title.value && playNum.value > 0) {
-    addedVideoList.value.push({
-      diaryExNo: diaryExNoCount.value++,
-      title: title.value.title,
-      playNum: playNum.value,
-    });
-    // 필드 초기화
-    title.value = "";
-    playNum.value = 1;
-  } else {
-    alert("영상 제목과 진행 횟수를 입력해주세요.");
   }
 };
 
@@ -362,10 +433,7 @@ const registDiary = async () => {
     diaryExList: addedVideoList.value,
   };
   try {
-    const response = await axios.post(
-      "api-diary/diary",
-      diary
-    );
+    const response = await axios.post("api-diary/diary", diary);
     emit("update-list");
     alert(date.value + ", 오늘 기록도 완료 :)");
     console.log("등록 성공", response.data);
@@ -379,8 +447,12 @@ const registDiary = async () => {
   }
 };
 
-// 다이어리 수정
+//============================
+// 다이어리 수정 
+// ===========================
 const updateDiary = async () => {
+  console.log("updateDiary => addedVideoList.value");
+  console.log(addedVideoList.value);
   const diary = {
     diaryNo: diaryNo.value,
     regDate: date.value,
@@ -392,10 +464,7 @@ const updateDiary = async () => {
     return null;
   }
   try {
-    const response = await axios.put(
-      `api-diary/diary/${diary.diaryNo}`,
-      diary
-    );
+    const response = await axios.put(`api-diary/diary/${diary.diaryNo}`, diary);
     emit("update-list");
     alert(date.value + ", 수정 완료 :)");
     console.log("수정 성공", response.data);
@@ -404,15 +473,13 @@ const updateDiary = async () => {
   }
 };
 
-// 날짜 선택 시, 해당 다이어리가 있는지 확인 
+// 날짜 선택 시, 해당 다이어리가 있는지 확인
 // -> isUpdate 값이 true 일 경우 수정이 보여지도록, 수정 버튼 클릭시에는 수정 메서드 진행
 async function selectDiaryByRegDate() {
   if (!date.value) return null;
 
   try {
-    const { data } = await axios.get(
-      `api-diary/diary/list/${date.value}`
-    );
+    const { data } = await axios.get(`api-diary/diary/list/${date.value}`);
 
     // 응답 데이터 유효성 검사
     if (data && typeof data === "object") {
@@ -430,23 +497,53 @@ async function selectDiaryByRegDate() {
   // }
 }
 
+
+//============================
+// 다이어리 수정 시 불러오는 Data
+// ===========================
+// userVideoList();
 watch(date, async (newDate) => {
   if (newDate) {
     console.log("조회 실행되었습니다.");
     const data = await selectDiaryByRegDate();
-    schVideoList();
     if (data) {
+      console.log("###");
+      console.log(data);
       // isLoading.value = true;
       // console.log("Retrieved diary data:", data);
       // console.log("data-type : " + typeof data);
 
-      diaryNo.value = data[0].diaryNo ?? "";
-      content.value = data[0].content ?? "";
-      // diaryExList 배열 처리
+      // 현재 유저아이디, 다이어리No. 에 대해 등록된 운동 video_no, play_num 받아오기
+      // 다이어리 리스트의 addedVideoList를 다시 받아와서 
+      // video_no 받아와서 그걸로 다시 영상들 타이틀 조회
+      const diaryExList = data.diaryExList;
+      console.log("#####", diaryExList);
+
+      // 영상 정보에 대한 데이터
+      if(diaryExList !== null){
+        for (const ex of diaryExList) {
+          const videoNo = ex.videoNo;
+          const response = await axios.get(`api-video/${videoNo}`);
+          const data2 = response.data.video;
+          console.log("watch data => data2 ");
+          console.log(data2);
+  
+          ex.title = data2.title;
+          console.log("watch data => ex.title");
+          console.log(ex.title);
+          addedVideoList.value.push(ex);
+        }
+      }
+
+      diaryNo.value = data.diaryNo ?? "";
+      content.value = data.content ?? "";
+
+      // // diaryExList 배열 처리
       // if (Array.isArray(data.diaryExList)) {
       //   addedVideoList.value = data.diaryExList.map((item) => ({
       //     diaryExNo: item.diaryExNo,
       //     title: item.title,
+      //     videoNo: item.videoNo,
       //     playNum: item.playNum,
       //   }));
       // } else {
@@ -461,6 +558,7 @@ watch(date, async (newDate) => {
       // }, 2800);
     } else if (!data && isUpdate) {
       resetForm();
+      isUpdate.value = false;
     }
   }
 });
@@ -495,13 +593,33 @@ onMounted(async () => {
 watch(
   () => modifyDiary.value,
   async (newModifyDiary) => {
-    schVideoList();
+    // userVideoList();
     console.dir("newModifyDiary.diaryNo : " + newModifyDiary.diaryNo);
     if (newModifyDiary) {
       console.log("newModifyDiary 실행되었습니다.");
+      console.log(newModifyDiary);
       diaryNo.value = newModifyDiary.diaryNo;
       date.value = newModifyDiary.regDate;
       content.value = newModifyDiary.content;
+      // const { data } = await axios.get(`api-diary/diary/exlist/${diaryNo.value}`);
+      // newModifyDiary.diaryExList = data;  
+
+     // 등록된 영상정보 세팅
+      if(newModifyDiary.diaryExList !== null){
+        for (const ex of newModifyDiary.diaryExList) {
+          const videoNo = ex.videoNo;
+          const response = await axios.get(`api-video/${videoNo}`);
+          const data2 = response.data.video;
+          console.log("watch data => data2 ");
+          console.log(data2);
+  
+          ex.title = data2.title;
+          console.log("watch data => ex.title");
+          console.log(ex.title);
+          addedVideoList.value.push(ex);
+        }
+      }
+
       // // diaryExList 배열 처리
       // if (Array.isArray(newModifyDiary.diaryExList)) {
       //   addedVideoList.value = newModifyDiary.diaryExList.map((item) => ({
@@ -517,7 +635,7 @@ watch(
       isUpdate.value = true;
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 );
 
 const resetFormAll = () => {
@@ -533,8 +651,6 @@ const resetForm = () => {
   addedVideoList.value = [];
 };
 
-// const reset = ref(false);
-// reset.value = props.reset;
 if (props.reset) {
   resetFormAll();
 }
@@ -570,5 +686,11 @@ watch(
   100% {
     box-shadow: 0 0 0 30px #0000;
   }
+}
+.multiselect__content-wrapper {
+  width: 400px !important; /* 원하는 너비로 설정 */
+}
+.multiselect__content {
+  width: 400px !important;
 }
 </style>

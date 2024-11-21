@@ -50,10 +50,10 @@ public class UserProfile {
 	public void setUploadDate(String uploadDate) {
 		this.uploadDate = uploadDate;
 	}
-	public String getId() {
+	public String getUserId() {
 		return userId;
 	}
-	public void setId(String id) {
+	public void setUserId(String id) {
 		this.userId = id;
 	}
 	@Override
