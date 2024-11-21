@@ -19,18 +19,22 @@ public interface MusicService {
 	boolean modifyMusic(int musicNo, Music music);
 
 	// 음악 조회(그룹(카테고리)별)
-	List<Music> musicList(MusicGroup musicGroup);
+	List<Music> musicList(String playlistName, String id);
 
 	// 재생목록 넣기 전 => 유저별 음악 제목 조회
 	List<Music> titleList(String id);
 
 	// 재생목록에 음악 추가
-	boolean addMusicToList(String playlistName, int musicNo);
+	boolean addMusicToList(String playlistName, int musicNo, String id);
 
 	// 재생목록에서 음악 삭제
 	boolean removeMusicFromList(String playlistName, int musicNo);
 
-	Map<String, Object> showPlaylist(int musicNo, String id);
+	// 재생목록 조회
+	List<MusicGroup> showPlaylist(String id);
+	
+	// 재생목록 조회(현재 비디오가 추가되어 있는지 확인)
+	Map<String, Object> showRegistedPlaylist(int musicNo, String id);
 
 	// 재생목록 추가
 	boolean addPlaylist(MusicGroup musicGroup);

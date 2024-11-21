@@ -62,6 +62,7 @@ const props = defineProps(["count", "videoNo"]);
 const playlist = ref([]);
 const registedPlaylist = ref([]);
 const isOpenPlaylistView = ref(false);
+
 const requestPlaylist = async () => {
   const { data } = await axios.get(
     "api-video/playlist/" + props.videoNo

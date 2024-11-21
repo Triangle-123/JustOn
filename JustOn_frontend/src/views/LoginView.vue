@@ -27,7 +27,7 @@
           v-model="password"
         />
         <div class="btn-box flex justify-center">
-          <a href="">회원가입</a>
+          <RouterLink :to="{name: 'signup'}">회원가입</RouterLink>
           <a href="">비밀번호 찾기</a>
           <a class="border-none" href="">아이디 찾기</a>
         </div>
@@ -57,7 +57,7 @@
 import { ref } from "vue";
 import axios from "@/axios/index.js";
 import { useUserStore } from "@/stores/user";
-import { useRouter } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 const userName = ref("");
 const password = ref("");
 const userStore = useUserStore();
@@ -66,33 +66,37 @@ const router = useRouter();
 const imgUrl = import.meta.env.VITE_IMAGE_URL;
 
 const login = async () => {
-  const response = await axios.post("api-user/login", {
-    userName: userName.value,
-    password: password.value,
-  });
-
-  // console.dir(response);
-  if (response.status === 200) {
-    localStorage.setItem("jwt", response.headers.authorization.split(" ")[1]);
-    const token = localStorage.getItem("jwt");
-    if (token) {
-      try {
-        // 사용자 정보를 서버에서 가져오기
-        const resInfo = await axios.get("api-user/userInfo");
-
-        console.dir(resInfo);
-        if (resInfo.status === 200) {
-          const userData = resInfo.data;
-          userStore.setUser(userData); // 사용자 정보 저장
-          router.push({ name: "home" });
-        } else {
-          userStore.logout(); // 인증 실패 시 로그아웃 처리
+  try {
+    const response = await axios.post("api-user/login", {
+      userName: userName.value,
+      password: password.value,
+    });
+  
+    // console.dir(response);
+    if (response.status === 200) {
+      localStorage.setItem("jwt", response.headers.authorization.split(" ")[1]);
+      const token = localStorage.getItem("jwt");
+      if (token) {
+        try {
+          // 사용자 정보를 서버에서 가져오기
+          const resInfo = await axios.get("api-user/userInfo");
+  
+          console.dir(resInfo);
+          if (resInfo.status === 200) {
+            const userData = resInfo.data;
+            userStore.setUser(userData); // 사용자 정보 저장
+            router.push({name: 'loggedinHome'});
+          } else {
+            userStore.logout(); // 인증 실패 시 로그아웃 처리
+          }
+        } catch (error) {
+          console.error(error);
+          userStore.logout();
         }
-      } catch (error) {
-        console.error(error);
-        userStore.logout();
       }
     }
+  } catch (error) {
+    alert("로그인에 실패하였습니다. 다시 시도해 주세요.");
   }
   // console.log(localStorage.getItem('jwt'));
 };

@@ -11,25 +11,25 @@
         <div class="my-4" v-for="p in playlist">
           <div class="item">
             <input
-              :id="p.categoryName"
+              :id="p.playlistName"
               class="cbx"
               type="checkbox"
               v-model="p.registed"
               style="display: none"
             />
             <label
-              :for="p.categoryName"
+              :for="p.playlistName"
               class="cbx"
-              @click="insertOrDeleteVideo(p.registed, p.categoryName)"
+              @click="insertOrDeleteMusic(p.registed, p.playlistName)"
             >
               <svg width="14px" height="12px" viewBox="0 0 14 12">
                 <polyline points="1 7.6 5 11 13 1"></polyline>
               </svg>
             </label>
           </div>
-          <span>{{ p.categoryName }}</span>
+          <span>{{ p.playlistName }}</span>
           <!-- <span v-if="p.groupDesc !== ''">> {{ p.groupDesc }}</span> -->
-          <span class="deleteBtn" @click="deletePlaylist(p.categoryName)"
+          <span class="deleteBtn" @click="deletePlaylist(p.playlistName)"
             ><i class="bi bi-x-lg"></i
           ></span>
         </div>
@@ -58,17 +58,17 @@ const emit = defineEmits([
 const openAddPlaylistView = () => {
   emit("openAddPlaylistView");
 };
-const props = defineProps(["count", "videoNo"]);
+const props = defineProps(["count", "musicNo"]);
 const playlist = ref([]);
 const registedPlaylist = ref([]);
 const isOpenPlaylistView = ref(false);
 const requestPlaylist = async () => {
-  const { data } = await axios.get("api-video/playlist/" + props.videoNo);
+  const { data } = await axios.get("api-music/playlist/" + props.musicNo);
   console.dir(data);
   playlist.value = data.list;
   registedPlaylist.value = data.registedList;
   for (const p of playlist.value) {
-    if (registedPlaylist.value.includes(p.categoryName)) {
+    if (registedPlaylist.value.includes(p.playlistName)) {
       p.registed = true;
     }
   }
@@ -86,10 +86,10 @@ watch(
   }
 );
 
-const deletePlaylist = async (categoryName) => {
-  if (confirm(`재생목록명 : ${categoryName}\n 재생목록을 삭제하시겠습니까?`)) {
+const deletePlaylist = async (playlistName) => {
+  if (confirm(`재생목록명 : ${playlistName}\n 재생목록을 삭제하시겠습니까?`)) {
     try {
-      await axios.delete("api-video/playlist/" + categoryName);
+      await axios.delete("api-video/playlist/" + playlistName);
       emit("deletePlaylist");
     } catch (error) {
       console.dir(error);
@@ -97,13 +97,13 @@ const deletePlaylist = async (categoryName) => {
   }
 };
 
-const insertOrDeleteVideo = async (registed, categoryName) => {
+const insertOrDeleteMusic = async (registed, playlistName) => {
   console.log(registed);
   if (!registed) {
     try {
-      await axios.post(`api-video/${categoryName}/${props.videoNo}`);
+      await axios.post(`api-music/${playlistName}/${props.musicNo}`);
       requestPlaylist();
-      Toast(`[${categoryName}] 재생목록에 영상이 추가되었습니다.`, {
+      Toast(`[${playlistName}] 재생목록에 음악이 추가되었습니다.`, {
         position: "top-right",
         timeout: 3000,
         closeOnClick: true,
@@ -123,9 +123,9 @@ const insertOrDeleteVideo = async (registed, categoryName) => {
     }
   } else {
     try {
-      await axios.delete(`api-video/${categoryName}/${props.videoNo}`);
+      await axios.delete(`api-music/${playlistName}/${props.musicNo}`);
       requestPlaylist();
-      Toast("재생목록에서 영상이 삭제되었습니다.", {
+      Toast("재생목록에서 음악이 삭제되었습니다.", {
         position: "top-right",
         timeout: 3000,
         closeOnClick: true,

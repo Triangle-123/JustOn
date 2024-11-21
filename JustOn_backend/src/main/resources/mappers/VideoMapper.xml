@@ -26,7 +26,10 @@
 	</update>
 	
 	
-	<select id="selectVideoByGroup" resultType="Video" parameterType="VideoGroup">
+	<select id="selectVideoByGroup" resultType="int">
+		SELECT video_no
+		FROM category_video
+		WHERE category_name = #{categoryName} AND user_id = #{id}
 		
 	</select>
 	
@@ -36,8 +39,8 @@
 	</select>
 	
 	<insert id="insertVideoToGroup">
-		INSERT INTO category_video(category_name, video_no)
-		VALUES (#{categoryName}, #{videoNo})
+		INSERT INTO category_video(category_name, video_no, user_id)
+		VALUES (#{categoryName}, #{videoNo}, #{id})
 	</insert>
 	
 	<delete id="deleteVideoFromGroup">
@@ -80,7 +83,7 @@
 		</foreach>
 		)
 	</insert>
-	
+		
 	<select id="selectVideoExColumnName" resultType="String">
 		SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
 		WHERE TABLE_NAME = 'video_ex_list' AND COLUMN_NAME NOT IN ('video_no', 'user_id', 'video_ex_no', 'ex_weight');

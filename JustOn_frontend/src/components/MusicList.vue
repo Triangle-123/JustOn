@@ -50,7 +50,7 @@
     </div>
 
     <div class="text-center text-lg my-6" v-if="musicList === ''">
-      등록된 영상이 없습니다.
+      등록된 음악이 없습니다.
     </div>
   </div>
 
@@ -134,14 +134,14 @@ const deleteMusic = async (musicNo) => {
   try {
     if (
       confirm(
-        "해당 음악 영상 삭제 시 재생목록 내에서도 지워집니다.\n삭제하시겠습니까?"
+        "해당 음악 삭제 시 재생목록 내에서도 지워집니다.\n삭제하시겠습니까?"
       )
     ) {
       await axios.delete("api-music/" + musicNo);
       emit("deleteMusic");
     }
   } catch (error) {
-    alert("해당 영상 삭제에 실패하였습니다.");
+    alert("해당 음악 삭제에 실패하였습니다.");
   }
 };
 
