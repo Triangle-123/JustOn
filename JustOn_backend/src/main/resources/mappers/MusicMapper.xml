@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.mvc.model.dao.MusicDao">
-<insert id="insertMusic" parameterType="Music" useGeneratedKeys="true" keyProperty="MusicNo">
+<insert id="insertMusic" parameterType="Music" useGeneratedKeys="true" keyProperty="musicNo">
 		INSERT INTO music(music_id, src, title, user_id)
 		SELECT #{musicId}, #{src}, #{title}, #{userId} FROM DUAL
 		WHERE #{musicId} NOT IN (SELECT music_id FROM music WHERE user_id = #{userId})
@@ -26,8 +26,10 @@
 	</update>
 	
 	
-	<select id="selectMusicByGroup" resultType="Music" parameterType="MusicGroup">
-		
+	<select id="selectMusicByGroup" resultType="int">
+		SELECT music_no
+		FROM playlist_music
+		WHERE playlist_name = #{playlistName} AND user_id = #{id}
 	</select>
 	
 	<select id="selectMusicTitle" resultType="Music" parameterType="String">
@@ -36,8 +38,8 @@
 	</select>
 	
 	<insert id="insertMusicToGroup">
-		INSERT INTO playlist_music(playlist_name, music_no)
-		VALUES (#{playlistName}, #{musicNo})
+		INSERT INTO playlist_music(playlist_name, music_no, user_id)
+		VALUES (#{playlistName}, #{musicNo}, #{id})
 	</insert>
 	
 	<delete id="deleteMusicFromGroup">
@@ -52,7 +54,7 @@
 	</select>
 	
 	<select id="selectRegistedMusicGroup" resultType="String" parameterType="int">
-		SELECT playlist_name FROM category_Music
+		SELECT playlist_name FROM playlist_music
 		WHERE music_no = #{musicNo}
 	</select>
 		

@@ -21,13 +21,13 @@ public interface MusicDao {
 	int updateMusic(Music music);
 
 	// 음악 조회(그룹(카테고리)별)
-	List<Music> selectMusicByGroup(MusicGroup musicGroup);
+	List<Integer> selectMusicByGroup(String playlistName, String id);
 
 	// 재생목록 넣기 전 => 유저별 음악 제목, 번호 조회
 	List<Music> selectMusicTitle(String id);
 
 	// 재생목록에 음악 추가
-	int insertMusicToGroup(String playlistName, int musicNo);
+	int insertMusicToGroup(String playlistName, int musicNo, String id);
 
 	// 재생목록에서 음악 삭제
 	int deleteMusicFromGroup(String playlistName, int musicNo);

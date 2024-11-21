@@ -21,14 +21,14 @@ public interface VideoDao {
 	// 영상 수정
 	int updateVideo(Video video);
 
-	// 영상 조회(그룹(카테고리)별)
-	List<Video> selectVideoByGroup(VideoGroup videoGroup);
+	// 영상 번호 조회(그룹(카테고리)별)
+	List<Integer> selectVideoByGroup(String categoryName, String id);
 	
 	// 재생목록 넣기 전 => 유저별 영상 제목, 번호 조회
 	List<Video> selectVideoTitle(String id);
 	
 	// 재생목록에 영상 추가
-	int insertVideoToGroup(String categoryName, int videoNo);
+	int insertVideoToGroup(String categoryName, int videoNo, String id);
 	
 	// 재생목록에서 영상 삭제
 	int deleteVideoFromGroup(String categoryName, int videoNo);
