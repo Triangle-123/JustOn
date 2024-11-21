@@ -439,8 +439,10 @@
 <script setup>
 import { ref, reactive, onMounted, computed, watch } from "vue";
 import axios from "@/axios/index";
+import { useRouter } from "vue-router";
 
 const isPwComplete = ref(false);
+const router = useRouter();
 
 // ========================
 // 운동 부위 객체
@@ -656,6 +658,7 @@ const handleSignup = async () => {
     responseMessage.value = "회원가입 성공! 환영합니다.";
     alert(responseMessage.value);
     console.log("서버 응답:", response.data);
+    router.push({ name: "login" });
   } catch (error) {
     // 서버 오류 또는 네트워크 오류 처리
     if (error.response) {

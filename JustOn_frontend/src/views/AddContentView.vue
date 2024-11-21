@@ -145,8 +145,8 @@
           <div class="misicPlayList">
             <MusicList
               @deleteVideo="deleteMusic"
-              @modifyMusic="modifyVideoView"
-              :count="count"
+              @modifyMusic="modifyMusicView"
+              :count="musicCount"
             />
           </div>
         </div>
@@ -410,6 +410,7 @@ const modifyVideo = async () => {
     alert("영상 수정을 완료했습니다.");
     cancelModify();
     weight.value = "none";
+    count.value++;
   } catch (error) {
     const { response } = error;
     alert(response.data);
@@ -441,7 +442,7 @@ const insertMusic = async () => {
   }
 
   const noEmbed = "https://noembed.com/embed?url=";
-  const fullURL = noEmbed + URL.value;
+  const fullURL = noEmbed + musicURL.value;
   // console.log(fullURL);
   const { data } = await oriAxios.get(fullURL);
   // console.dir(data);
@@ -463,9 +464,7 @@ const insertMusic = async () => {
   // console.log(youtube.value);
 
   try {
-    await axios.post("api-music", {
-      music: youtubeMusic.value,
-    });
+    await axios.post("api-music", youtubeMusic.value);
     musicCount.value++;
     musicURL.value = "";
   } catch (error) {
@@ -491,7 +490,7 @@ const modifyMusic = async () => {
   }
 
   const noEmbed = "https://noembed.com/embed?url=";
-  const fullURL = noEmbed + URL.value;
+  const fullURL = noEmbed + musicURL.value;
   // console.log(fullURL);
   const { data } = await oriAxios.get(fullURL);
   // console.dir(data);
@@ -513,12 +512,10 @@ const modifyMusic = async () => {
   // console.log(youtube.value);
 
   try {
-    await axios.put("api-music/" + musicNo.value, {
-      music: youtubeMusic.value,
-    });
+    await axios.put("api-music/" + musicNo.value, youtubeMusic.value);  
     alert("음악 영상 수정을 완료했습니다.");
     cancelMusicModify();
-    weight.value = "none";
+    musicCount.value++;
   } catch (error) {
     const { response } = error;
     alert(response.data);
@@ -529,7 +526,7 @@ const modifyMusic = async () => {
 const modifyMusicView = async (no) => {
   const { data } = await axios.get("api-music/" + no);
   console.dir(data);
-  musicURL.value = data.music.src;
+  musicURL.value = data.src;
   musicModifyState.value = true;
 
   musicNo.value = no;

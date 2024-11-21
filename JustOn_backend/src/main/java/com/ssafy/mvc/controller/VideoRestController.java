@@ -84,7 +84,7 @@ public class VideoRestController {
 	@GetMapping("/{no}")
 	public ResponseEntity<?> getVideoInfo(@PathVariable("no") int videoNo) {
 		try {
-			Map<String, Object> result = videoService.getVideoInfo(videoNo);	
+			Map<String, Object> result = videoService.getVideoInfo(videoNo);
 			if(result != null && !result.isEmpty()) {
 				return ResponseEntity.ok(result);
 			}
@@ -110,13 +110,13 @@ public class VideoRestController {
 	}
 	
 	@GetMapping("/{categoryName}/videos")
-	public ResponseEntity<?> videoList(@RequestBody VideoGroup videoGroup) {
+	public ResponseEntity<?> videoList(@PathVariable("categoryName") String categoryName, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			List<Video> list = videoService.videoList(videoGroup);
+			List<Video> list = videoService.videoList(categoryName, userDetails.getUsername());
 			if(list != null && !list.isEmpty()) {
 				return ResponseEntity.ok(list);
 			}
-			throw new Exception();
+			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.internalServerError().body("영상 불러오기 실패");
@@ -124,9 +124,9 @@ public class VideoRestController {
 	}
 	
 	@PostMapping("/{categoryName}/{videoNo}")
-	public ResponseEntity<String> addVideoToList(@PathVariable("categoryName") String categoryName, @PathVariable("videoNo") int videoNo) {
+	public ResponseEntity<String> addVideoToList(@PathVariable("categoryName") String categoryName, @PathVariable("videoNo") int videoNo, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			if(videoService.addVideoToList(categoryName, videoNo)) {
+			if(videoService.addVideoToList(categoryName, videoNo, userDetails.getUsername())) {
 				return ResponseEntity.ok("재생목록에 영상이 추가되었습니다.");
 			}
 			throw new Exception();
@@ -149,10 +149,24 @@ public class VideoRestController {
 		}
 	}
 	
-	@GetMapping("/playlist/{videoNo}")
-	public ResponseEntity<?> showPlaylist(@PathVariable("videoNo") int videoNo, @AuthenticationPrincipal CustomUserDetails userDetails) {
+	@GetMapping("/playlist")
+	public ResponseEntity<?> showPlaylist(@AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			Map<String, Object> result = videoService.showPlaylist(videoNo, userDetails.getUsername());
+			List<VideoGroup> list = videoService.showPlaylist(userDetails.getUsername());
+			if(list != null && !list.isEmpty()) {
+				return ResponseEntity.ok(list);
+			}
+			return ResponseEntity.noContent().build();
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().build();
+		}
+	}
+	
+	
+	@GetMapping("/playlist/{videoNo}")
+	public ResponseEntity<?> showRegistedPlaylist(@PathVariable("videoNo") int videoNo, @AuthenticationPrincipal CustomUserDetails userDetails) {
+		try {
+			Map<String, Object> result = videoService.showRegistedPlaylist(videoNo, userDetails.getUsername());
 //			List<VideoGroup> list = (List<VideoGroup>) result.get("list");
 			if(result != null && !result.isEmpty()) {
 				return ResponseEntity.ok(result);

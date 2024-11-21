@@ -84,8 +84,10 @@ CREATE TABLE music (
 CREATE TABLE playlist_music(
 	playlist_name VARCHAR(100) NOT NULL,
     music_no INT NOT NULL,
+    user_id VARCHAR(100) NOT NULL,
     FOREIGN KEY(playlist_name) REFERENCES music_group(playlist_name),
     FOREIGN KEY(music_no) REFERENCES music(music_no),
+    FOREIGN KEY(user_id) REFERENCES user(user_id),
     PRIMARY KEY(playlist_name, music_no)
 );
 
@@ -131,10 +133,15 @@ CREATE TABLE IF NOT EXISTS video_review(
 CREATE TABLE IF NOT EXISTS ex_record(
     ex_record_no INT NOT NULL AUTO_INCREMENT,
     user_id VARCHAR(100) NOT NULL,
-    part VARCHAR(30) NOT NULL,
-    ex_date DATE,
-    ex_weight INT, 
-    ex_nums INT NOT NULL,
+    ex_date DATE NOT NULL,
+    shoulder INT NOT NULL,
+    leg INT NOT NULL,
+    abs INT NOT NULL,
+    chest INT NOT NULL,
+    back INT NOT NULL,
+    arm INT NOT NULL,
+    stretching INT NOT NULL,
+    cardio INT NOT NULL,
     PRIMARY KEY(ex_record_no),
     FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
@@ -165,8 +172,10 @@ CREATE TABLE IF NOT EXISTS video_ex_list(
 CREATE TABLE IF NOT EXISTS category_video(
     video_no INT NOT NULL, 
     category_name VARCHAR(100) NOT NULL,
+    user_id VARCHAR(100) NOT NULL,
     FOREIGN KEY(video_no) REFERENCES video(video_no) ON DELETE CASCADE,
     FOREIGN KEY(category_name) REFERENCES video_group(category_name) ON DELETE CASCADE,
+    FOREIGN KEY(user_id) REFERENCES user(user_id),
     PRIMARY KEY(video_no, category_name)
 );
 
@@ -192,6 +201,8 @@ SELECT * FROM video_review;
 
 SELECT * FROM video_group;
 
-SELECT * FROM category_video;
+SELECT * FROM category_video;	
 
 SELECT * FROM video_ex_list;
+
+SELECT * FROM music;	

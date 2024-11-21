@@ -1,5 +1,6 @@
 package com.ssafy.mvc.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +42,13 @@ public class MusicServiceImpl implements MusicService{
 	}
 
 	@Override
-	public List<Music> musicList(MusicGroup musicGroup) {
-		return musicDao.selectMusicByGroup(musicGroup);
+	public List<Music> musicList(String playlistName, String id) {
+		List<Integer> musicNums = musicDao.selectMusicByGroup(playlistName, id);
+		List<Music> list = new ArrayList<>();
+		for(int musicNo : musicNums) {
+			list.add(musicDao.selectMusicByNo(musicNo));
+		}
+		return list;
 	}
 
 	@Override
@@ -51,8 +57,8 @@ public class MusicServiceImpl implements MusicService{
 	}
 
 	@Override
-	public boolean addMusicToList(String playlistName, int musicNo) {
-		return musicDao.insertMusicToGroup(playlistName, musicNo) >= 1;
+	public boolean addMusicToList(String playlistName, int musicNo, String id) {
+		return musicDao.insertMusicToGroup(playlistName, musicNo, id) >= 1;
 	}
 
 	@Override
@@ -61,7 +67,12 @@ public class MusicServiceImpl implements MusicService{
 	}
 
 	@Override
-	public Map<String, Object> showPlaylist(int musicNo, String id) {
+	public List<MusicGroup> showPlaylist(String id) {
+		return musicDao.selectMusicGroup(id);
+	}
+	
+	@Override
+	public Map<String, Object> showRegistedPlaylist(int musicNo, String id) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("list", musicDao.selectMusicGroup(id));
 		map.put("registedList", musicDao.selectRegistedMusicGroup(musicNo));
@@ -77,5 +88,6 @@ public class MusicServiceImpl implements MusicService{
 	public boolean removePlaylist(MusicGroup musicGroup) {
 		return musicDao.deleteMusicGroup(musicGroup) >= 1;
 	}
+
 
 }

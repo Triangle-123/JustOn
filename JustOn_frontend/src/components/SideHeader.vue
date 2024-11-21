@@ -63,8 +63,8 @@
     <div
       class="login-sign text-lg btn-box mt-4 mb-6 mx-6 flex gap-3 bg-[--juston-bg-w] rounded-2xl px-4 py-3"
     >
-      <RouterLink class="font-bold flex-1 text-center" :to="{ name: 'login' }"
-        ><i class="bi bi-box-arrow-right mr-1.5"></i>로그아웃</RouterLink
+      <a class="font-bold flex-1 text-center" @click="logout" href=""
+        ><i class="bi bi-box-arrow-right mr-1.5"></i>로그아웃</a
       >
       <em class="w-[1px] bg-[#ccc]"></em>
       <RouterLink class="font-bold flex-1 text-center" :to="{ name: 'mypage' }"
@@ -95,13 +95,13 @@
           :key="index"
           class="menu-item bg-[#fff] p-4 rounded-[16px] block hover-effect cursor-pointer"
           @click="
-            setActive(index);
+            // setActive(index);
             navigateTo(menu.routerName);
           "
-          :class="{ 'juston-gradient-1-2': activeIndex === index }"
+          :class="{ 'juston-gradient-1-2': activeIndex == index }"
         >
           <i
-            v-show="activeIndex === index"
+            v-show="activeIndex == index"
             class="bi bi-arrow-right-circle mr-3"
           ></i
           >{{ menu.menuName }}
@@ -130,9 +130,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { watch, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
 
+const userStore = useUserStore();
+const route = useRoute();
 const isSizeChange = ref(false);
 const rotate = ref(false);
 const menus = [
@@ -158,7 +161,10 @@ const sMenus = [
 const router = useRouter();
 const navigateTo = (routeName) => {
   console.log(routeName);
-  router.push({ name: routeName });
+  if(routeName === 'home' && userStore.user) {
+    router.push({name: 'loggedinHome'});
+  }
+  else router.push({ name: routeName });
 };
 
 const activeIndex = ref(0);
@@ -170,6 +176,22 @@ const sizeChange = () => {
   console.log("w-ch");
   isSizeChange.value = !isSizeChange.value;
 };
+const logout = () => {
+  userStore.logout();
+  router.push({name: 'home'});
+}
+
+console.log(route);
+
+watch(() => route.name, () => {
+  for(const index in menus) {
+    if(menus[index].routerName === route.name) {
+      setActive(index);
+      return;
+    }
+  }
+  setActive(0);
+})
 </script>
 
 <script>

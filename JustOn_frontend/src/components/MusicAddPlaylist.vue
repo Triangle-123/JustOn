@@ -12,7 +12,7 @@
             <input
               class="w-[100%] input-style-h52"
               type="text"
-              v-model="playlist.categoryName"
+              v-model="playlist.playlistName"
             />
           </div>
           <div class="flex flex-col mb-6">
@@ -43,7 +43,7 @@ import { useToast } from "vue-toastification";
 const Toast = useToast();
 
 const playlist = ref({
-  categoryName: "",
+  playlistName: "",
   groupDesc: "",
 });
 const emit = defineEmits(["closeAddPlaylistView", "successAdd"]);
@@ -52,12 +52,12 @@ const closeAddPlaylistView = () => {
 };
 const addPlaylist = async () => {
   try {
-    if (playlist.value.categoryName.trim() === "") {
+    if (playlist.value.playlistName.trim() === "") {
       alert("재생목록명을 입력해주세요");
       return false;
     }
-    const { response } = await axios.post("api-video/playlist", playlist.value);
-    Toast(`[${playlist.value.categoryName}] 재생목록이 추가되었습니다.`, {
+    const { response } = await axios.post("api-music/playlist", playlist.value);
+    Toast(`[${playlist.value.playlistName}] 재생목록이 추가되었습니다.`, {
       position: "top-right",
       timeout: 3000,
       closeOnClick: true,
@@ -75,7 +75,7 @@ const addPlaylist = async () => {
     emit("successAdd");
   } catch (error) {
   } finally {
-    playlist.value.categoryName = "";
+    playlist.value.playlistName = "";
     playlist.value.groupDesc = "";
     closeAddPlaylistView();
   }

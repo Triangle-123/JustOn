@@ -1,5 +1,6 @@
 package com.ssafy.mvc.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +55,13 @@ public class VideoServiceImpl implements VideoService {
 	}
 	
 	@Override
-	public List<Video> videoList(VideoGroup videoGroup) {
-		return videoDao.selectVideoByGroup(videoGroup);
+	public List<Video> videoList(String categoryName, String id) {
+		List<Integer> videoNums = videoDao.selectVideoByGroup(categoryName, id);
+		List<Video> list = new ArrayList<>();
+		for(int videoNo : videoNums) {
+			list.add(videoDao.selectVideoByNo(videoNo));
+		}
+		return list;
 	}
 
 	@Override
@@ -64,8 +70,8 @@ public class VideoServiceImpl implements VideoService {
 	}
 
 	@Override
-	public boolean addVideoToList(String categoryName, int videoNo) {
-		return videoDao.insertVideoToGroup(categoryName, videoNo) >= 1;
+	public boolean addVideoToList(String categoryName, int videoNo, String id) {
+		return videoDao.insertVideoToGroup(categoryName, videoNo, id) >= 1;
 	}
 
 	@Override
@@ -74,7 +80,12 @@ public class VideoServiceImpl implements VideoService {
 	}
 
 	@Override
-	public Map<String, Object> showPlaylist(int videoNo, String id) {
+	public List<VideoGroup> showPlaylist(String id) {
+		return videoDao.selectVideoGroup(id);
+	}
+	
+	@Override
+	public Map<String, Object> showRegistedPlaylist(int videoNo, String id) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("list", videoDao.selectVideoGroup(id));
 		map.put("registedList", videoDao.selectRegistedVideoGroup(videoNo));
@@ -90,5 +101,6 @@ public class VideoServiceImpl implements VideoService {
 	public boolean removePlaylist(VideoGroup videoGroup) {
 		return videoDao.deleteVideoGroup(videoGroup) >= 1;
 	}
+
 
 }

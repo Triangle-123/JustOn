@@ -95,6 +95,7 @@ public class MusicRestController {
 			music.setUserId(userDetails.getUsername());
 			if(musicService.modifyMusic(musicNo, music)) {
 				return ResponseEntity.ok("음악 수정을 완료했습니다.");
+				
 			}
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 등록된 음악입니다.");
 		} catch (Exception e) {
@@ -104,13 +105,13 @@ public class MusicRestController {
 	}
 	
 	@GetMapping("/{playlistName}/music")
-	public ResponseEntity<?> musicList(@RequestBody MusicGroup musicGroup) {
+	public ResponseEntity<?> musicList(@PathVariable("playlistName") String playlistName, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			List<Music> list = musicService.musicList(musicGroup);
+			List<Music> list = musicService.musicList(playlistName, userDetails.getUsername());
 			if(list != null && !list.isEmpty()) {
 				return ResponseEntity.ok(list);
 			}
-			throw new Exception();
+			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.internalServerError().body("음악 불러오기 실패");
@@ -118,9 +119,9 @@ public class MusicRestController {
 	}
 	
 	@PostMapping("/{playlistName}/{musicNo}")
-	public ResponseEntity<String> addMusicToList(@PathVariable("playlistName") String playlistName, @PathVariable("musicNo") int musicNo) {
+	public ResponseEntity<String> addMusicToList(@PathVariable("playlistName") String playlistName, @PathVariable("musicNo") int musicNo, @AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			if(musicService.addMusicToList(playlistName, musicNo)) {
+			if(musicService.addMusicToList(playlistName, musicNo, userDetails.getUsername())) {
 				return ResponseEntity.ok("재생목록에 음악이 추가되었습니다.");
 			}
 			throw new Exception();
@@ -143,10 +144,24 @@ public class MusicRestController {
 		}
 	}
 	
-	@GetMapping("/playlist/{musicNo}")
-	public ResponseEntity<?> showPlaylist(@PathVariable("musicNo") int musicNo, @AuthenticationPrincipal CustomUserDetails userDetails) {
+	@GetMapping("/playlist")
+	public ResponseEntity<?> showPlaylist(@AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			Map<String, Object> result = musicService.showPlaylist(musicNo, userDetails.getUsername());
+			List<MusicGroup> list = musicService.showPlaylist(userDetails.getUsername());
+			if(list != null && !list.isEmpty()) {
+				return ResponseEntity.ok(list);
+			}
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("재생목록이 없습니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("재생목록 불러오기에 실패하였습니다.");
+		}
+	}
+	
+	@GetMapping("/playlist/{musicNo}")
+	public ResponseEntity<?> showRegistedPlaylist(@PathVariable("musicNo") int musicNo, @AuthenticationPrincipal CustomUserDetails userDetails) {
+		try {
+			Map<String, Object> result = musicService.showRegistedPlaylist(musicNo, userDetails.getUsername());
 			if(result != null && !result.isEmpty()) {
 				return ResponseEntity.ok(result);
 			}

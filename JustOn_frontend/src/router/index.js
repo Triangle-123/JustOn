@@ -6,6 +6,7 @@ import LoginView from "@/views/LoginView.vue";
 import { useUserStore } from "@/stores/user";
 import SignUpView from "@/views/SignUpView.vue";
 import MyPageView from "@/views/MyPageView.vue";
+import LoggedinHomeView from "@/views/LoggedinHomeView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,15 +20,6 @@ const router = createRouter({
       path: "/addcontent",
       name: "addContent",
       component: AddContentView,
-      beforeEnter: async (to, from) => {
-        const userStore = useUserStore();
-        await userStore.getUser();
-        console.log(userStore.user);
-        if (!userStore.user) {
-          return { name: "login" };
-        }
-        return true;
-      },
     },
     {
       path: "/diaryList",
@@ -45,11 +37,31 @@ const router = createRouter({
       component: SignUpView,
     },
     {
+      path: "/loggedinHome",
+      name: "loggedinHome",
+      component: LoggedinHomeView,
+    },
+    {
       path: "/mypage",
       name: "mypage",
       component: MyPageView,
     },
   ],
+});
+
+router.beforeEach(async (to, from) => {
+  const allowedRoutes = ["login", "home", "signup"]; // 허용할 라우트
+
+  const userStore = useUserStore();
+  await userStore.getUser();
+  // console.log(userStore.user);
+  if (!userStore.user) {
+    if (allowedRoutes.includes(to.name)) {
+      return true;
+    }
+    return { name: "login" };
+  }
+  return true;
 });
 
 export default router;
