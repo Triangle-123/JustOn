@@ -49,4 +49,24 @@
 		DELETE FROM user_profile_img
 		WHERE user_id = #{id}
 	</delete>
+	
+	<!-- ** 프로필 이미지 관련 ** -->
+	<!-- 프로필 이미지 삽입 -->
+    <insert id="insertUserProfile" parameterType="UserProfile">
+        INSERT INTO user_profile_img (file_path, ori_name, system_name, user_id)
+        VALUES (#{filePath}, #{oriName}, #{systemName}, #{userId})
+    </insert>
+
+    <!-- 유저의 기존 프로필 이미지 삭제 -->
+    <delete id="deleteUserProfile" parameterType="String" >
+        DELETE FROM user_profile_img 
+        WHERE user_id = #{userId}
+    </delete>
+
+    <!-- 유저 프로필 이미지 조회 -->
+    <select id="getUserProfile" parameterType="String" resultType="UserProfile">
+        SELECT * FROM user_profile_img
+        WHERE user_id = #{userId}
+    </select>
+	
 </mapper>

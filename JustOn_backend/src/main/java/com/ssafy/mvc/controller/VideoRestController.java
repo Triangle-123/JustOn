@@ -71,6 +71,7 @@ public class VideoRestController {
 		try {
 			List<Video> list = videoService.titleList(userDetails.getUsername());
 			if(list != null && !list.isEmpty()) {
+				System.out.println("영상 불러오기 성공");
 				return ResponseEntity.ok(list);
 			}
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("등록된 영상이 없습니다.");
@@ -206,5 +207,8 @@ public class VideoRestController {
 			return ResponseEntity.internalServerError().body("재생목록 삭제에 실패하였습니다.");
 		}
 	}
+	
+	
+
 	
 }

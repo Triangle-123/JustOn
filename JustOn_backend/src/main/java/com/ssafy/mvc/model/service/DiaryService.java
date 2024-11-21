@@ -15,7 +15,7 @@ public interface DiaryService  {
 
 	public Map<String, Object> selectAllDiary(DiarySearch diarySearch, String userId);
 
-	public List<Diary> selectDiaryByRegDate(String userId, String regDate);
+	public Diary selectDiaryByRegDate(String userId, String regDate);
 
 	public Diary selectOneDiaryByNo(int diaryNo);
 
@@ -23,6 +23,6 @@ public interface DiaryService  {
 
 	public boolean deleteDiary(int diaryNo);
 
-
+	public List<DiaryEx> selectDiaryExList(int diaryNo);
 	
 }

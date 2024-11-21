@@ -19,7 +19,10 @@ public interface DiaryDao {
 	int selectAllDiaryCount(String userId);
 	
 	// 특정 유저의 다이어리 날짜 선택 조회
-	List<Diary> selectDiaryByRegDate(Map<String, String> info);
+	Diary selectDiaryByRegDate(Map<String, String> info);
+		
+	// 조회된 다이어리의 ExList 조회 
+	List<DiaryEx> selectDiaryExList(int diaryNo);
 	
 	// 다이어리 상세 조회
 	Diary selectOneDiaryByNo(int diaryNo);
@@ -29,5 +32,9 @@ public interface DiaryDao {
 	
 	// 특정 유저의 다이어리 삭제
 	int deleteDiary(int diaryNo);
-
+	
+	// 특정 다이어리의 운동리스트 삭제
+	int deleteDiaryExList(int diaryNo);
+	
+	
 }

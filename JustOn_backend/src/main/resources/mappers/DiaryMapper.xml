@@ -46,6 +46,13 @@
 		WHERE diary_no = #{diaryNo}
 	</select>
 	
+	<!-- 특정 다이어리의 운동 리스트 조회 -->
+	<select id="selectDiaryExList" resultType="DiaryEx" parameterType="int">
+		SELECT diary_ex_no, play_num, diary_no, video_no 
+		FROM diary_ex
+		WHERE diary_no = #{diaryNo}
+	</select>
+	
 	<!-- 특정 유저의 다이어리 수정 --> 
 	<update id="modifyDiary" parameterType="Diary">
 		UPDATE diary 
@@ -53,10 +60,37 @@
 		WHERE diary_no = #{diaryNo}
 	</update> 
 	
+	<!-- 특정 다이어리의 ExList 수정 
+	<select id="modifyDiaryExList" parameterType="diary" resultType="int">
+		 <foreach collection="diaryExList" item="diaryEx" separator=";">
+		  UPDATE diary_ex
+		  SET 
+		    play_num = #{diaryEx.playNum},
+		    diary_no = #{diaryEx.diaryNo},
+		    video_no = #{diaryEx.videoNo}
+		  WHERE 
+		    diary_no = #{diaryNo} AND video_no = #{diaryEx.videoNo}
+		</foreach>
+		
+		UPDATE diary_ex 
+		SET play_num = #{playNum}, diary_no = #{diaryNo}, video_no = #{video_no}
+		WHERE diary_no = #{diaryNo}
+		
+		
+		 SELECT play_num, diary_no, video_no 
+		FROM diary_ex
+		WHERE diary_no = #{diaryNo} 
+	</select>--> 
+	
 	<!-- 다이어리 삭제 --> 
-	<delete id="deleteDiary" parameterType="int">
+	<delete id="deleteDiary" parameterType="int" >
 		DELETE FROM diary
 		WHERE diary_no = #{diaryNo}
 	</delete> 
 	
+	<!-- 특정 다이어리 운동 전체 삭제 --> 
+	<delete id="deleteDiaryExList" parameterType="int">
+		DELETE FROM diary_ex
+		WHERE diary_no = #{diaryNo}
+	</delete> 
 </mapper>

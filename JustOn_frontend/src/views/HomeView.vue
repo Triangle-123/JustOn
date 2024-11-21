@@ -20,6 +20,7 @@
         </div>
         <span class="font-bold text-2xl block">날 위한 운동 Mate</span>
         <h2 class="text-[70px] font-[800] mb-10">JustOn</h2>
+
         <div
           class="rounded-[32px] overflow-hidden h-[300px] w-[1100px] bg-img-1 bg-[#ccc]"
         ></div>
@@ -142,6 +143,7 @@
 import { isDarkMode, toggleDarkMode } from "@/composables/DarkMode";
 import { onMounted, ref } from "vue";
 import Swiper from "swiper/bundle";
+import MetronomeBtn from "@/components/MetronomeBtn.vue";
 // import styles bundle
 import "swiper/css/bundle";
 const isHidden = ref(false);

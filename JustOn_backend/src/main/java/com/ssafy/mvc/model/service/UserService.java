@@ -1,8 +1,11 @@
 package com.ssafy.mvc.model.service;
 
-import java.util.Map;
+import java.io.IOException;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.mvc.model.dto.User;
+import com.ssafy.mvc.model.dto.UserProfile;
 
 public interface UserService {
 
@@ -12,7 +15,16 @@ public interface UserService {
 	
 	boolean signUp(User user);
 	
-	void modifyInfo(User user);
+	boolean modifyInfo(User user);
 	
 	boolean checkExisted(String userId);
+
+	// 유저 프로필 이미지 관련 
+	// 프로필 이미지 업로드
+	boolean uploadProfile(MultipartFile file, String userId) throws IOException;
+	
+	UserProfile getUserProfile(String userId);
+	
+	boolean deleteUserProfile(String userId);
+	
 }

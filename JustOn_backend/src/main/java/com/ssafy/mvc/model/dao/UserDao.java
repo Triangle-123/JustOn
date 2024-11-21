@@ -19,12 +19,17 @@ public interface UserDao {
 	User selectUser(String userId);
 	
 	// 회원정보 수정
-	void updateUser(User user);
+	int updateUser(User user);
 	
 	// 프로필 이미지 업로드
-	void insertProfile(UserProfile userProfile);
+	int insertUserProfile(UserProfile userProfile);
 	
 	// 프로필 이미지 삭제
-	void deleteProfile(String id);
+	int deleteUserProfile(String id);
+	
+	// 프로필 이미지 조회
+	UserProfile getUserProfile(String id);
+	
+	
 	
 }

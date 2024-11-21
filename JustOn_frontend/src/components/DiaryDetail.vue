@@ -12,9 +12,9 @@
     <div class="content flex flex-col justify-between h-[100%]">
       <!-- 다이어리 내용 -->
       <div>
-        <h3 class="font-bold text-xl mr-6 mb-5">
-          <span class="bg-[var(--juston-black)] text-white px-2 py-1 mr-1"
-            ><strong class="font-[900] juston-gradient-text"
+        <h3 class="font-bold text-xl mr-6 mb-8">
+          <span class="bg-[var(--juston-black)] text-white px-2 pt-4 pb-3 mr-1"
+            ><strong class="text-3xl font-[900] juston-gradient-text"
               >DATE &nbsp;{{ diaryForDetail.regDate }}</strong
             ></span
           >
@@ -46,7 +46,7 @@
             <tbody>
               <tr
                 class="border-solid border-r-[1px] border-gray-200 p-1"
-                v-for="ex in diaryForDetail.diaryExList"
+                v-for="ex in addedVideoList"
               >
                 <td>{{ ex.title }}</td>
                 <td>{{ ex.playNum }}</td>
@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { watch } from "vue";
+import { onMounted, reactive, watch, ref } from "vue";
 import axios from "@/axios/index";
 const emit = defineEmits(["closeDetail", "openModifyDiary", "updateList"]);
 
@@ -81,15 +81,25 @@ const props = defineProps({
     Required: true,
   },
 });
-const diary = props.diaryForDetail;
+// const diaryForDetail = reactive({
+//   content: "",
+//   regDate: "",
+//   diaryNo: "",
+//   // 기타 필요한 속성들...
+// });
+
+const diaryForDetail = ref(props.diaryForDetail);
+
+// let diaryForDetail = reactive([]);
+// diaryForDetail = props.diaryForDetail;
+console.log("DiaryDetail  => diaryForDetail");
+console.log(diaryForDetail.value);
 
 async function deleteDiary() {
   if (diary.diaryNo) {
     try {
       if (confirm("삭제하시겠습니까?")) {
-        await axios.delete(
-          "api-diary/diary/" + diary.diaryNo
-        );
+        await axios.delete("api-diary/diary/" + diary.diaryNo);
         console.log("삭제완료");
         emit("closeDetail");
         emit("updateList");
@@ -103,19 +113,68 @@ async function deleteDiary() {
   }
 }
 
+onMounted(() => {
+  registView();
+});
+const addedVideoList = reactive([]);
+const registView = async () => {
+  // const diaryNo = diaryForDetail.diarNo;
+  // const { data } = await axios.get(`api-diary/diary/${diaryNo}`);
+  // diaryForDetail.diaryExList = data.diaryExList;
+  // console.log("registView => diaryForDetail.diaryExList ");
+  // console.log(diaryForDetail.diaryExList);
+
+  const { data } = await axios.get(
+    `api-diary/diary/exlist/${diaryForDetail.value.diaryNo}`
+  );
+
+  const diaryExList = data;
+  // const diaryExList = diaryForDetail.diaryExList;
+  addedVideoList.splice(0, addedVideoList.length);
+  if (diaryExList !== null) {
+    for (const ex of diaryExList) {
+      const videoNo = ex.videoNo;
+      const response = await axios.get(`api-video/${videoNo}`);
+      const data2 = response.data.video;
+      ex.title = data2.title;
+      console.log("registView => ex.title", ex.title);
+
+      addedVideoList.push(ex);
+
+      //   console.log("watch data => data2 ");
+      //   console.log(data2);
+
+      //   console.log("watch data => ex.title");
+      //   console.log(ex.title);
+    }
+  }
+  diaryForDetail.value.diaryExList = diaryExList;
+};
+
 const openModifyDiary = () => {
-  emit("openModifyDiary", diary);
+  console.log("openModifyDiary +++++++++ ", openModifyDiary);
+  emit("openModifyDiary", diaryForDetail.value);
 };
 
 // 다이어리 변화 감지
 // watch(
-//   diary,
+//   () => props.diaryForDetail,
 //   (newValue) => {
-//     diary.value = newValue;
+//     diaryForDetail.value = props.diaryForDetail;
+//     registView();
+//     console.log(diaryForDetail.value);
 //     console.log("반영완료");
-//   },
-//   { immediate: true }
+//   }
 // );
+
+watch(
+  () => props.diaryForDetail,
+  (newValue) => {
+    diaryForDetail.value = newValue; // ref 객체에 값을 대체
+    registView();
+    console.log("반영 완료");
+  }
+);
 </script>
 
 <style scoped></style>
