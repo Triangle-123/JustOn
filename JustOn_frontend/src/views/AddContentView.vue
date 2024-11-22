@@ -124,7 +124,7 @@
               </button>
               <div class="flex justify-end" v-if="musicModifyState">
                 <button
-                  class="flex-1 btn-m-black mr-3"
+                  class="flex-1 btn-m-black mr-3 p-3"
                   type="button"
                   @click="modifyMusic"
                 >
@@ -586,7 +586,7 @@ button {
   border: 1px solid #ccc;
   font-size: 0.9rem;
   font-weight: bold;
-  /* width: 100px; */
+  width: 100px;
   /* height: 35px; */
   color: white;
   /* background-color: black; */
