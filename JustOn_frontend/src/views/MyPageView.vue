@@ -25,7 +25,7 @@
                 <img
                   class="object-cover max-width-auto"
                   referrerpolicy="no-referrer"
-                  :src="imagePreview"
+                  :src="profileStore.imagePreview"
                   alt="프로필 이미지 미리보기"
                   width="200"
                 />
@@ -58,7 +58,7 @@
               <input
                 class="hidden"
                 type=""
-                @click="resetUserImage"
+                @click="profileStore.resetUserImage"
                 accept="image/*"
                 href=""
                 id="reset-img"
@@ -399,7 +399,9 @@
 <script setup>
 import { ref, reactive, onMounted, computed, watch } from "vue";
 import axios from "@/axios/index";
-import defaultImg from "@/assets/juston-default-profile-140.png";
+import { useProfileStore } from "@/stores/profile";
+
+const profileStore = useProfileStore();
 
 const isPwComplete = ref(false);
 
@@ -407,7 +409,6 @@ const isPwComplete = ref(false);
 // 프로필 이미지 파일 선택 및 업로드
 // ========================
 const file = ref(null);
-const imagePreview = ref(null);
 
 // 이미지 파일 선택 시 실행
 const onFileChange = (event) => {
@@ -420,87 +421,10 @@ const onFileChange = (event) => {
 
     file.value = selectedFile; // 파일 상태 저장
     console.log("##file.value : ", file.value);
-    uploadImage();
+    profileStore.uploadImage(file.value);
   }
 };
 
-// 이미지를 서버로 업로드하는 함수
-const uploadImage = async () => {
-  // 파일 상태 체크
-  if (!file.value) {
-    alert("업로드할 파일을 선택해주세요.");
-    return;
-  }
-
-  // const formData = new FormData();
-  // formData.append("profileImage", file.value);
-
-  try {
-    const response = await axios.post(
-      "/api-user/profile/upload",
-      { file: file.value }, // 객체? 그대로?
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-
-    // console.log("response:", response);
-    // 성공적으로 업로드된 경우, 응답으로 받은 이미지 URL을 사용해 프로필 이미지 업데이트
-    const imageUrl = response.data.imageUrl;
-    console.log("업로드된 이미지 URL:", imageUrl);
-    alert("프로필 이미지가 성공적으로 업로드되었습니다.");
-    getUserImage();
-  } catch (error) {
-    console.error("이미지 업로드 오류:", error);
-    alert("이미지 업로드에 실패했습니다.");
-  }
-};
-
-// ========================
-// 프로필 이미지 조회
-// ========================
-const imgSysName = ref("");
-const getUserImage = async () => {
-  try {
-    const response = await axios.get("/api-user/profile");
-    if (!response) return;
-    const imgData = response.data;
-    imgSysName.value = imgData.systemName;
-
-    const url = `http://localhost:8080/uploads/${imgSysName.value}/${imgSysName.value}`;
-
-    const response2 = await axios.get(url, {
-      responseType: "blob",
-      // headers: {
-      //   Authorization: "Bearer " + localStorage.getItem("jwt"),
-      // },
-    });
-
-    imagePreview.value = URL.createObjectURL(response2.data);
-
-    // imagePreview.value = `http://localhost:8080/uploads/${imgSysName}`;
-    console.log("프로필 이미지 데이터 response", response);
-    console.log("프로필 이미지 imgSysName", imgSysName.value);
-  } catch (error) {
-    imagePreview.value = defaultImg;
-    console.log("프로필 이미지 imgSysName", imgSysName.value);
-    console.error("프로필 이미지 조회 실패", error);
-  }
-};
-
-const resetUserImage = async () => {
-  const url = "src/main/resources/static/imgs/juston-default-profile-140.png";
-  // imagePreview.value = URL.createObjectURL(url);
-  try {
-    const response = await axios.delete(`api-user/profile`);
-    console.log("프로필 이미지 삭제 성공", response);
-    imagePreview.value = defaultImg;
-  } catch (error) {
-    console.error("프로필 이미지 삭제 실패", error);
-  }
-};
 
 // ========================
 // 회원정보 받아오기
@@ -508,7 +432,7 @@ const resetUserImage = async () => {
 // 컴포넌트 마운트 시 유저 데이터 로드
 onMounted(() => {
   fetchUserData();
-  getUserImage();
+  profileStore.getUserImage();
 });
 
 const fetchUserData = async () => {
