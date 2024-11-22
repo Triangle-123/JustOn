@@ -3,10 +3,10 @@
     <div class="list-wrap my-scrollbar" v-if="videoList !== ''">
       <div
         @click="modifyVideo(video.videoNo)"
-        class="list p-3 flex justify-between items-center relative border-solid border-gray-200 border-b rounded-[16px] hover:bg-[#f6f6f6] cursor-pointer"
+        class="list p-3 flex justify-between min-width-[400px] items-center relative border-solid border-gray-200 border-b rounded-[16px] hover:bg-[#f6f6f6] cursor-pointer"
         v-for="video in videoList"
       >
-        <span class="ellipsis max-width-[600px] inline-block">{{
+        <span class="ellipsis inline-block max-width-[300px]">{{
           video.title
         }}</span>
 
@@ -35,9 +35,9 @@
           </div>
         </div>
       </div>
-      <!-- 재생목록 선택 -->
     </div>
-
+    
+    <!-- 재생목록 선택 -->
     <div class="" v-for="video in videoList">
       <VideoPlaylist
         v-if="video.selected"
@@ -55,6 +55,7 @@
   </div>
 
   <VideoAddPlaylist
+    class=""
     @success-add="playlistAddCount++"
     @close-add-playlist-view="doCloseAddPlaylist"
     v-if="addListView"

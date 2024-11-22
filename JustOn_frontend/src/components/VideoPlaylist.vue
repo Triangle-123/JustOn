@@ -1,10 +1,10 @@
 <template>
   <div
-    class="modal-overlay flex justify-center items-center absolute left-0 top-0 bg-[rgba(0,0,0,0.3)] w-[100%] h-[100%]"
+    class="modal-overlay z-[1000] flex justify-center items-center absolute left-0 top-0 bg-[rgba(0,0,0,0.3)] w-[100%] h-[100%]"
   >
     <div
-      v-click-outside="closePlaylistView"
-      class="bg-white rounded-[16px] p-8 h-[400px] flex flex-col justify-between"
+      
+      class="w-[500px] h-[400px] bg-white rounded-[16px] p-8 h-[400px] flex flex-col justify-between"
     >
       <h2>재생목록 선택</h2>
       <div class="flex-col h-[100%] items-start">
@@ -37,9 +37,18 @@
           재생목록이 없습니다.
         </div>
       </div>
-      <button class="btn-m-white w-[100%]" @click="openAddPlaylistView">
-        + 재생목록 추가
-      </button>
+      <div class="flex gap-4">
+        <button class="flex-1 btn-m-white mb-4" @click="openAddPlaylistView">
+          + 재생목록 추가
+        </button>
+        <button
+                class="btn-m-white flex-1"
+                type="button"
+                @click="closePlaylistView"
+              >
+                닫기
+        </button>
+      </div>
     </div>
   </div>
 </template>

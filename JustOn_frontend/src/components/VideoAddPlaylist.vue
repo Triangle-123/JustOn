@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-overlay">
+  <div class="modal-overlay z-[2000]">
     <div
       class="modal-con p-6 rounded-[16px] w-[500px] h-[400px]"
       v-click-outside="closeAddPlaylistView"
@@ -96,7 +96,7 @@ const addPlaylist = async () => {
   align-items: center;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  /* background: rgba(0, 0, 0, 0.5); */
 }
 .modal-con {
   background-color: #fff;

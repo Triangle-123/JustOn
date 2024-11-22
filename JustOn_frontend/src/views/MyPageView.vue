@@ -1,6 +1,6 @@
 <template>
   <div class="h-[100%] flex justify-center items-center">
-    <div class="content-wrap w-[500px] h-[calc(100vh-(360px))]">
+    <div class="content-wrap w-[500px] h-[calc(100vh-(160px))]">
       <div
         class="flex justify-between items-center pb-5 mb-10 border-solid border-b border-gray-200"
       >
