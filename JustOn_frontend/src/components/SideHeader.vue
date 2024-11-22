@@ -114,9 +114,11 @@
         <a
           v-for="(menu, index) in sMenus"
           :key="index"
-          class="menu-item rounded-[16px] block"
-          href="#none"
-          @click="setActive(index)"
+          class="menu-item rounded-[16px] block cursor-pointer"
+          @click="
+            // setActive(index);
+            navigateTo(menu.routerName);
+          "
         >
           <i :class="menu.iconClass" class="mr-3"></i>
         </a>
@@ -153,10 +155,18 @@ const menus = [
   },
 ];
 const sMenus = [
-  { iconClass: "bi bi-house-heart", text: "홈" },
-  { iconClass: "bi bi-patch-plus-fill", text: "컨텐츠 등록" },
-  { iconClass: "bi bi-journal-plus", text: "운동 다이어리" },
-  { iconClass: "", text: "PlayList 등록" },
+  { iconClass: "bi bi-house-heart",
+    text: "홈",
+    routerName: "home",
+  },
+  { iconClass: "bi bi-patch-plus-fill",
+    text: "컨텐츠 등록",
+    routerName: "addContent",
+   },
+  { iconClass: "bi bi-journal-plus", 
+    text: "운동 다이어리",
+    routerName: "diaryList",
+  },
 ];
 const router = useRouter();
 const navigateTo = (routeName) => {

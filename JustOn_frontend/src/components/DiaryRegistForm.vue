@@ -61,7 +61,7 @@
                   @click="openSchModal"
                 >
                   <!-- 영상 검색 버튼 -->
-                  <input class="leading-[52px] w-[100%] relative z-[0]" v-model="title"  placeholder="영상을 검색해주세요." disabled></input>
+                  <input class="bg-[rgba(0,0,0,0)] leading-[52px] w-[100%] relative z-[0]" v-model="title"  placeholder="영상을 검색해주세요." disabled></input>
                   <button class="w-[52px] h-[52px] absolute right-0 top-0">
                     <i class="bi bi-search text-[#000]"></i>
                   </button>
@@ -170,16 +170,16 @@
               type="text"
               @input="handleSearch"
               placeholder="영상 제목을 검색해주세요"
-              class="w-full border-2 border-gray-200 rounded-[16px] px-4 py-2 mb-4"
+              class="w-full border-solid border-2 border-gray-200 rounded-[16px] px-4 py-2 mb-4"
             />
 
             <!-- 검색 결과 리스트 -->
-            <ul class="overflow-y-auto h-[300px] bg-[#ccc] max-h-[300px]">
+            <ul class="overflow-y-auto h-[300px] max-h-[300px]">
               <li
                 v-for="ex in filteredExercises"
                 :key="ex.videoNo"
                 @click="selectExercise(ex)"
-                class="bg-[#f00] p-2 hover:bg-gray-100 cursor-pointer"
+                class=" p-2 hover:bg-gray-100 cursor-pointer"
               >
                 <!-- {{ ex.videoNo || "제목없음" }} -->
                 {{ ex.title || "제목없음" }}

@@ -34,7 +34,7 @@
 
         <div class="border-solid border-b-[1px] border-gray-200 mb-5">
           <h4 class="font-bold text-lg mb-2">진행한 운동 영상</h4>
-          <table class="border-collapse w-[100%] h-[260px]">
+          <table class="border-collapse w-[100%] h-[100%]">
             <thead>
               <tr
                 class="text-l border-solid border-b-[1px] border-t-[1px] border-gray-200"
@@ -48,8 +48,8 @@
                 class="border-solid border-r-[1px] border-gray-200 p-1"
                 v-for="ex in addedVideoList"
               >
-                <td>{{ ex.title }}</td>
-                <td>{{ ex.playNum }}</td>
+                <td class="text-center py-5">{{ ex.title }}</td>
+                <td class="text-center  py-5">{{ ex.playNum }}</td>
               </tr>
             </tbody>
           </table>

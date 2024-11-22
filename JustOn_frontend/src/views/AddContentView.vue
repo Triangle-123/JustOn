@@ -13,9 +13,9 @@
       <div class="mb-20 max-w-screen-xl w-[100%]">
         <h3 class="mb-4">영상 추가/수정</h3>
 
-        <div class="flex flex-row gap-[30px]">
+        <div class="flex gap-[30px]">
           <!-- LEFT -->
-          <div class="flex flex-col gap-[20px]">
+          <div class="add-info flex flex-col gap-[20px] ">
             <div class="addVideo flex flex-col items-start">
               <label class="label font-bold text-lg mb-2">URL 입력</label>
               <input
@@ -593,13 +593,17 @@ button {
   cursor: pointer;
 }
 .playList {
-  max-width: 700px;
+  flex: 1;
+  /* min-width: 800px; */
   border: 1px solid #ccc;
   border-radius: 20px;
   display: flex;
   /* overflow-y: scroll; */
-  height: 400px;
+  height: 410px;
   padding: 10px 20px;
+}
+.add-info {
+  flex : 1;
 }
 .misicPlayList {
   width: 100%;
