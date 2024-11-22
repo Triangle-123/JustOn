@@ -85,7 +85,8 @@ const login = async () => {
           if (resInfo.status === 200) {
             const userData = resInfo.data;
             userStore.setUser(userData); // 사용자 정보 저장
-            router.push({name: 'loggedinHome'});
+            // router.push({name: 'loggedinHome'});
+            router.push({name: 'home'});
           } else {
             userStore.logout(); // 인증 실패 시 로그아웃 처리
           }

@@ -172,7 +172,7 @@ public class UserRestController {
         if (profile != null) {
             return ResponseEntity.ok(profile);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build();	
         }
     }
     
