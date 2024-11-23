@@ -100,31 +100,10 @@
             </button>
           </div>
         </div>
-
-        <!-- 
-        diarySearch : private int page,	private int listSize;
-    
-        params.put("diarySearch", diarySearch);
-        params.put("userId", userId);
-        result.put("list", diaryDao.selectAllDiary(params));
-        result.put("pr", new PageResult(
-              diarySearch.getPage(),
-              diaryDao.selectAllDiaryCount(userId),
-              diarySearch.getListSize()
-          )
-    
-          ### PageResult 
-          private int page; // 현재 요청된 페이지 번호
-          private int beginPage; // 목록 하단의 페이지 시작번호
-          private int endPage; // 목록 하단의 페이지 종료번호
-          private int lastPage; // 목록 하단의 페이지 마지막 페이지
-          private boolean prev; // 이전 버튼 표시 여부 판단
-          private boolean next; // 다음 버튼 표시 여부 판단
-        );
-        -->
       </div>
     </div>
 
+    <!-- 등록/수정  -->
     <DiaryRegistForm
       v-if="isShowRegisterForm"
       @update-list="updateList"
@@ -132,7 +111,9 @@
       :isModify="isModify"
       ref="diaryRegistFormRef"
       :reset="reset"
+      @mounted="onChildMounted"
     />
+    <!-- 상세 -->
     <DiaryDetail
       v-if="isDiaryDetailShow"
       @closeDetail="closeDetail"
@@ -165,10 +146,7 @@ const pr = ref({
 
 async function getUserDiaryList() {
   const { data } = await axios.get(`api-diary/diary`);
-  // diaryList.value = data.list;
 
-  console.log("getUserDiaryList => data.list.value");
-  console.log(data.list);
   if (data.list !== undefined) {
     if (data.list.length > 0) {
       diaryList.value = data.list.sort(
@@ -180,17 +158,17 @@ async function getUserDiaryList() {
     pr.value = data.pr;
   } else {
     diaryList.value = [];
-    // pr.value = data.pr;
   }
 }
 getUserDiaryList();
 
 const updateList = () => {
-  console.log("updateList들어옴");
   getUserDiaryList();
 };
 
-// 페이징 구현
+// =======================
+// 페이징
+// =======================
 const curPage = ref(1);
 
 // 페이징을 위한 페이지 번호 배열 계산
@@ -204,7 +182,6 @@ const pageNumbers = computed(() => {
 
 // 페이지 변경 함수
 const changePage = async (page) => {
-  // if (page < 1 || page > pr.value.lastPage) return;
   // 페이지 변경 시 새로운 데이터를 불러옴
   try {
     const { data } = await axios.get(`api-diary/diary?page=${page}`);
@@ -249,21 +226,14 @@ async function selectDiaryByRegDate() {
   }
 }
 
+// =======================
 // 다이어리 상세
+// =======================
 const selectedDiary = ref({});
 const isDiaryDetailShow = ref(false);
 
 const diaryDetailShow = async (diary) => {
-  console.log("diaryDetailShow => diary");
-  console.log(diary);
-
-  // 받아온 다이어리의 No. 로 ExList 세팅 후 보내주기
-  // const diaryNo = diary.diaryNo;
-  // const { data } = await axios.get(`api-diary/diary/exlist/${diaryNo}`);
-  // console.log("### diaryDetailShow => data");
-  // console.log(data);
-  // modifyDiary.value = { ...diary, diaryExList: data };
-  // selectedDiary.value = { ...diary, diaryExList: data };
+  formState.value = "";
   selectedDiary.value = diary;
   modifyDiary.value = diary;
   isDiaryDetailShow.value = true;
@@ -275,12 +245,22 @@ const diaryDetailShow = async (diary) => {
 const isShowRegisterForm = ref(false);
 const isModify = ref(false);
 const reset = ref(false);
+// Detail => RegistForm
+const formState = ref();
 const showRegisterForm = () => {
-  // 전부 끄고 켜는 식으로
-  isDiaryDetailShow.value = false;
-  isShowRegisterForm.value = !isShowRegisterForm.value;
-  isModify.value = false;
-  reset.value = true;
+  if (!formState.value) {
+    // 초기값일 때, 일반 기본 설정. regist 상태 변화
+    isDiaryDetailShow.value = false; // 상세 꺼지고
+    isShowRegisterForm.value = true; // 등록 보이고
+    isModify.value = false; // 등록 상태
+    formState.value = "regist";
+  } else if (formState.value === "regist") {
+    // regist 상태일 때
+    isShowRegisterForm.value = false;
+    formState.value = "";
+  }
+  // reset.value = true;
+  // this.$refs.diaryRegistFormRef.handleAction();
 };
 
 // closeDetail
@@ -292,8 +272,6 @@ const closeDetail = () => {
 // openModifyDiary
 const modifyDiary = ref({});
 const openModifyDiary = (diary) => {
-  console.log("diary");
-  console.log(diary);
   modifyDiary.value = diary;
   isModify.value = true;
   isShowRegisterForm.value = true;
