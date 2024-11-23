@@ -5,12 +5,12 @@ public class ExRecord {
 	private String userId;
 	private String exDate;
 	private String part;
-	private String partValue;
+	private int partValue;
 	public ExRecord() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public ExRecord(int exRecordNo, String userId, String exDate, String part, String partValue) {
+	public ExRecord(int exRecordNo, String userId, String exDate, String part, int partValue) {
 		super();
 		this.exRecordNo = exRecordNo;
 		this.userId = userId;
@@ -42,10 +42,10 @@ public class ExRecord {
 	public void setPart(String part) {
 		this.part = part;
 	}
-	public String getPartValue() {
+	public int getPartValue() {
 		return partValue;
 	}
-	public void setPartValue(String partValue) {
+	public void setPartValue(int partValue) {
 		this.partValue = partValue;
 	}
 	@Override

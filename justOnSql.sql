@@ -41,11 +41,11 @@ CREATE TABLE user_profile_img (
 # 사용자별 운동 일기
 CREATE TABLE diary (
 	diary_no INT AUTO_INCREMENT PRIMARY KEY,
-    -- title VARCHAR(300) NOT NULL,
     content TEXT NOT NULL,
-    reg_date VARCHAR(50) UNIQUE,
+    reg_date DATE NOT NULL,
     user_id VARCHAR(100) NOT NULL,
-    FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE
+    FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE,
+    UNIQUE(user_id, reg_date)
 );
 
 # 운동일기 상의 운동기록
@@ -85,9 +85,9 @@ CREATE TABLE playlist_music(
 	playlist_name VARCHAR(100) NOT NULL,
     music_no INT NOT NULL,
     user_id VARCHAR(100) NOT NULL,
-    FOREIGN KEY(playlist_name) REFERENCES music_group(playlist_name),
-    FOREIGN KEY(music_no) REFERENCES music(music_no),
-    FOREIGN KEY(user_id) REFERENCES user(user_id),
+    FOREIGN KEY(playlist_name) REFERENCES music_group(playlist_name) ON DELETE CASCADE,
+    FOREIGN KEY(music_no) REFERENCES music(music_no) ON DELETE CASCADE,
+    FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE,
     PRIMARY KEY(playlist_name, music_no)
 );
 
@@ -143,7 +143,9 @@ CREATE TABLE IF NOT EXISTS ex_record(
     stretching INT NOT NULL,
     cardio INT NOT NULL,
     PRIMARY KEY(ex_record_no),
-    FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE
+    FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE,
+    UNIQUE(user_id, ex_date),
+    FOREIGN KEY(user_id, ex_date) REFERENCES diary(user_id, reg_date) ON DELETE CASCADE
 );
 
 
@@ -175,7 +177,7 @@ CREATE TABLE IF NOT EXISTS category_video(
     user_id VARCHAR(100) NOT NULL,
     FOREIGN KEY(video_no) REFERENCES video(video_no) ON DELETE CASCADE,
     FOREIGN KEY(category_name) REFERENCES video_group(category_name) ON DELETE CASCADE,
-    FOREIGN KEY(user_id) REFERENCES user(user_id),
+    FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE,
     PRIMARY KEY(video_no, category_name)
 );
 
@@ -205,4 +207,8 @@ SELECT * FROM category_video;
 
 SELECT * FROM video_ex_list;
 
-SELECT * FROM music;	
+SELECT * FROM music;
+
+SELECT * FROM diary_ex;
+
+SELECT * FROM ex_record;

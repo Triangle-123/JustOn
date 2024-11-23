@@ -6,7 +6,7 @@ import com.ssafy.mvc.model.dto.ExRecord;
 
 public interface ExDataService {
 	
-	boolean registExData(ExRecord exRecord);
+	boolean registExData(List<ExRecord> exRecordList);
 	
 	List<ExRecord> getExData(String userId);
 }

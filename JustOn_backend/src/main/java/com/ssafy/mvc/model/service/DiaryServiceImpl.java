@@ -95,7 +95,7 @@ public class DiaryServiceImpl implements DiaryService {
 			result3 = diaryDao.insertDiaryExList(diaryEx);
 		}
 //		int result3 = diaryDao.insertDiaryExList(diary.getDiaryExList());
-		return result >= 1 && result2 >= 1 && result3 >= 1;
+		return result >= 1 && result2 >= 0 && result3 >= 1;
 	}
 
 	// 다이어리 삭제

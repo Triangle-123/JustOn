@@ -23,6 +23,7 @@
                 class="w-[100%] input-style-h52"
                 type="text"
                 v-model.trim="URL"
+                @keyup.enter="insertVideo"
               />
             </div>
 
@@ -96,7 +97,7 @@
       </div>
       <!-- 음악 Section -->
       <div class="mb-20 max-w-screen-xl w-[100%]">
-        <h3 class="mb-4">음악 추가/수정</h3>
+        <h3 class="mb-4">음악 추가</h3>
 
         <div class="flex flex-col gap-[20px] w-[100%]">
           <!-- TOP -->
@@ -110,6 +111,7 @@
                 type="text"
                 v-model.trim="musicURL"
                 placeholder="추가하실 음악 영상의 링크를 넣어주세요."
+                @keyup.enter="insertMusic"
               />
             </div>
 
@@ -122,7 +124,7 @@
               >
                 추가하기
               </button>
-              <div class="flex justify-end" v-if="musicModifyState">
+              <!-- <div class="flex justify-end" v-if="musicModifyState">
                 <button
                   class="flex-1 btn-m-black mr-3 p-3"
                   type="button"
@@ -137,14 +139,14 @@
                 >
                   취소
                 </button>
-              </div>
+              </div> -->
             </div>
           </div>
 
           <!-- BOTTOM -->
           <div class="misicPlayList">
             <MusicList
-              @deleteVideo="deleteMusic"
+              @deleteMusic="deleteMusic"
               @modifyMusic="modifyMusicView"
               :count="musicCount"
             />
@@ -464,11 +466,15 @@ const insertMusic = async () => {
   // console.log(youtube.value);
 
   try {
-    await axios.post("api-music", youtubeMusic.value);
+    const response = await axios.post("api-music", youtubeMusic.value);
+    console.log(response.data);
+    // if(!response) {
+    //   throw new Error("이미 등록된 음악입니다.");
+    // }
     musicCount.value++;
     musicURL.value = "";
   } catch (error) {
-    // console.dir(error);
+    console.dir(error);
     const { response } = error;
     alert(response.data);
     musicURL.value = "";

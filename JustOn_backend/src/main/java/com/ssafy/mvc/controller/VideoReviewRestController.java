@@ -40,7 +40,7 @@ public class VideoReviewRestController {
 			if(ReviewService.regist(videoReview)) {
 				return ResponseEntity.ok().build();
 			}
-			return ResponseEntity.internalServerError().build();			
+			return ResponseEntity.internalServerError().build();
 		} catch(Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.internalServerError().build();

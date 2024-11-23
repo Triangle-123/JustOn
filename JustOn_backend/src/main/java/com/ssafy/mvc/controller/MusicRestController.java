@@ -37,8 +37,10 @@ public class MusicRestController {
 			music.setUserId(userDetails.getUsername());
 //			System.out.println(addDto.video);
 			if(musicService.addMusic(music)) {
+				System.out.println("dd");
 				return ResponseEntity.ok("음악이 등록되었습니다.");
 			}
+			System.out.println("ss");
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 등록된 음악입니다.");
 		} catch (Exception e) {
 			e.printStackTrace();

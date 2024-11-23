@@ -143,7 +143,7 @@
 import { isDarkMode, toggleDarkMode } from "@/composables/DarkMode";
 import { onMounted, ref } from "vue";
 import Swiper from "swiper/bundle";
-import MetronomeBtn from "@/components/MetronomeBtn.vue";
+
 // import styles bundle
 import "swiper/css/bundle";
 const isHidden = ref(false);

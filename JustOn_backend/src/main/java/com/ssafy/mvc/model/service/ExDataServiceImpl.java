@@ -17,8 +17,8 @@ public class ExDataServiceImpl implements ExDataService {
 	}
 	
 	@Override
-	public boolean registExData(ExRecord exRecord) {
-		return exDataDao.insertOrUpdateExRecord(exRecord) >= 1;
+	public boolean registExData(List<ExRecord> exRecordList) {
+		return exDataDao.insertOrUpdateExRecord(exRecordList) >= 1;
 	}
 
 	@Override

@@ -20,7 +20,6 @@
         <input class="hidden" type="file" @change="onFileChange" accept="image/*" href="" id="proImg-upload" />
         <label class="absolute bottom-0 right-0 cursor-pointer text-base" for="proImg-upload" v-if="userStore.user"><i
             class="bi bi-gear shadow-lg shadow-slate-800/10 bg-[#fff] block w-6 h-6 rounded-[50%] text-center leading-6"></i></label>
-
       </div>
 
       <!-- <div calss="profile-txt"> -->

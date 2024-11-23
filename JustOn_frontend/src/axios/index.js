@@ -3,7 +3,7 @@ import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
 
 const apiClient = axios.create({
-    baseURL: 'http://192.168.210.75:8080/', // API 서버 주소
+    baseURL: 'http://localhost:8080/', // API 서버 주소
     headers: {
         'Content-Type': 'application/json',
     },
@@ -32,6 +32,7 @@ apiClient.interceptors.response.use(
       userStore.logout();
       // router.push({name:'login'});
     }
+    return Promise.reject(error);
   }
 );
 

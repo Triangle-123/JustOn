@@ -6,7 +6,7 @@ import com.ssafy.mvc.model.dto.ExRecord;
 
 public interface ExDataDao {
 	
-	int insertOrUpdateExRecord(ExRecord exRecord);
+	int insertOrUpdateExRecord(List<ExRecord> exRecordList);
 	
 	List<ExRecord> selectExRecord(List<String> column, String userId);
 	
