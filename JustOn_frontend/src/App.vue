@@ -1,7 +1,7 @@
 <template>
   <SideHeader />
   <RouterView />
-  <!-- <MetronomeBtn /> -->
+  <MetronomeBtn />
   <!-- <DiaryList /> -->
   <!-- <VideoTest /> -->
   <!-- <RouterLink :to="{name:home}">home</RouterLink> -->
@@ -12,7 +12,7 @@
 
 <script setup>
 import SideHeader from "@/components/SideHeader.vue";
-// import MetronomeBtn from "./components/MetronomeBtn.vue";
+import MetronomeBtn from "./components/MetronomeBtn.vue";
 // import DiaryList from "./components/DiaryList.vue";
 // import VideoTest from "@/components/VideoTest.vue";
 // import Home from "./components/Home.vue";

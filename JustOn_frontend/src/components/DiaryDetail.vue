@@ -96,10 +96,10 @@ console.log("DiaryDetail  => diaryForDetail");
 console.log(diaryForDetail.value);
 
 async function deleteDiary() {
-  if (diary.diaryNo) {
+  if (diaryForDetail.value.diaryNo) {
     try {
       if (confirm("삭제하시겠습니까?")) {
-        await axios.delete("api-diary/diary/" + diary.diaryNo);
+        await axios.delete("api-diary/diary/" + diaryForDetail.value.diaryNo);
         console.log("삭제완료");
         emit("closeDetail");
         emit("updateList");

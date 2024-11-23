@@ -333,6 +333,7 @@ async function userVideoList() {
   } catch (error) {
     console.error("userExercises 데이터 불러오는 중 오류", error);
     return null;
+    
   }
 }
 
@@ -418,6 +419,7 @@ const registDiary = async () => {
   };
   try {
     const response = await axios.post("api-diary/diary", diary);
+    const res = await axios.post("api-ex", diary);
     emit("update-list");
     alert(date.value + ", 오늘 기록도 완료 :)");
     console.log("등록 성공", response.data);
@@ -449,6 +451,7 @@ const updateDiary = async () => {
   }
   try {
     const response = await axios.put(`api-diary/diary/${diary.diaryNo}`, diary);
+    const res = await axios.post('api-ex', diary);
     emit("update-list");
     alert(date.value + ", 수정 완료 :)");
     console.log("수정 성공", response.data);
@@ -496,6 +499,7 @@ watch(date, async (newDate) => {
 
       // 영상 정보에 대한 데이터
       if(diaryExList !== null){
+        addedVideoList.value.length = 0;
         for (const ex of diaryExList) {
           const videoNo = ex.videoNo;
           const response = await axios.get(`api-video/${videoNo}`);

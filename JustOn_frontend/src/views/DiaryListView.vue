@@ -86,7 +86,7 @@
               v-for="page in pageNumbers"
               :key="page"
               @click="changePage(page)"
-              :class="['btn-page', { active: page === pr.page }]"
+              :class="['btn-page', { active: page === pr.page }, {'font-bold' : page == curPage}]"
             >
               {{ page }}
             </button>
@@ -197,7 +197,8 @@ const changePage = async (page) => {
       pr.value = data.pr;
     } else {
       diaryList.value = [];
-    }
+    } 
+    curPage.value = page;
   } catch (error) {
     console.error("페이지 불러오기 실패", error);
   }
@@ -207,6 +208,7 @@ const changePage = async (page) => {
 const date = ref("");
 async function selectDiaryByRegDate() {
   if (date.value) {
+    pr.value = {};  
     try {
       console.log("실행됨");
       const { data } = await axios.get("api-diary/diary/list/" + date.value);

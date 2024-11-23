@@ -20,7 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 //
 //해당 필터를 통해 요청 헤더 Authorization 키에 JWT가 존재하는 경우 
 // JWT를 검증하고 강제로 SecurityContextHolder에 세션을 생성한다. 
-// (이 세션은 STATLESS 상태로 관리되기 때문에 해당 요청이 끝나면 소멸 된다.)
+// (이 세션은 STATELESS 상태로 관리되기 때문에 해당 요청이 끝나면 소멸 된다.)
 public class JWTFilter extends OncePerRequestFilter { // OncePerRequestFilter => 요청에 대해 한번만 동작하는 필터
 
 	private JWTUtil jwtUtil;
