@@ -276,8 +276,9 @@ const isShowRegisterForm = ref(false);
 const isModify = ref(false);
 const reset = ref(false);
 const showRegisterForm = () => {
+  // 전부 끄고 켜는 식으로
   isDiaryDetailShow.value = false;
-  isShowRegisterForm.value = true;
+  isShowRegisterForm.value = !isShowRegisterForm.value;
   isModify.value = false;
   reset.value = true;
 };

@@ -15,7 +15,7 @@
 
         <div class="flex gap-[30px]">
           <!-- LEFT -->
-          <div class="add-info flex flex-col gap-[20px] ">
+          <div class="add-info flex flex-col gap-[20px]">
             <div class="addVideo flex flex-col items-start">
               <label class="label font-bold text-lg mb-2">URL 입력</label>
               <input
@@ -512,7 +512,7 @@ const modifyMusic = async () => {
   // console.log(youtube.value);
 
   try {
-    await axios.put("api-music/" + musicNo.value, youtubeMusic.value);  
+    await axios.put("api-music/" + musicNo.value, youtubeMusic.value);
     alert("음악 영상 수정을 완료했습니다.");
     cancelMusicModify();
     musicCount.value++;
@@ -593,7 +593,7 @@ button {
   cursor: pointer;
 }
 .playList {
-  flex: 1;
+  flex: 2;
   /* min-width: 800px; */
   border: 1px solid #ccc;
   border-radius: 20px;
@@ -603,7 +603,7 @@ button {
   padding: 10px 20px;
 }
 .add-info {
-  flex : 1;
+  flex: 1;
 }
 .misicPlayList {
   width: 100%;

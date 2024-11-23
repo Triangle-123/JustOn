@@ -16,7 +16,7 @@
       <form
         @keydown.enter.prevent
         @submit.prevent
-        class="flex flex-col gap-4 mb-3"
+        class="flex flex-col gap-3 "
       >
         <!-- 날짜 선택 -->
         <fieldset>
@@ -61,7 +61,7 @@
                   @click="openSchModal"
                 >
                   <!-- 영상 검색 버튼 -->
-                  <input class="bg-[rgba(0,0,0,0)] leading-[52px] w-[100%] relative z-[0]" v-model="title"  placeholder="영상을 검색해주세요." disabled></input>
+                  <input class="bg-[rgba(0,0,0,0)] leading-[52px] w-[80%] relative z-[0]" v-model="title"  placeholder="영상을 검색해주세요." disabled></input>
                   <button class="w-[52px] h-[52px] absolute right-0 top-0">
                     <i class="bi bi-search text-[#000]"></i>
                   </button>
@@ -238,21 +238,24 @@ const props = defineProps({
 const date = ref("");
 const content = ref("");
 const diaryNo = ref("");
-const isUpdate = ref(false);
+
+const isUpdate = ref(false); // 수정인지, 등록인지 판별위한 변수
 isUpdate.value = props.isModify;
+
 const userExercises = reactive([]); // 유저가 추가한 모든 영상
 const filteredExercises = reactive([]);
 const videoNo = ref("");
-// 검색에 따라 필터링된 영상들
+
+onMounted(() => {
+  userVideoList(); // 컴포넌트가 마운트될 때 유저의 데이터 로딩
+});
+
 // ==========================//
 // 다이어리 수정
 // ==========================//
 const modifyDiary = ref({});
 modifyDiary.value = props.modifyDiary;
 date.value = modifyDiary.value.regDate;
-console.log("modifyDiary +++++++++++ ###",modifyDiary.value);
-console.log("modifyDiary +++++++++++ ###",date.value);
-
 
 // ---------로딩창 관련--------//
 const isLoading = ref(false);
@@ -271,12 +274,9 @@ const addedVideoList = ref([]);
 const isSearch = ref(false);
 const openSchModal = () => {
   isSearch.value = true;
-  // userVideoList();
   console.log("openSchModal -> userExercises.value");
   console.dir(userExercises.value);
-  // filteredExercises.value = userExercises.value;
   console.log("openSchModal -> filteredExercises.value");
-  // console.dir(filteredExercises.value);
 };
 
 // 사용자가 등록한 운동 영상 리스트 모두 받아옴
@@ -288,18 +288,13 @@ async function userVideoList() {
       userExercises.push(d);
     }
 
-    // filteredExercises.value = data;
     console.log("userExercises.value");
-    // console.dir(userExercises.value);
-    // console.dir(userExercises.value[0].title);
   } catch (error) {
     console.error("userExercises 데이터 불러오는 중 오류", error);
     return null;
   }
 }
-onMounted(() => {
-  userVideoList(); // 컴포넌트가 마운트될 때 데이터 로딩
-});
+
 
 // watch(
 //   () => filteredExercises.value,
@@ -342,7 +337,6 @@ const searchQuery = ref("");
 
 const handleSearch = (query) => {
   filteredExercises.splice(0, filteredExercises.length);
-  // userVideoList();
   console.log("handleSearch -> userExercises.value");
   console.dir(userExercises);
   console.log("이벤트", query);
@@ -475,6 +469,16 @@ const updateDiary = async () => {
 
 // 날짜 선택 시, 해당 다이어리가 있는지 확인
 // -> isUpdate 값이 true 일 경우 수정이 보여지도록, 수정 버튼 클릭시에는 수정 메서드 진행
+
+handleAction();
+const handleAction = () => {
+  if(!isUpdate) { // 등록일 경우
+
+  } else { // 수정일 경우
+
+  }
+};
+
 async function selectDiaryByRegDate() {
   if (!date.value) return null;
 
@@ -492,16 +496,15 @@ async function selectDiaryByRegDate() {
     console.error("데이터 불러오는 중 오류", error);
     return null;
   }
-  // else {
-  //   alert("날짜를 선택해주세요.");
-  // }
+  else {
+    alert("날짜를 선택해주세요.");
+  }
 }
 
 
 //============================
 // 다이어리 수정 시 불러오는 Data
 // ===========================
-// userVideoList();
 watch(date, async (newDate) => {
   if (newDate) {
     console.log("조회 실행되었습니다.");

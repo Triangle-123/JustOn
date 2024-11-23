@@ -112,7 +112,7 @@ body {
   border-radius: 36px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
   background-color: var(--juston-bg-white);
-  padding: 42px;
+  padding: 40px;
   overflow: hidden;
 }
 
@@ -241,6 +241,12 @@ textarea {
 }
 /* COLOR - E */
 
+/* WIDTH TOGGLE - S*/
+.width-spread {
+  transition: all 0.8s;
+  /* margin-right: 0; */
+  /* transform-origin: top right;  */
+}
 /**********
 COMMON - E
 **********/

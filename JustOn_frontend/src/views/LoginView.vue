@@ -27,7 +27,7 @@
           v-model="password"
         />
         <div class="btn-box flex justify-center">
-          <RouterLink :to="{name: 'signup'}">회원가입</RouterLink>
+          <RouterLink :to="{ name: 'signup' }">회원가입</RouterLink>
           <a href="">비밀번호 찾기</a>
           <a class="border-none" href="">아이디 찾기</a>
         </div>
@@ -71,7 +71,7 @@ const login = async () => {
       userName: userName.value,
       password: password.value,
     });
-  
+
     // console.dir(response);
     if (response.status === 200) {
       localStorage.setItem("jwt", response.headers.authorization.split(" ")[1]);
@@ -80,13 +80,13 @@ const login = async () => {
         try {
           // 사용자 정보를 서버에서 가져오기
           const resInfo = await axios.get("api-user/userInfo");
-  
+
           console.dir(resInfo);
           if (resInfo.status === 200) {
             const userData = resInfo.data;
             userStore.setUser(userData); // 사용자 정보 저장
-            // router.push({name: 'loggedinHome'});
-            router.push({name: 'home'});
+            router.push({ name: "loggedinHome" });
+            // router.push({name: 'home'});
           } else {
             userStore.logout(); // 인증 실패 시 로그아웃 처리
           }
