@@ -107,7 +107,7 @@
         class="txt-box text-[#fff] text-center flex flex-col items-center text-base"
       >
         <img
-          on-click=""
+          @click="switchStore.switching"
           class="w-[60px] h-[60px] mb-4 fill-white cursor-pointer"
           src="../assets/on-btn-w.svg"
         />
@@ -163,9 +163,11 @@ import { watch, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useProfileStore } from "@/stores/profile";
+import { useSwitchStore } from "@/stores/switch";
 
 const userStore = useUserStore();
 const profileStore = useProfileStore();
+const switchStore = useSwitchStore();
 const route = useRoute();
 const isSizeChange = ref(false);
 const rotate = ref(false);

@@ -1,10 +1,10 @@
 <template>
   <div class="flex gap-5">
     <div class="video">
-      <MainVideoList />
+      <MainVideoList/>
     </div>
     <div class="music">
-      <MainMusicList />
+      <MainMusicList/>
     </div>
     <div class="ex-sug">
       <ExSuggest />

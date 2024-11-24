@@ -37,7 +37,7 @@
       <div class="flex w-[100%] gap-8">
         <!-- 영상 박스 -->
         <div class="main-video flex-1">
-          <MainVideoListDetail :video="selectedVideo" />
+          <MainVideoListDetail @next-video="showNextVideo" :video="selectedVideo" />
         </div>
         <!-- 재생목록 영상 리스트 -->
         <div
@@ -54,13 +54,13 @@
               </div>
               <div
                 class="mb-6"
-                v-for="video in videoInPlaylist"
+                v-for="(video, index) in videoInPlaylist"
                 :key="video.videoId"
               >
                 <img
                   class="rounded-[16px]"
                   :src="video.thumb"
-                  @click="selectedVideo = video"
+                  @click="videoSelect(index)"
                 />
               </div>
             </div>
@@ -73,12 +73,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import axios from "@/axios/index";
 import MainVideoListDetail from "./MainVideoListDetail.vue";
 const videoPlaylist = ref([]);
 const videoInPlaylist = ref([]);
 const selectedVideo = ref({});
+const selectedIndex = ref(0);
 const selectedVideoPlaylist = ref("재생 목록 선택을 선택해주세요.");
 // const selectedPlaylist = ref("");
 const requestGetPlaylist = async () => {
@@ -96,8 +97,18 @@ const requestGetVideo = async (event) => {
   } else categoryName.value = event.target.value;
   const response = await axios.get(`api-video/${categoryName.value}/videos`);
   videoInPlaylist.value = response.data;
-  selectedVideo.value = videoInPlaylist.value[0];
+  videoSelect(0);
 };
+
+const videoSelect = (index) => {
+  selectedVideo.value = videoInPlaylist.value[index];
+  selectedIndex.value = index;
+}
+const showNextVideo = () => {
+  if(selectedIndex.value == videoInPlaylist.value.length - 1) {
+    videoSelect(0);
+  } else videoSelect(selectedIndex.value + 1);
+}
 </script>
 
 <style scoped>
