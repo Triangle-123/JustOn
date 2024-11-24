@@ -20,12 +20,12 @@ import { useApiStore } from '@/stores/api';
 const switchStore = useSwitchStore();
 const apiStore = useApiStore();
 
-const isPlayerLoaded = ref(false); 
+const isPlayerLoaded = ref(false);
 const props = defineProps(['video']);
 const emit = defineEmits(['nextVideo']);
 const player = ref();
 
-const initializePlayer = () => {  
+const initializePlayer = () => {
   return new Promise((resolve) => {
     console.log("video api before-init");
     if (apiStore.isApiLoaded) {
@@ -50,33 +50,49 @@ const initializePlayer = () => {
 
 const onPlayerStateChange = () => {
   const playerState = player.value.getPlayerState();
-  if(playerState == 0) {
+  if (playerState == 0) {
     emit('nextVideo');
   }
 }
 
+const cueVideo = () => {
+  return new Promise((resolve) => {
+    player.value.cueVideoById({
+      videoId: props.video.videoId,
+      startSeconds: 0,
+      endSeconds: 0,
+      suggestedQuality: "large",
+    });
+
+    resolve();
+  })
+};
+
 const loadVideo = () => {
-  player.value.cueVideoById({
-    videoId: props.video.videoId,
-    startSeconds: 0,
-    endSeconds: 0,
-    suggestedQuality: "large",
-  });
+  return new Promise((resolve) => {
+    player.value.loadVideoById({
+      videoId: props.video.videoId,
+      startSeconds: 0,
+      endSeconds: 0,
+      suggestedQuality: "large",
+    });
+
+    resolve();
+  })
 };
 const play = ref();
 watch(() => props.video, () => {
   if (isPlayerLoaded.value) {
     console.log("hahahah")
     loadVideo();
-    player.value.playVideo();
   }
 })
 
 onMounted(() => {
   if (apiStore.isApiLoaded) {
     initializePlayer().then(() => {
-      loadVideo();
-  });
+      cueVideo();
+    });
   }
   else console.log("not init");
 })
@@ -84,18 +100,18 @@ onMounted(() => {
 watch(() => apiStore.isApiLoaded, () => {
   if (apiStore.isApiLoaded) {
     initializePlayer().then(() => {
-      loadVideo();
-  });
+      cueVideo();
+    });
   }
   else console.log("not init");
 })
 
 watch(() => switchStore.isOff, () => {
-  if(switchStore.isOff) {
-    if(player.value.getPlayerState() == 1) player.value.pauseVideo();
+  if (switchStore.isOff) {
+    if (player.value.getPlayerState() == 1) player.value.pauseVideo();
   }
   else {
-    if(player.value.getPlayerState() == 2) player.value.playVideo();
+    if (player.value.getPlayerState() == 2) player.value.playVideo();
   }
 })
 </script>

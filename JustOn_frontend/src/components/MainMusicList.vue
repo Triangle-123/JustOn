@@ -267,7 +267,6 @@ const getTime = () => {
         } 
         else curMin.value = "0";
       }
-      console.log(curMin.value);
       curSec.value = String(Math.floor(currentTime.value)).padStart(2, "0");
     }
   }
