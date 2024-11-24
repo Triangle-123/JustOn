@@ -49,17 +49,17 @@
     <div
       class="playlist-select mb-4 flex justify-between h-[44px] items-center px-4 py-7 bg-[#f7f7f7] rounded-[16px]"
     >
-      <p
+      <!-- <p
         class="text-[14px] w-[160px] mr-4 bg-white px-5 py-1 rounded-[16px] flex-1"
       >
         <i class="bi bi-music-note-list mr-2"></i>{{ selectedMusicPlaylist }}
-      </p>
+      </p> -->
       <select
-        class="w-[180px] text-[14px] border-solid border-gray-200 border-2 rounded-[16px] px-4 py-1"
+        class="w-[100%] text-[14px] border-solid border-gray-200 border-2 rounded-[16px] px-4 py-1"
         @change="requestGetMusic"
         v-model="selectedMusicPlaylist"
       >
-        <option disabled value="플레이리스트 선택">플레이리스트 선택</option>
+        <option disabled value="플레이리스트 선택">🎵 플레이리스트 선택</option>
         <option
           v-for="playlist in musicPlaylist"
           :value="playlist.playlistName"
@@ -150,9 +150,9 @@
       @click="musicSelect(index)"
       :key="music.musicNo"
     >
-      <span class="ellipsis max-width-[300px] inline-block">{{
-        music.title
-      }}</span>
+      <span class="ellipsis max-width-[300px] inline-block"
+        >💿 {{ music.title }}</span
+      >
     </div>
   </div>
 </template>

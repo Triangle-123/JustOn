@@ -6,9 +6,9 @@
         class="list p-3 flex justify-between min-width-[400px] items-center relative border-solid border-gray-200 border-b rounded-[16px] hover:bg-[#f6f6f6] cursor-pointer"
         v-for="video in videoList"
       >
-        <span class="ellipsis inline-block max-w-[480px]">{{
-          video.title
-        }}</span>
+        <span class="ellipsis inline-block max-w-[480px]"
+          >💿 {{ video.title }}</span
+        >
 
         <div class="flex items-center">
           <button class="add-btn mr-3" @click="selectVideo(video)">

@@ -68,8 +68,8 @@ h3 {
   font-weight: 800;
 }
 
-.content-wrap .juston-gradient-text {
-  background: linear-gradient(to right, #e0d6ff, #ffeaec, #eaf0fe);
+.juston-gradient-text {
+  background: linear-gradient(to right, #bba5ff, #ffaeb6, #b4caff);
   background-size: 300% 100%; /* 배경 크기 설정 */
   -webkit-background-clip: text; /* 텍스트에 배경을 클리핑 */
   color: transparent; /* 텍스트 색상을 투명으로 설정 */
