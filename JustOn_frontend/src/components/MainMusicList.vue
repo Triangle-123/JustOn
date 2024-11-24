@@ -161,6 +161,12 @@
 <script setup>
 import { onMounted, onBeforeMount, ref, watch } from "vue";
 import axios from "@/axios/index";
+import { useSwitchStore } from "@/stores/switch";
+import { useApiStore } from "@/stores/api";
+
+const switchStore = useSwitchStore();
+const apiStore = useApiStore();
+
 const musicPlaylist = ref([]);
 const musicInPlaylist = ref([]);
 const selectedMusic = ref({});
@@ -258,14 +264,11 @@ const getTime = () => {
       if (totMin.value) {
         if (totMin.value >= 10 || totMin.value.length == 2) {
           curMin.value = "00";
-        }
-      } else curMin.value = "0";
-      curSec.value = String(Math.floor(currentTime.value)).padStart(2, "0");
-    }
-    if (duration.value > 0) {
-      if (Math.floor(currentTime.value) >= Math.floor(duration.value)) {
-        nextMusic();
+        } 
+        else curMin.value = "0";
       }
+      console.log(curMin.value);
+      curSec.value = String(Math.floor(currentTime.value)).padStart(2, "0");
     }
   }
 };
@@ -317,8 +320,8 @@ const changeTime = (event) => {
     if (totMin.value) {
       if (totMin.value >= 10 || totMin.value.length == 2) {
         curMin.value = "00";
-      }
-    } else curMin.value = "0";
+      } else curMin.value = "0";
+    }
     curSec.value = String(Math.floor(currentTime.value)).padStart(2, "0");
   }
 };
@@ -365,9 +368,11 @@ const playVideo = () => {
     // console.log(duration.value, totHour.value, totMin.value, totSec.value);
   }, 1000);
   timer.value = setInterval(getTime, 1000);
+  isPlaying.value = true;
 };
 const pauseVideo = () => {
   player.value.pauseVideo();
+  isPlaying.value = false;
 };
 const togglePlayPause = () => {
   if (isPlaying.value) {
@@ -375,7 +380,7 @@ const togglePlayPause = () => {
   } else {
     playVideo();
   }
-  isPlaying.value = !isPlaying.value; // 상태 토글
+  // isPlaying.value = !isPlaying.value; // 상태 토글
 };
 const changeVolume = () => {
   player.value.setVolume(volume.value);
@@ -403,6 +408,7 @@ const musicSelect = (index) => {
   selectedIndex.value = index;
   loadVideo();
   playVideo();
+  isPlaying.value = true;
 };
 
 const prevMusic = () => {
@@ -417,7 +423,9 @@ const nextMusic = () => {
   } else musicSelect(selectedIndex.value + 1);
 };
 
+const emit = defineEmits(['apiLoaded']);
 const loadYouTubeAPI = async () => {
+  console.log("before music api load");
   return new Promise((resolve) => {
     if (typeof YT === "undefined" || typeof YT.Player === "undefined") {
       const script = document.createElement("script");
@@ -429,11 +437,15 @@ const loadYouTubeAPI = async () => {
       // API 로드 후 초기화 함수 연결
 
       window.onYouTubeIframeAPIReady = async () => {
+        console.log("music api loaded")
         isApiLoaded.value = true;
+        apiStore.isApiLoaded = true;
         resolve();
       };
     } else {
+      console.log("music api already loaded");
       isApiLoaded.value = true;
+      apiStore.isApiLoaded = true;
       resolve();
       return;
     }
@@ -455,11 +467,19 @@ const initializePlayer = () => {
             event.target.setVolume(volume.value);
             resolve();
           },
+          onStateChange: onPlayerStateChange,
         },
       });
     }
   });
 };
+
+const onPlayerStateChange = () => {
+  const playerState = player.value.getPlayerState();
+  if(playerState == 0) {
+    nextMusic();
+  }
+}
 
 watch(
   () => isApiLoaded.value,
@@ -469,6 +489,16 @@ watch(
     console.log("player : ", YT.Player);
   }
 );
+
+watch(() => switchStore.isOff, () => {
+  if(switchStore.isOff) {
+    if(player.value.getPlayerState() == 1) pauseVideo();
+  }
+  else {
+    if(player.value.getPlayerState() == 2) playVideo();
+  }
+})
+
 onBeforeMount(() => {
   loadYouTubeAPI()
     .then(() => initializePlayer())

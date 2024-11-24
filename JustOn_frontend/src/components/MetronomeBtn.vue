@@ -11,12 +11,25 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useSwitchStore } from "@/stores/switch";
+
+const switchStore = useSwitchStore();
+
 const soundUrl = import.meta.env.VITE_SOUND_URL;
 const audioFiles = [
   // { src: soundUrl + "/racestart.mp3", duration: 5, repeatCount: 1 },
-  { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 10 },
-  { src: soundUrl + "/countdown-10.mp3", duration: 11.5, repeatCount: 1 },
+  { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
+  { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
+  { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
+  { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
+  { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
+  { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
+  { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
+  { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
+  { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
+  { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
+  { src: soundUrl + "/10-second-count-down.mp3", duration: 10.5, repeatCount: 1 },
   { src: soundUrl + "/wow.mp3", duration: 1, repeatCount: 1 },
   // { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
   // { src: soundUrl + "/wow.mp3", duration: 1, repeatCount: 1 },
@@ -129,6 +142,14 @@ function stopAllAudio() {
     audio.removeEventListener("ended", () => { });
   });
 }
+
+watch(() => switchStore.isOff, () => {
+  if(switchStore.isOff) {
+    stopAllAudio();
+    isPlaying.value = false;
+  }
+})
+
 </script>
 <style>
 .met-active {
@@ -159,7 +180,7 @@ function stopAllAudio() {
     width: 100px;
     /* Height and width */
     animation-name: time;
-    animation-duration: 22.5s;
+    animation-duration: 21.5s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
 }
@@ -172,7 +193,7 @@ function stopAllAudio() {
     width: 50%;
    
     animation-name: mask;
-    animation-duration: 22.5s;
+    animation-duration: 21.5s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     /* Animation time and number of steps (halved) */
