@@ -11,17 +11,17 @@
       <div
         class="h-[44px] flex justify-center items-center px-4 py-7 bg-[#f7f7f7] rounded-[16px]"
       >
-        <p class="text-[14px] w-[260px] mr-4 bg-white px-5 py-1 rounded-[16px]">
+        <!-- <p class="text-[14px] w-[260px] mr-4 bg-white px-5 py-1 rounded-[16px]">
           <i class="bi bi-collection-play mr-2"></i>
           {{ selectedVideoPlaylist }}
-        </p>
+        </p> -->
         <select
-          class="w-[230px] text-[14px] border-solid border-gray-200 border-2 rounded-[16px] px-4 py-1"
+          class="w-[300px] text-[14px] border-solid border-gray-200 border-2 rounded-[16px] px-4 py-1"
           @change="requestGetVideo"
           v-model="selectedVideoPlaylist"
         >
           <option disabled value="재생 목록 선택을 선택해주세요.">
-            재생 목록 선택
+            🎬 재생 목록 선택
           </option>
           <option
             v-for="playlist in videoPlaylist"

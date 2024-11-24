@@ -10,9 +10,9 @@
         class="list p-3 flex justify-between items-center relative border-solid border-gray-200 border-b rounded-[16px] hover:bg-[#f6f6f6]"
         v-for="music in musicList"
       >
-      <span class="ellipsis max-width-[600px] inline-block">{{
-          music.title
-        }}</span>
+        <span class="ellipsis max-width-[600px] inline-block"
+          >💿 {{ music.title }}</span
+        >
 
         <div class="flex items-center">
           <button class="add-btn mr-3" @click="selectMusic(music)">
@@ -37,7 +37,10 @@
               </div>
             </div>
           </div> -->
-          <i class="bi bi-x-circle cursor-pointer fs-3" @click="deleteMusic(music.musicNo)"></i>
+          <i
+            class="bi bi-x-circle cursor-pointer fs-3"
+            @click="deleteMusic(music.musicNo)"
+          ></i>
         </div>
       </div>
       <!-- 재생목록 선택 -->

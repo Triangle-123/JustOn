@@ -11,7 +11,7 @@
     <div class="content-scroll flex flex-col items-center">
       <!-- 영상 Section -->
       <div class="mb-20 max-w-screen-xl w-[100%]">
-        <h3 class="mb-4">영상 추가/수정</h3>
+        <h3 class="mb-4">🏋🏻‍♂️ 운동 영상 추가/수정</h3>
 
         <div class="flex gap-[30px]">
           <!-- LEFT -->
@@ -58,7 +58,7 @@
               </div>
             </div>
             <button
-              class="h-[80px] btn-m-black"
+              class="add-btn h-[80px] btn-m-black"
               type="button"
               @click="insertVideo"
               v-if="!modifyState"
@@ -97,7 +97,7 @@
       </div>
       <!-- 음악 Section -->
       <div class="mb-20 max-w-screen-xl w-[100%]">
-        <h3 class="mb-4">음악 추가</h3>
+        <h3 class="mb-4">🎧 음악 추가</h3>
 
         <div class="flex flex-col gap-[20px] w-[100%]">
           <!-- TOP -->
@@ -642,5 +642,8 @@ button {
 }
 select {
   margin-right: 3vw;
+}
+.add-btn {
+  width: 100%;
 }
 </style>

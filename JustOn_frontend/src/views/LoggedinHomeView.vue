@@ -6,12 +6,16 @@
     <div class="music">
       <MainMusicList />
     </div>
+    <div class="ex-sug">
+      <ExSuggest />
+    </div>
   </div>
 </template>
 
 <script setup>
 import MainVideoList from "@/components/MainVideoList.vue";
 import MainMusicList from "@/components/MainMusicList.vue";
+import ExSuggest from "@/components/ExSuggest.vue";
 </script>
 
 <style scoped>
