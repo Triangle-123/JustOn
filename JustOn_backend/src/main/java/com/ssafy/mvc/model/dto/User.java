@@ -13,6 +13,7 @@ public class User {
 	private String nickname;
 	private String birth;
 	private String role;
+	private String color;
 	
 	private UserProfile userProfile;
 
@@ -22,7 +23,7 @@ public class User {
 	}
 
 	public User(String userId, String password, String name, String email, String gender, int postCode, String address,
-			String extraAddress, String detailAddress, String nickname, String birth, String role,
+			String extraAddress, String detailAddress, String nickname, String birth, String role, String color,
 			UserProfile userProfile) {
 		super();
 		this.userId = userId;
@@ -37,6 +38,7 @@ public class User {
 		this.nickname = nickname;
 		this.birth = birth;
 		this.role = role;
+		this.color = color;
 		this.userProfile = userProfile;
 	}
 
@@ -136,6 +138,14 @@ public class User {
 		this.role = role;
 	}
 
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
 	public UserProfile getUserProfile() {
 		return userProfile;
 	}
@@ -149,9 +159,8 @@ public class User {
 		return "User [userId=" + userId + ", password=" + password + ", name=" + name + ", email=" + email + ", gender="
 				+ gender + ", postCode=" + postCode + ", address=" + address + ", extraAddress=" + extraAddress
 				+ ", detailAddress=" + detailAddress + ", nickname=" + nickname + ", birth=" + birth + ", role=" + role
-				+ ", userProfile=" + userProfile + "]";
+				+ ", color=" + color + ", userProfile=" + userProfile + "]";
 	}
 
-	
 	
 }

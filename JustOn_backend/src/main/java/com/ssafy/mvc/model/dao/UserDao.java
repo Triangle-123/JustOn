@@ -29,6 +29,8 @@ public interface UserDao {
 	
 	// 프로필 이미지 조회
 	UserProfile getUserProfile(String id);
+
+	int updateUserColor(String color, String userId);
 	
 	
 	

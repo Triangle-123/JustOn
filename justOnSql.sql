@@ -16,7 +16,8 @@ CREATE TABLE `user` (
     detail_address VARCHAR(100) NOT NULL,
     nickname VARCHAR(100) NOT NULL,
     birth DATE NOT NULL,
-    role VARCHAR(30) NOT NULL
+    role VARCHAR(30) NOT NULL,
+    color VARCHAR(100)
 );
 
 # 유저 선호운동 정보

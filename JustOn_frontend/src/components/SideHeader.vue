@@ -288,7 +288,7 @@ header {
   height: 100%;
   overflow: hidden;
   transition: all 0.8s;
-
+  background: var(--juston-bg-white);
   > div {
     display: flex;
   }

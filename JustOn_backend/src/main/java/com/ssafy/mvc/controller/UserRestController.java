@@ -2,6 +2,7 @@ package com.ssafy.mvc.controller;
 
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -186,6 +187,19 @@ public class UserRestController {
 		}
     }
     
-	
+	@PutMapping("/color")
+	public ResponseEntity<?> changeColor(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Map<String, String> map) {
+		try {
+			String color = map.get("color");
+			System.out.println(color);
+			if(userService.changeColor(color, userDetails.getUsername())) {
+				return ResponseEntity.ok("배경색이 변경되었습니다.");
+			}
+			throw new Exception();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("배경색 변경에 실패하였습니다.");
+		}
+	}
 	
 }

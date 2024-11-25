@@ -26,5 +26,7 @@ public interface UserService {
 	UserProfile getUserProfile(String userId);
 	
 	boolean deleteUserProfile(String userId);
+
+	boolean changeColor(String color, String userId);
 	
 }
