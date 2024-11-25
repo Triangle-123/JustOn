@@ -1,8 +1,5 @@
 <template>
-  <div class="absolute right-10 bottom-[170px]">
-    <span class="hidden hover:block absolute bg-white rounded-[16px] text-bold"
-      >나에게 부족한 운동 부위는?</span
-    >
+  <div class="fixed right-10 bottom-[170px]">
     <button
       class="slot-btn p-4 w-[100px] bg-[var(--juston-black)] border-dotted border-gray-300 border-[8px] rounded-[50%] text-xl font-bold text-white"
       @click="toggleSlot"
@@ -181,7 +178,7 @@ function stopSlotMachine() {
   // 선택된 값이 중앙에 위치하도록 `position` 조정
   position.value = selectedIndex.value * slotItemHeight;
 
-  // 부드럽게 중앙 정렬
+  // 중앙 정렬
   setTimeout(() => {
     isStart.value = false;
     isStop.value = true;

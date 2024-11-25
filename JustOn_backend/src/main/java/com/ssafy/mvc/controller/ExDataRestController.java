@@ -40,10 +40,6 @@ public class ExDataRestController {
 	public ResponseEntity<?> registExData(@RequestBody Diary diary,
 			@AuthenticationPrincipal CustomUserDetails userDetails) {
 		try {
-			// diary의 regDate와 userId로 diaryNo를 가져오거나 diaryExList 가져오기
-			// diaryExList의 videoNo로 diaryEx 하나당 videoExList를 가져온다.
-			// 그 후 부위에 가중치를 곱하고, diaryEx의 play_Num을 곱한다
-			// 결과 데이터(부위, regDate, userId)를 ExRecord 객체에 넣어 DB에 추가
 			List<DiaryEx> diaryExList = diary.getDiaryExList();
 			List<ExRecord> exList = new ArrayList<>();
 			for (int i = 0; i < diaryExList.size(); i++) {
@@ -52,9 +48,7 @@ public class ExDataRestController {
 				List<VideoEx> list = (List<VideoEx>) videoService.getVideoInfo(d.getVideoNo()).get("videoEx");
 				int weight = list.get(0).getExWeight();
 				for (int j = 0; j < list.size(); j++) {
-					// for(VideoEx v : list)
 					VideoEx v = list.get(j);
-					// partValue를 합쳐서 저장하는 법...
 					int partValue = v.getSelCnt() * weight * playNum;
 					if (i == 0) {
 						ExRecord exRecord = new ExRecord();

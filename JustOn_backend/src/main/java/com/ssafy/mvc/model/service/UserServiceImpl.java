@@ -124,6 +124,11 @@ public class UserServiceImpl implements UserService {
 		int result1 = userDao.deleteUserProfile(userId);
 		return result1 >= 1;
 	}
+
+	@Override
+	public boolean changeColor(String color, String userId) {
+		return userDao.updateUserColor(color, userId) >= 1;
+	}
 	
 	
 	
