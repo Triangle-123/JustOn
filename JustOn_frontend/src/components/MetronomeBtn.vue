@@ -1,7 +1,7 @@
 <template>
   <button
-    class="metronome-btn bg-[var(--juston-black)] fixed right-10 bottom-10 w-[100px] h-[100px] rounded-[50%] text-white text-4xl firework-button"
-    :class="{ 'met-active': isPlaying }" @click="toggleAudio">
+    class="metronome-btn absolute left-0 top-0 bg-[var(--juston-black)] w-[100px] h-[100px] rounded-[50%] text-white text-4xl firework-button"
+    :class="{ 'met-active': isPlaying, 'kick3': switchStore.isKicked }" @click="toggleAudio">
     <i class="bi bi-stopwatch-fill"></i>
     <div class="timer" v-if="isPlaying">
       <div class="mask"></div>
@@ -144,7 +144,7 @@ function stopAllAudio() {
 }
 
 watch(() => switchStore.isOff, () => {
-  if(switchStore.isOff) {
+  if (switchStore.isOff) {
     stopAllAudio();
     isPlaying.value = false;
   }
@@ -152,14 +152,20 @@ watch(() => switchStore.isOff, () => {
 
 </script>
 <style>
+.metronome-btn {
+  transition: all .2s ease-in-out;
+  transform: scale(0.5);
+  opacity: 0;
+}
+
 .met-active {
   background: var(--juston-gradient-1);
 }
 
-.met-active > i {
+.met-active>i {
   /* color: black; */
   /* inline 속성은 transform이 적용되지 않는다.. */
-  display: inline-block; 
+  display: inline-block;
   /* animation: rotate 0.5s linear infinite;  */
   animation: buzz 0.15s linear infinite;
   /* animation: combine 1s linear infinite; */
@@ -170,72 +176,87 @@ watch(() => switchStore.isOff, () => {
 }
 
 .timer {
-    background: -webkit-linear-gradient(left, #b196f7 50%, black 50%);
-    /* Foreground color, Background colour */
-    border-radius: 100%;
-    height: 100px;
-    /* Height and width */
-    top: 0;
-    position: absolute;
-    width: 100px;
-    /* Height and width */
-    animation-name: time;
-    animation-duration: 21.5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+  background: -webkit-linear-gradient(left, #b196f7 50%, black 50%);
+  /* Foreground color, Background colour */
+  border-radius: 100%;
+  height: 100px;
+  /* Height and width */
+  top: 0;
+  position: absolute;
+  width: 100px;
+  /* Height and width */
+  animation-name: time;
+  animation-duration: 21.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
+
 .mask {
-    border-radius: 100% 0 0 100% / 50% 0 0 50%;
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 50%;
-   
-    animation-name: mask;
-    animation-duration: 21.5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    /* Animation time and number of steps (halved) */
-    transform-origin: 100% 50%;
+  border-radius: 100% 0 0 100% / 50% 0 0 50%;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 50%;
+
+  animation-name: mask;
+  animation-duration: 21.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  /* Animation time and number of steps (halved) */
+  transform-origin: 100% 50%;
 }
+
 @keyframes buzz {
   50% {
     transform: translateX(3px) rotate(2deg);
   }
+
   100% {
     transform: translateX(-3px) rotate(-2deg);
   }
 }
 
 @keyframes time {
-    50% {
-        -webkit-transform: rotate(180deg);
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-    }
+  50% {
+    -webkit-transform: rotate(180deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }
+
 @keyframes mask {
-    0% {
-        background: black;
-        /* Background colour */
-        -webkit-transform: rotate(0deg);
-    }
-    50% {
-        background: black;
-        /* Background colour */
-        -webkit-transform: rotate(-180deg);
-    }
-    50.01% {
-        background: #b196f7;
-        /* Foreground colour */
-        -webkit-transform: rotate(0deg);
-    }
-    100% {
-        background: #b196f7;  
-        /* Foreground colour */
-        -webkit-transform: rotate(-180deg);
-    }
+  0% {
+    background: black;
+    /* Background colour */
+    -webkit-transform: rotate(0deg);
+  }
+
+  50% {
+    background: black;
+    /* Background colour */
+    -webkit-transform: rotate(-180deg);
+  }
+
+  50.01% {
+    background: #b196f7;
+    /* Foreground colour */
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    background: #b196f7;
+    /* Foreground colour */
+    -webkit-transform: rotate(-180deg);
+  }
+}
+
+.kick3 {
+  top: 60px;
+  left: -60px;
+  transform: scale(1);
+  opacity: 1;
 }
 </style>

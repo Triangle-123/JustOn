@@ -108,7 +108,8 @@
       >
         <img
           @click="switchStore.switching"
-          class="w-[60px] h-[60px] mb-4 fill-white cursor-pointer"
+          class="switch w-[60px] h-[60px] mb-4 fill-white cursor-pointer"
+          :class="{'active' : switchStore.isOff }"
           src="../assets/on-btn-w.svg"
         />
         <p class="juston-gradient-text font-bold">
@@ -369,4 +370,47 @@ header {
 em {
   font-weight: 800;
 }
+
+/*-------------------- Switch --------------------*/
+ .switch {
+	 transition: all 0.1s ease-out;
+	 z-index: 0;
+	 border-radius: 50%;
+	 box-shadow: inset 0 2px 3px rgba(91, 85, 86, 0.37);
+	 cursor: pointer;
+}
+ .switch::before {
+	 transition: all 0.1s ease-out;
+	 content: '';
+	 z-index: 2;
+	 border-radius: 50%;
+	 box-shadow: 0 2px 6px rgba(83, 73, 74, 0.44), 0 0 0 1px rgba(41, 41, 41, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.77);
+}
+ .switch::after {
+	 transition: all 0.1s ease-out;
+	 z-index: 3;
+   /* width: 117px;
+	 height: 117px; */
+}
+ .switch:hover::before {
+	 background: linear-gradient(to bottom, #e7e7e7, #f5f5f5);
+}
+ .switch.active {
+	 width: 80px;
+	 height: 80px;
+	
+	 transform-origin: center;
+   box-shadow :0 0 20px #fff;
+}
+ .switch.active::before {
+	 background: linear-gradient(to bottom, #dbcfca, #fcf6f0);
+	 box-shadow: 0 2px 8px rgba(183, 0, 15, 0.44), 0 0 0 1px rgba(41, 41, 41, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.77);
+}
+ .switch.active::after {
+	 color: #f72735;
+}
+
+.bg{background:#ccc; padding:50px 0;}
+.box{width:200px; height:60px; padding:10px; text-align:center; line-height:60px; background:#fff; margin:50px; box-shadow: 3px 3px 20px #111;}
+.box2{}
 </style>

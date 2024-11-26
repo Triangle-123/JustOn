@@ -219,7 +219,7 @@ import FlatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import Multiselect from "vue-multiselect";
 import axios from "@/axios/index";
-
+import Swal from "sweetalert2";
 const emit = defineEmits(["update-list"]);
 const props = defineProps({
   modifyDiary: {
@@ -376,7 +376,10 @@ const addList = () => {
     title.value = "";
     playNum.value = 1;
   } else {
-    alert("영상 제목과 진행 횟수를 입력해주세요.");
+    Swal.fire({
+      icon : "warning",
+      text :"영상 제목과 진행 횟수를 입력해주세요."
+    })
   }
 };
 
@@ -405,11 +408,17 @@ const minus = () => {
 // 다이어리 등록
 const registDiary = async () => {
   if (!date.value) {
-    alert("날짜를 입력해주세요.");
+    Swal.fire({
+      icon : "warning",
+      text :"날짜를 선택해주세요."
+    })
     return null;
   }
   if (!content.value) {
-    alert("운동소감을 입력해주세요.");
+    Swal.fire({
+      icon : "warning",
+      text :"운동 소감을 입력해주세요."
+    })
     return null;
   }
   const diary = {
@@ -421,7 +430,10 @@ const registDiary = async () => {
     const response = await axios.post("api-diary/diary", diary);
     const res = await axios.post("api-ex", diary);
     emit("update-list");
-    alert(date.value + ", 오늘 기록도 완료 :)");
+    Swal.fire({
+      icon : "success",
+      text : date.value + ", 오늘 기록도 완료 :)"
+    })
     console.log("등록 성공", response.data);
     if (response.status === 200) {
       date.value = "";
@@ -446,14 +458,20 @@ const updateDiary = async () => {
     diaryExList: addedVideoList.value,
   };
   if (!diary.content) {
-    alert("운동소감을 입력해주세요.");
+    Swal.fire({
+      icon : "warning",
+      text :"운동 소감을 입력해주세요."
+    })
     return null;
   }
   try {
     const response = await axios.put(`api-diary/diary/${diary.diaryNo}`, diary);
     const res = await axios.post('api-ex', diary);
     emit("update-list");
-    alert(date.value + ", 수정 완료 :)");
+    Swal.fire({
+      icon : "success",
+      text : date.value + ", 수정 완료 :)"
+    })
     console.log("수정 성공", response.data);
   } catch (error) {
     console.error("수정 실패", error);

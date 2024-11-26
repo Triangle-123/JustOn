@@ -74,7 +74,7 @@ import { ref, watch } from "vue";
 import axios from "@/axios/index";
 import MusicPlaylist from "./MusicPlaylist.vue";
 import MusicAddPlaylist from "./MusicAddPlaylist.vue";
-
+import Swal from "sweetalert2";
 const addListView = ref(false);
 const listView = ref(false);
 const playlistAddCount = ref(0);
@@ -149,7 +149,10 @@ const deleteMusic = async (musicNo) => {
       emit("deleteMusic");
     }
   } catch (error) {
-    alert("해당 음악 삭제에 실패하였습니다.");
+    Swal.fire({
+      icon : "error",
+      text : "해당 음악 삭제에 실패하였습니다."
+    })
   }
 };
 

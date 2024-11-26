@@ -165,6 +165,7 @@ import oriAxios from "axios";
 import axios from "@/axios/index";
 import VideoList from "@/components/VideoList.vue";
 import MusicList from "@/components/MusicList.vue";
+import Swal from "sweetalert2";
 
 const modifyState = ref(false);
 const musicModifyState = ref(false); // 음악 상태
@@ -248,11 +249,17 @@ const count = ref(0);
 // 영상 추가 --------------------------------------------------------------------
 const insertVideo = async () => {
   if (!URL.value) {
-    alert("영상 URL을 입력해주세요.");
+    Swal.fire({
+      icon : "warning",
+      text : "영상 URL을 입력해주세요."
+    })
     return;
   }
   if (weight.value === "none") {
-    alert("영상의 운동 강도를 선택해주세요.");
+    Swal.fire({
+      icon : "warning",
+      text : "영상의 운동 강도를 선택해주세요."
+    })
     return;
   }
 
@@ -261,7 +268,10 @@ const insertVideo = async () => {
       return ex.selected;
     }) === -1
   ) {
-    alert("영상의 운동 부위/종류를 선택해주세요.");
+    Swal.fire({
+      icon : "warning",
+      text : "영상의 운동 부위/종류를 선택해주세요."
+    })
     return;
   }
 
@@ -306,7 +316,10 @@ const insertVideo = async () => {
   } catch (error) {
     console.dir(error);
     const { response } = error;
-    alert(response.data);
+    Swal.fire({
+      icon : "error",
+      text : response.data
+    })
     URL.value = "";
     weight.value = "none";
     for (const ex of exData.value) {
@@ -360,11 +373,17 @@ const modifyVideoView = async (no) => {
 
 const modifyVideo = async () => {
   if (!URL.value) {
-    alert("영상 URL을 입력해주세요.");
+    Swal.fire({
+      icon : "warning",
+      text : "영상 URL을 입력해주세요."
+    })
     return;
   }
   if (weight.value === "none") {
-    alert("영상의 운동 강도를 선택해주세요.");
+    Swal.fire({
+      icon : "warning",
+      text : "영상의 운동 강도를 선택해주세요."
+    })
     return;
   }
 
@@ -373,7 +392,10 @@ const modifyVideo = async () => {
       return ex.selected;
     }) === -1
   ) {
-    alert("영상의 운동 부위/종류를 선택해주세요.");
+    Swal.fire({
+      icon : "warning",
+      text : "영상의 운동 부위/종류를 선택해주세요."
+    })
     return;
   }
 
@@ -409,13 +431,19 @@ const modifyVideo = async () => {
       video: youtube.value,
       videoExList: exData.value,
     });
-    alert("영상 수정을 완료했습니다.");
+    Swal.fire({
+      icon : "success",
+      text : "영상 수정을 완료했습니다."
+    })
     cancelModify();
     weight.value = "none";
     count.value++;
   } catch (error) {
     const { response } = error;
-    alert(response.data);
+    Swal.fire({
+      icon : "error",
+      text : response.data
+    })
   }
 };
 
@@ -439,7 +467,10 @@ const musicCount = ref(0);
 
 const insertMusic = async () => {
   if (!musicURL.value) {
-    alert("음악 영상 URL을 입력해주세요.");
+    Swal.fire({
+      icon : "warning",
+      text : "음악 영상 URL을 입력해주세요."
+    })
     return;
   }
 
@@ -476,7 +507,10 @@ const insertMusic = async () => {
   } catch (error) {
     console.dir(error);
     const { response } = error;
-    alert(response.data);
+    Swal.fire({
+      icon : "error",
+      text : response.data
+    })
     musicURL.value = "";
   }
 };
@@ -491,7 +525,10 @@ const musicNo = ref(-1);
 // 음악 영상 수정 데이터 전송--------------------------------------------------------------
 const modifyMusic = async () => {
   if (!musicURL.value) {
-    alert("음악 영상 URL을 입력해주세요.");
+    Swal.fire({
+      icon : "warning",
+      text : "음악 영상 URL을 입력해주세요."
+    })
     return;
   }
 
@@ -519,12 +556,18 @@ const modifyMusic = async () => {
 
   try {
     await axios.put("api-music/" + musicNo.value, youtubeMusic.value);
-    alert("음악 영상 수정을 완료했습니다.");
+    Swal.fire({
+      icon : "success",
+      text : "음악 영상 수정을 완료했습니다."
+    })
     cancelMusicModify();
     musicCount.value++;
   } catch (error) {
     const { response } = error;
-    alert(response.data);
+    Swal.fire({
+      icon : "error",
+      text : response.data
+    })
   }
 };
 

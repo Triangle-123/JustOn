@@ -67,7 +67,7 @@ import { ref, watch } from "vue";
 import axios from "@/axios/index";
 import VideoPlaylist from "./VideoPlaylist.vue";
 import VideoAddPlaylist from "./VideoAddPlaylist.vue";
-
+import Swal from "sweetalert2";
 const addListView = ref(false);
 const listView = ref(false);
 const playlistAddCount = ref(0);
@@ -140,7 +140,10 @@ const deleteVideo = async (videoNo) => {
       emit("deleteVideo");
     }
   } catch (error) {
-    alert("영상 삭제에 실패하였습니다.");
+    Swal.fire({
+      icon : "error",
+      text : "영상 삭제에 실패하였습니다."
+    })
   }
 };
 
