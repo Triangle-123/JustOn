@@ -6,7 +6,7 @@
 	
 	<!-- select pw 빼기  -->
 	<select id="selectUser" parameterType="String" resultType="User">
-		SELECT user_id, name, email, gender, post_code, address, extra_address, detail_address, nickname, birth, role
+		SELECT user_id, name, email, gender, post_code, address, extra_address, detail_address, nickname, birth, role, color
 		FROM user
 		WHERE user_id = #{userId}
 	</select>
@@ -69,4 +69,9 @@
         WHERE user_id = #{userId}
     </select>
 	
+	<update id="updateUserColor">
+		UPDATE user
+		SET color = #{color}
+		WHERE user_id = #{userId}
+	</update>
 </mapper>

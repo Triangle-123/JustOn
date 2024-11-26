@@ -36,6 +36,7 @@
 	<select id="selectVideoTitle" resultType="Video" parameterType="String">
 		SELECT video_no, title FROM video
 		WHERE user_id = #{Id}
+		ORDER BY video_no DESC;
 	</select>
 	
 	<insert id="insertVideoToGroup">
