@@ -58,6 +58,7 @@ import { ref } from "vue";
 import axios from "@/axios/index.js";
 import { useUserStore } from "@/stores/user";
 import { RouterLink, useRouter } from "vue-router";
+import Swal from "sweetalert2";
 const userName = ref("");
 const password = ref("");
 const userStore = useUserStore();
@@ -97,7 +98,10 @@ const login = async () => {
       }
     }
   } catch (error) {
-    alert("로그인에 실패하였습니다. 다시 시도해 주세요.");
+    Swal.fire({
+      icon : "error",
+      text : "로그인에 실패하였습니다. 다시 시도해 주세요."
+    })
   }
   // console.log(localStorage.getItem('jwt'));
 };

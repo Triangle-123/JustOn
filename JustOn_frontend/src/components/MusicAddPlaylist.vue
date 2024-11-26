@@ -39,7 +39,7 @@
 import { ref } from "vue";
 import axios from "@/axios/index";
 import { useToast } from "vue-toastification";
-
+import Swal from "sweetalert2";
 const Toast = useToast();
 
 const playlist = ref({
@@ -53,7 +53,10 @@ const closeAddPlaylistView = () => {
 const addPlaylist = async () => {
   try {
     if (playlist.value.playlistName.trim() === "") {
-      alert("재생목록명을 입력해주세요");
+      Swal.fire({
+      icon : "warning",
+      text :"재생목록명을 입력해주세요"
+    })
       return false;
     }
     const { response } = await axios.post("api-music/playlist", playlist.value);

@@ -400,7 +400,7 @@
 import { ref, reactive, onMounted, computed, watch } from "vue";
 import axios from "@/axios/index";
 import { useProfileStore } from "@/stores/profile";
-
+import Swal from "sweetalert2";
 const profileStore = useProfileStore();
 
 const isPwComplete = ref(false);
@@ -472,7 +472,10 @@ const fetchUserData = async () => {
 const updateUserInfo = async () => {
   try {
     const response = await axios.put("/api-user/signup", formData); // 수정된 정보 전송
-    alert("회원 정보가 수정되었습니다.");
+    Swal.fire({
+      icon : "success",
+      text : "회원 정보가 수정되었습니다."
+    })
   } catch (error) {
     console.error("회원 정보 수정 오류:", error);
   }
@@ -619,7 +622,10 @@ const responseMessage = ref("");
 const handleSignup = async () => {
   if (!userIdAvailable.value) {
     responseMessage.value = "아이디 중복 검사를 진행해주세요.";
-    alert(responseMessage.value);
+    Swal.fire({
+      icon : "warning",
+      text : responseMessage.value
+    })
     return;
   }
   console.dir(formData);
@@ -630,18 +636,27 @@ const handleSignup = async () => {
 
     // 서버 응답 성공 시 처리
     responseMessage.value = "회원가입 성공! 환영합니다.";
-    alert(responseMessage.value);
+    Swal.fire({
+      icon : "success",
+      text : responseMessage.value
+    })
     console.log("서버 응답:", response.data);
   } catch (error) {
     // 서버 오류 또는 네트워크 오류 처리
     if (error.response) {
       // 서버에서 반환한 오류 메시지
       responseMessage.value = `회원가입 실패: ${error.response.data.message}`;
-      alert(responseMessage.value);
+      Swal.fire({
+      icon : "error",
+      text : responseMessage.value
+    })
     } else {
       // 네트워크 오류 등 기타 문제
       responseMessage.value = "서버와 연결할 수 없습니다. 다시 시도해주세요.";
-      alert(responseMessage.value);
+      Swal.fire({
+      icon : "error",
+      text : responseMessage.value
+    })
     }
     console.error("에러 발생:", error);
   }

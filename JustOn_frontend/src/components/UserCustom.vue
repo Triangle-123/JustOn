@@ -1,10 +1,10 @@
 <template>
-    <div class="fixed right-10 bottom-[305px]">
-        <button class="p-4 w-[100px] h-[100px] bg-[var(--juston-black)] rounded-[50%] text-xl font-bold text-white"
-            @click="isCustomOpen = !isCustomOpen">
-            배경색 변경
+    <button  :class="switchStore.isKicked ? 'kick2' : ''" class="custom absolute left-0 top-0 p-4 w-[100px] h-[100px] bg-[var(--juston-black)] rounded-[50%] text-xl font-bold text-white"
+        @click="isCustomOpen = !isCustomOpen">
+        배경색 변경
     </button>
-    </div>
+    <!-- <div class="">
+    </div> -->
 
     <div v-if="isCustomOpen"
         class="modal-overlay z-[1000] flex justify-center items-center bg-[rgba(0,0,0,0.6)] fixed left-0 top-0 w-full h-full">
@@ -53,7 +53,9 @@
 import { ref } from 'vue';
 import axios from '@/axios/index';
 import { useUserStore } from '@/stores/user';
+import { useSwitchStore } from '@/stores/switch';
 
+const switchStore = useSwitchStore();
 const userStore = useUserStore();
 const isCustomOpen = ref(false);
 const color1 = ref('#ffd7dd');
@@ -116,6 +118,13 @@ const changeColor = async () => {
     --after-gradient-color3: #c29bd8;
 }
 
+.custom {
+    transition: all .2s ease-in-out;        
+    transform: scale(0.5);
+    opacity: 0;
+}
+
+
 .before-bg {
     background: linear-gradient(90deg,
             var(--bf-gradient-color1),
@@ -128,5 +137,12 @@ const changeColor = async () => {
             var(--after-gradient-color1),
             var(--after-gradient-color2),
             var(--after-gradient-color3));
+}
+
+.kick2 {
+    top: -120px;
+    left: -60px;
+    transform: scale(1);
+    opacity: 1;
 }
 </style>

@@ -2,6 +2,7 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import axios from "@/axios/index";
 import defaultImg from "@/assets/juston-default-profile-140.png";
+import Swal from "sweetalert2";
 
 export const useProfileStore = defineStore("profile", () => {
   const imagePreview = ref(null);
@@ -44,7 +45,10 @@ export const useProfileStore = defineStore("profile", () => {
   const uploadImage = async (file) => {
     // 파일 상태 체크
     if (!file) {
-      alert("업로드할 파일을 선택해주세요.");
+      Swal.fire({
+        icon : "warning",
+        text : "업로드할 파일을 선택해주세요."
+      })
       return;
     }
 
@@ -66,11 +70,17 @@ export const useProfileStore = defineStore("profile", () => {
       // 성공적으로 업로드된 경우, 응답으로 받은 이미지 URL을 사용해 프로필 이미지 업데이트
       const imageUrl = response.data.imageUrl;
       // console.log("업로드된 이미지 URL:", imageUrl);
-      alert("프로필 이미지가 성공적으로 업로드되었습니다.");
+      Swal.fire({
+        icon : "success",
+        text : "프로필 이미지가 성공적으로 업로드되었습니다."
+      });
       getUserImage();
     } catch (error) {
       console.error("이미지 업로드 오류:", error);
-      alert("이미지 업로드에 실패했습니다.");
+      Swal.fire({
+        icon : "error",
+        text : "이미지 업로드에 실패했습니다."
+      })
     }
   };
 

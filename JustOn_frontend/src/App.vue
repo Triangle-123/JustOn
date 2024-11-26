@@ -1,51 +1,56 @@
-<template >
-    <SideHeader />
-    <RouterView />
-    <!-- <MetronomeBtn v-if="userStore.user"/> -->
-    <!-- <ExSuggest v-if="userStore.user"/> -->
-    <!-- <UserCustom v-if="userStore.user"/> -->
+<template>
+  <SideHeader />
+  <RouterView />
+  <div class="w-[60px] h-[60px] fixed right-[80px] bottom-[450px]" v-if="userStore.user">
+    <div class="absolute kick-btn left-[20px] top-[-5px] w-[60px] h-[60px] rounded-[50%]"></div>
+    <button class="absolute z-[1000] left-[20px] top-[-5px]  flex justify-center items-center w-[60px] h-[60px] 
+        bg-[var(--juston-black)] rounded-[50%] text-xl font-bold text-white"
+      @click="switchStore.isKicked = !switchStore.isKicked">
+      <img class="w-[35px]" src="./assets/kick-icon.svg" alt="킥" />
+    </button>
 
+    <MetronomeBtn v-if="userStore.user" />
+    <ExSuggest v-if="userStore.user" />
+    <UserCustom v-if="userStore.user" />
+  </div>
 
-    <!-- <DiaryList /> -->
-    <!-- <VideoTest /> -->
-    <!-- <RouterLink :to="{name:home}">home</RouterLink> -->
-    
-    <!-- <LoginTest /> -->
-    <!-- <MainLoginedView /> -->
-    
-    <div
-        v-for="(circle, index) in circles"
-        :key="index"
-        class="circle"
-        :id="'circle'+index"
-        :style="{
-          width: circle.size + 'px',
-          height: circle.size + 'px',
-          transform: `translate(${circle.x}px, ${circle.y}px)`
-        }"
-      ></div>
+  <!-- <DiaryList /> -->
+  <!-- <VideoTest /> -->
+  <!-- <RouterLink :to="{name:home}">home</RouterLink> -->
+
+  <!-- <LoginTest /> -->
+  <!-- <MainLoginedView /> -->
+
+  <div v-for="(circle, index) in circles" :key="index" class="circle" :id="'circle' + index" :style="{
+    width: circle.size + 'px',
+    height: circle.size + 'px',
+    transform: `translate(${circle.x}px, ${circle.y}px)`
+  }"></div>
 </template>
 
 <script setup>
 import { onMounted, watch, ref, onUpdated } from "vue";
 import SideHeader from "@/components/SideHeader.vue";
 import MetronomeBtn from "./components/MetronomeBtn.vue";
-import ExSuggest from "@/components/ExSuggest.vue"; 
+import ExSuggest from "@/components/ExSuggest.vue";
 import { useUserStore } from "./stores/user";
 import UserCustom from "./components/userCustom.vue";
+import { useSwitchStore } from "./stores/switch";
+
+const switchStore = useSwitchStore();
 const userStore = useUserStore();
 // import DiaryList from "./components/DiaryList.vue";
 // import VideoTest from "@/components/VideoTest.vue";
 // import Home from "./components/Home.vue";
 // import MainLoginedView from "@/components/views/MainLoginedView.vue";
 
-watch(() => userStore.user,() => {
-  if(userStore.user.color) {
+watch(() => userStore.user, () => {
+  if (userStore.user.color) {
     console.log('user', userStore.user);
     const color1 = userStore.user.color.split(".")[0];
     const color2 = userStore.user.color.split(".")[1];
     const color3 = userStore.user.color.split(".")[2];
-    
+
     document.documentElement.style.setProperty('--bg-gradient-color1', color1);
     document.documentElement.style.setProperty('--bg-gradient-color2', color2);
     document.documentElement.style.setProperty('--bg-gradient-color3', color3);
@@ -60,63 +65,63 @@ const screenHeight = document.documentElement.clientHeight;
 const isAnimated = ref(false);
 // 원의 상태를 관리하는 reactive 데이터
 const circles = ref([
-      {
-        size: 500,
-        x: Math.random() * screenWidth,
-        y: Math.random() * screenHeight,
-        speedX: (Math.random() - 0.5) * 4,
-        speedY: (Math.random() - 0.5) * 4,
-      },
-      {
-        size: 500,
-        x: Math.random() * screenWidth,
-        y: Math.random() * screenHeight,
-        speedX: (Math.random() - 0.5) * 4,
-        speedY: (Math.random() - 0.5) * 4,
-      },
-      {
-        size: 500,
-        x: Math.random() * screenWidth,
-        y: Math.random() * screenHeight,
-        speedX: (Math.random() - 0.5) * 4,
-        speedY: (Math.random() - 0.5) * 4,
-      },
-    ]);
-  
-  // 애니메이션 실행 함수
-  const animate = () => {
-    isAnimated.value = true;
-      circles.value.forEach(circle => {
-        // 원의 위치 업데이트
-        circle.x += circle.speedX;
-        circle.y += circle.speedY;
+  {
+    size: 500,
+    x: Math.random() * screenWidth,
+    y: Math.random() * screenHeight,
+    speedX: (Math.random() - 0.5) * 4,
+    speedY: (Math.random() - 0.5) * 4,
+  },
+  {
+    size: 500,
+    x: Math.random() * screenWidth,
+    y: Math.random() * screenHeight,
+    speedX: (Math.random() - 0.5) * 4,
+    speedY: (Math.random() - 0.5) * 4,
+  },
+  {
+    size: 500,
+    x: Math.random() * screenWidth,
+    y: Math.random() * screenHeight,
+    speedX: (Math.random() - 0.5) * 4,
+    speedY: (Math.random() - 0.5) * 4,
+  },
+]);
+
+// 애니메이션 실행 함수
+const animate = () => {
+  isAnimated.value = true;
+  circles.value.forEach(circle => {
+    // 원의 위치 업데이트
+    circle.x += circle.speedX;
+    circle.y += circle.speedY;
 
 
-         // 원의 위치가 화면을 벗어나지 않도록 제한
-         circle.x = Math.max(circle.size / 2, Math.min(circle.x, screenWidth - circle.size / 2));
-        circle.y = Math.max(circle.size / 2, Math.min(circle.y, screenHeight - circle.size / 2));
+    // 원의 위치가 화면을 벗어나지 않도록 제한
+    circle.x = Math.max(circle.size / 2, Math.min(circle.x, screenWidth - circle.size / 2));
+    circle.y = Math.max(circle.size / 2, Math.min(circle.y, screenHeight - circle.size / 2));
 
-        // 벽에 부딪히면 속도 반전
-        if (circle.x === circle.size / 2 || circle.x === screenWidth - circle.size / 2) {
-          circle.speedX = -circle.speedX;
-        }
-        if (circle.y === circle.size / 2 || circle.y === screenHeight - circle.size / 2) {
-          circle.speedY = -circle.speedY;
-        }
-      });
-      // 요청 애니메이션 프레임을 이용해 반복 실행
-      requestAnimationFrame(animate);
-    };
+    // 벽에 부딪히면 속도 반전
+    if (circle.x === circle.size / 2 || circle.x === screenWidth - circle.size / 2) {
+      circle.speedX = -circle.speedX;
+    }
+    if (circle.y === circle.size / 2 || circle.y === screenHeight - circle.size / 2) {
+      circle.speedY = -circle.speedY;
+    }
+  });
+  // 요청 애니메이션 프레임을 이용해 반복 실행
+  requestAnimationFrame(animate);
+};
 
-    // 컴포넌트가 마운트될 때 애니메이션 시작
-    onUpdated(() => {
-      if(!isAnimated.value) animate();
-    });
+// 컴포넌트가 마운트될 때 애니메이션 시작
+onUpdated(() => {
+  if (!isAnimated.value) animate();
+});
 
 </script>
 
 <style>
-  /* .user-bg {
+/* .user-bg {
     background: linear-gradient(
     90deg,
     var(--bg-gradient-color1),
@@ -124,11 +129,11 @@ const circles = ref([
     var(--bg-gradient-color3)
   );
   } */
-  .circle {
+.circle {
   position: absolute;
   border-radius: 50%;
   filter: blur(60px);
-  z-index: -1 ;
+  z-index: -1;
 }
 
 #circle0 {
@@ -151,4 +156,29 @@ const circles = ref([
   padding: 30px;
 }
 
+body.swal2-no-backdrop .swal2-container .swal2-modal {
+  width: 0;
+  height: 0;
+}
+
+.kick-btn {
+  background: #000;
+  animation: button-beat 1.5s ease-out 0.4s infinite;
+}
+
+@keyframes button-beat {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  70% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
 </style>
