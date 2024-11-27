@@ -1,5 +1,6 @@
 <template>
-  <button :class="switchStore.isKicked ? 'kick' : ''"
+  <button
+    :class="switchStore.isKicked ? 'kick' : ''"
     class="slot-btn absolute left-0 top-0 p-4 w-[100px] h-[100px] bg-[var(--juston-black)] border-dotted border-gray-300 border-[8px] rounded-[50%] text-xl font-bold text-white"
     @click="toggleSlot"
   >
@@ -192,7 +193,6 @@ const returnSlotMachine = () => {
   isStop.value = false;
   isSpinning.value = true;
 };
-
 </script>
 
 <style scoped>
@@ -204,7 +204,8 @@ const returnSlotMachine = () => {
   background-color: rgba(255, 255, 255, 0.85);
   /* clip-path: polygon(3% 0%, 97% 0%, 100% 100%, 0% 100%); */
   border: 10px dotted var(--juston-gradient-1);
-  animation: 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) 0s 1 normal both running scale-up-center;
+  animation: 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) 0s 1 normal both running
+    scale-up-center;
 }
 .slot {
   color: #222;
@@ -231,7 +232,7 @@ const returnSlotMachine = () => {
 }
 .slot-btn {
   animation: bling 0.8s infinite;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   transform: scale(0.5);
   opacity: 0;
 }
@@ -249,8 +250,8 @@ p {
 }
 
 .kick {
-  left : -120px;
-  top : -30px;
+  left: -50px;
+  top: 0px;
   transform: scale(1);
   opacity: 1;
 }
@@ -292,7 +293,7 @@ p {
     transform: scale(0.95);
   }
   90% {
-    transform: scale(1.03) 
+    transform: scale(1.03);
   }
   95% {
     transform: scale(0.98);

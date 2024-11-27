@@ -1,7 +1,9 @@
 <template>
   <button
     class="metronome-btn absolute left-0 top-0 bg-[var(--juston-black)] w-[100px] h-[100px] rounded-[50%] text-white text-4xl firework-button"
-    :class="{ 'met-active': isPlaying, 'kick3': switchStore.isKicked }" @click="toggleAudio">
+    :class="{ 'met-active': isPlaying, kick3: switchStore.isKicked }"
+    @click="toggleAudio"
+  >
     <i class="bi bi-stopwatch-fill"></i>
     <div class="timer" v-if="isPlaying">
       <div class="mask"></div>
@@ -29,7 +31,11 @@ const audioFiles = [
   { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
   { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
   { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
-  { src: soundUrl + "/10-second-count-down.mp3", duration: 10.5, repeatCount: 1 },
+  {
+    src: soundUrl + "/10-second-count-down.mp3",
+    duration: 10.5,
+    repeatCount: 1,
+  },
   { src: soundUrl + "/wow.mp3", duration: 1, repeatCount: 1 },
   // { src: soundUrl + "/metronome.mp3", duration: 1, repeatCount: 1 },
   // { src: soundUrl + "/wow.mp3", duration: 1, repeatCount: 1 },
@@ -139,21 +145,23 @@ function stopAllAudio() {
 
   // 이벤트 리스너 제거
   audioElements.value.forEach((audio) => {
-    audio.removeEventListener("ended", () => { });
+    audio.removeEventListener("ended", () => {});
   });
 }
 
-watch(() => switchStore.isOff, () => {
-  if (switchStore.isOff) {
-    stopAllAudio();
-    isPlaying.value = false;
+watch(
+  () => switchStore.isOff,
+  () => {
+    if (switchStore.isOff) {
+      stopAllAudio();
+      isPlaying.value = false;
+    }
   }
-})
-
+);
 </script>
 <style>
 .metronome-btn {
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   transform: scale(0.5);
   opacity: 0;
 }
@@ -162,7 +170,7 @@ watch(() => switchStore.isOff, () => {
   background: var(--juston-gradient-1);
 }
 
-.met-active>i {
+.met-active > i {
   /* color: black; */
   /* inline 속성은 transform이 적용되지 않는다.. */
   display: inline-block;
@@ -254,8 +262,8 @@ watch(() => switchStore.isOff, () => {
 }
 
 .kick3 {
-  top: 60px;
-  left: -60px;
+  top: 110px;
+  left: 0px;
   transform: scale(1);
   opacity: 1;
 }

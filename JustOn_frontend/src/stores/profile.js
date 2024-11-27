@@ -17,7 +17,7 @@ export const useProfileStore = defineStore("profile", () => {
       const imgData = response.data;
       imgSysName.value = imgData.systemName;
 
-      const url = `http://localhost:8080/uploads/${imgSysName.value}/${imgSysName.value}`;
+      const url = `http://192.168.210.74:8080/uploads/${imgSysName.value}/${imgSysName.value}`;
 
       const response2 = await axios.get(url, {
         responseType: "blob",

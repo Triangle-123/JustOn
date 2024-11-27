@@ -1,11 +1,17 @@
 <template>
   <SideHeader />
   <RouterView />
-  <div class="w-[60px] h-[60px] fixed right-[80px] bottom-[450px]" v-if="userStore.user">
-    <div class="absolute kick-btn left-[20px] top-[-5px] w-[60px] h-[60px] rounded-[50%]"></div>
-    <button class="absolute z-[1000] left-[20px] top-[-5px]  flex justify-center items-center w-[60px] h-[60px] 
-        bg-[var(--juston-black)] rounded-[50%] text-xl font-bold text-white"
-      @click="switchStore.isKicked = !switchStore.isKicked">
+  <div
+    class="w-[60px] h-[60px] fixed right-[80px] bottom-[450px]"
+    v-if="userStore.user"
+  >
+    <div
+      class="absolute kick-btn right-[-80px] top-[-5px] w-[60px] h-[120px] rounded-l-[120px]"
+    ></div>
+    <button
+      class="absolute z-[1000] right-[-80px] top-[-5px] flex justify-center items-center w-[60px] h-[120px] rounded-l-[120px] bg-[var(--juston-black)] text-xl font-bold text-white"
+      @click="switchStore.isKicked = !switchStore.isKicked"
+    >
       <img class="w-[35px]" src="./assets/kick-icon.svg" alt="킥" />
     </button>
 
@@ -21,11 +27,17 @@
   <!-- <LoginTest /> -->
   <!-- <MainLoginedView /> -->
 
-  <div v-for="(circle, index) in circles" :key="index" class="circle" :id="'circle' + index" :style="{
-    width: circle.size + 'px',
-    height: circle.size + 'px',
-    transform: `translate(${circle.x}px, ${circle.y}px)`
-  }"></div>
+  <div
+    v-for="(circle, index) in circles"
+    :key="index"
+    class="circle"
+    :id="'circle' + index"
+    :style="{
+      width: circle.size + 'px',
+      height: circle.size + 'px',
+      transform: `translate(${circle.x}px, ${circle.y}px)`,
+    }"
+  ></div>
 </template>
 
 <script setup>
@@ -34,7 +46,7 @@ import SideHeader from "@/components/SideHeader.vue";
 import MetronomeBtn from "./components/MetronomeBtn.vue";
 import ExSuggest from "@/components/ExSuggest.vue";
 import { useUserStore } from "./stores/user";
-import UserCustom from "./components/userCustom.vue";
+import UserCustom from "@/components/UserCustom.vue";
 import { useSwitchStore } from "./stores/switch";
 
 const switchStore = useSwitchStore();
@@ -44,19 +56,34 @@ const userStore = useUserStore();
 // import Home from "./components/Home.vue";
 // import MainLoginedView from "@/components/views/MainLoginedView.vue";
 
-watch(() => userStore.user, () => {
-  if (userStore.user.color) {
-    console.log('user', userStore.user);
-    const color1 = userStore.user.color.split(".")[0];
-    const color2 = userStore.user.color.split(".")[1];
-    const color3 = userStore.user.color.split(".")[2];
+watch(
+  () => userStore.user,
+  () => {
+    if (userStore.user.color) {
+      console.log("user", userStore.user);
+      const color1 = userStore.user.color.split(".")[0];
+      const color2 = userStore.user.color.split(".")[1];
+      const color3 = userStore.user.color.split(".")[2];
 
-    document.documentElement.style.setProperty('--bg-gradient-color1', color1);
-    document.documentElement.style.setProperty('--bg-gradient-color2', color2);
-    document.documentElement.style.setProperty('--bg-gradient-color3', color3);
-    document.documentElement.style.setProperty('--juston-gradient-1', `linear-gradient(to right, ${color1}, ${color2}, ${color3})`);
+      document.documentElement.style.setProperty(
+        "--bg-gradient-color1",
+        color1
+      );
+      document.documentElement.style.setProperty(
+        "--bg-gradient-color2",
+        color2
+      );
+      document.documentElement.style.setProperty(
+        "--bg-gradient-color3",
+        color3
+      );
+      document.documentElement.style.setProperty(
+        "--juston-gradient-1",
+        `linear-gradient(to right, ${color1}, ${color2}, ${color3})`
+      );
+    }
   }
-})
+);
 
 // 스크롤바를 고려한 화면의 크기 제한
 const screenWidth = document.documentElement.clientWidth;
@@ -91,21 +118,32 @@ const circles = ref([
 // 애니메이션 실행 함수
 const animate = () => {
   isAnimated.value = true;
-  circles.value.forEach(circle => {
+  circles.value.forEach((circle) => {
     // 원의 위치 업데이트
     circle.x += circle.speedX;
     circle.y += circle.speedY;
 
-
     // 원의 위치가 화면을 벗어나지 않도록 제한
-    circle.x = Math.max(circle.size / 2, Math.min(circle.x, screenWidth - circle.size / 2));
-    circle.y = Math.max(circle.size / 2, Math.min(circle.y, screenHeight - circle.size / 2));
+    circle.x = Math.max(
+      circle.size / 2,
+      Math.min(circle.x, screenWidth - circle.size / 2)
+    );
+    circle.y = Math.max(
+      circle.size / 2,
+      Math.min(circle.y, screenHeight - circle.size / 2)
+    );
 
     // 벽에 부딪히면 속도 반전
-    if (circle.x === circle.size / 2 || circle.x === screenWidth - circle.size / 2) {
+    if (
+      circle.x === circle.size / 2 ||
+      circle.x === screenWidth - circle.size / 2
+    ) {
       circle.speedX = -circle.speedX;
     }
-    if (circle.y === circle.size / 2 || circle.y === screenHeight - circle.size / 2) {
+    if (
+      circle.y === circle.size / 2 ||
+      circle.y === screenHeight - circle.size / 2
+    ) {
       circle.speedY = -circle.speedY;
     }
   });
@@ -117,7 +155,6 @@ const animate = () => {
 onUpdated(() => {
   if (!isAnimated.value) animate();
 });
-
 </script>
 
 <style>
