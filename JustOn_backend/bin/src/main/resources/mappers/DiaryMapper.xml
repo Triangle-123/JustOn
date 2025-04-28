@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.mvc.model.dao.DiaryDao">
+	
+	<!-- 다이어리 등록, insert 시 diary_no 자동 생성 -->
+	<insert id="insertDiary" parameterType="Diary" keyProperty="diaryNo" useGeneratedKeys="true" >
+		INSERT INTO diary (content, reg_date, user_id)
+		VALUES(#{content}, #{regDate}, #{userId})
+	</insert>
+	
+	<!-- 다이어리 등록 시 운동 리스트 추가 -->
+	<insert id="insertDiaryExList" parameterType="DiaryEx" keyProperty="diaryExNo" useGeneratedKeys="true" >
+		INSERT INTO diary_ex (play_num, diary_no, video_no )
+		VALUES(#{playNum}, #{diaryNo}, #{videoNo})
+	</insert>
+	
+	<!-- 특정 유저의 다이어리 전체 조회 (최신순으로 정렬 = 내림차순)-->
+	<select id="selectAllDiary" resultType="Diary" parameterType="Map">
+		SELECT diary_no, content, reg_date, user_id
+		FROM diary
+		WHERE user_id = #{userId}
+		ORDER BY reg_date DESC
+	    LIMIT #{diarySearch.offset}, #{diarySearch.listSize};
+	</select>
+	
+
+	<select id="selectAllDiaryCount" resultType="int" parameterType="String">
+		SELECT COUNT(*)
+		FROM diary
+		WHERE user_id = #{userId}
+	</select>
+	
+	<!-- 다이어리 날짜 선택 조회 : 날짜 기간조회 ? 선택조회 ? --> 
+	<select id="selectDiaryByRegDate" resultType="Diary" parameterType="map">
+		SELECT diary_no, content, reg_date, user_id
+		FROM diary
+		WHERE user_id = #{userId} AND reg_date = #{regDate}
+	</select>
+	
+	<!-- 다이어리 상세 조회 --> 	
+	<select id="selectOneDiaryByNo" resultType="Diary" parameterType="int">
+		SELECT diary_no, content, reg_date, user_id
+		FROM diary
+		WHERE diary_no = #{diaryNo}
+	</select>
+	
+	<!-- 특정 다이어리의 운동 리스트 조회 -->
+	<select id="selectDiaryExList" resultType="DiaryEx" parameterType="int">
+		SELECT diary_ex_no, play_num, diary_no, video_no 
+		FROM diary_ex
+		WHERE diary_no = #{diaryNo}
+	</select>
+	
+	<!-- 특정 유저의 다이어리 수정 --> 
+	<update id="modifyDiary" parameterType="Diary">
+		UPDATE diary 
+		SET content = #{content}, reg_date = #{regDate}
+		WHERE diary_no = #{diaryNo}
+	</update> 
+	
+	<!-- 특정 다이어리의 ExList 수정 
+	<select id="modifyDiaryExList" parameterType="diary" resultType="int">
+		 <foreach collection="diaryExList" item="diaryEx" separator=";">
+		  UPDATE diary_ex
+		  SET 
+		    play_num = #{diaryEx.playNum},
+		    diary_no = #{diaryEx.diaryNo},
+		    video_no = #{diaryEx.videoNo}
+		  WHERE 
+		    diary_no = #{diaryNo} AND video_no = #{diaryEx.videoNo}
+		</foreach>
+		
+		UPDATE diary_ex 
+		SET play_num = #{playNum}, diary_no = #{diaryNo}, video_no = #{video_no}
+		WHERE diary_no = #{diaryNo}
+		
+		
+		 SELECT play_num, diary_no, video_no 
+		FROM diary_ex
+		WHERE diary_no = #{diaryNo} 
+	</select>--> 
+	
+	<!-- 다이어리 삭제 --> 
+	<delete id="deleteDiary" parameterType="int" >
+		DELETE FROM diary
+		WHERE diary_no = #{diaryNo}
+	</delete> 
+	
+	<!-- 특정 다이어리 운동 전체 삭제 --> 
+	<delete id="deleteDiaryExList" parameterType="int">
+		DELETE FROM diary_ex
+		WHERE diary_no = #{diaryNo}
+	</delete> 
+</mapper>

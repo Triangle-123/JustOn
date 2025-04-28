@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.mvc.model.dao.VideoDao">
+	<insert id="insertVideo" parameterType="Video" useGeneratedKeys="true" keyProperty="videoNo">
+		INSERT INTO video(video_id, src, title, user_id, thumb)
+		SELECT #{videoId}, #{src}, #{title}, #{userId}, #{thumb} FROM DUAL
+		WHERE #{videoId} NOT IN (SELECT video_id FROM video WHERE user_id = #{userId})
+	</insert>
+	
+	<delete id="deleteVideo" parameterType="int">
+		DELETE FROM video
+		WHERE video_no = #{videoNo}
+	</delete>
+		
+	<select id="selectVideoByNo" resultType="Video" parameterType="int">
+		SELECT * FROM video
+		WHERE video_no = #{videoNo}
+	</select>
+	
+	<update id="updateVideo" parameterType="Video">
+		UPDATE video
+		SET video_id = #{videoId}, src = #{src}, title = #{title}, thumb = #{thumb}
+		WHERE video_no = #{videoNo} AND #{videoId} NOT IN (SELECT video_id FROM (SELECT video_id FROM video WHERE user_id = #{userId} AND video_no != #{videoNo}) as v)
+	</update>
+	
+	
+	<select id="selectVideoByGroup" resultType="int">
+		SELECT video_no
+		FROM category_video
+		WHERE category_name = #{categoryName} AND user_id = #{id}
+		
+	</select>
+	
+	<select id="selectVideoTitle" resultType="Video" parameterType="String">
+		SELECT video_no, title FROM video
+		WHERE user_id = #{Id}
+		ORDER BY video_no DESC;
+	</select>
+	
+	<insert id="insertVideoToGroup">
+		INSERT INTO category_video(category_name, video_no, user_id)
+		VALUES (#{categoryName}, #{videoNo}, #{id})
+	</insert>
+	
+	<delete id="deleteVideoFromGroup">
+		DELETE FROM category_video
+		WHERE category_name = #{categoryName} AND video_no = #{videoNo}
+	</delete>
+	
+	<select id="selectVideoGroup" resultType="VideoGroup" parameterType="String">
+		SELECT category_name, group_desc FROM video_group
+		WHERE user_id = #{userId}
+		ORDER BY create_date
+	</select>
+	
+	<select id="selectRegistedVideoGroup" resultType="String" parameterType="int">
+		SELECT category_name FROM category_video
+		WHERE video_no = #{videoNo}
+	</select>
+		
+	<insert id="insertVideoGroup" parameterType="VideoGroup">
+		INSERT INTO video_group(category_name, user_id, group_desc)
+		VALUES (#{categoryName}, #{userId}, #{groupDesc})
+	</insert>
+	
+	<delete id="deleteVideoGroup" parameterType="VideoGroup">
+		DELETE FROM video_group
+		WHERE category_name = #{categoryName} AND user_id = #{userId}
+	</delete>
+	
+	<insert id="insertVideoEx">
+		INSERT INTO video_ex_list(
+		<foreach collection="videoExList" item="ex" separator="," index="idx">
+		${ex.part}
+		<if test="idx == videoExList.size - 1">, ex_weight, video_no, user_id</if>
+		</foreach>
+		)
+		VALUE (
+		<foreach collection="videoExList" item="ex" separator="," index="idx">
+		#{ex.selCnt}
+		<if test="idx == videoExList.size - 1">, #{ex.exWeight}, #{video.videoNo}, #{video.userId}</if>
+		</foreach>
+		)
+	</insert>
+		
+	<select id="selectVideoExColumnName" resultType="String">
+		SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE TABLE_NAME = 'video_ex_list' AND COLUMN_NAME NOT IN ('video_no', 'user_id', 'video_ex_no', 'ex_weight');
+	</select>
+	
+	<select id="selectVideoEx" resultType="VideoEx">
+		<foreach collection="column" item="colName" separator="UNION ALL">
+			SELECT #{colName} as part, ${colName} as selCnt, ex_weight
+			FROM video_ex_list
+			WHERE video_no = #{videoNo}
+		</foreach>
+	</select>
+	
+	<delete id="deleteVideoEx" parameterType="int">
+		DELETE FROM video_ex_list
+		WHERE video_no = #{videoNo}
+	</delete>
+</mapper>

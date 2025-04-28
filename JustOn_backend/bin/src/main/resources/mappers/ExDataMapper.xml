@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.mvc.model.dao.ExDataDao">
+	<insert id="insertOrUpdateExRecord">
+		
+	</insert>
+	
+	<select id="selectExRecordColumnName" resultType="String">
+		SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE TABLE_NAME = 'ex_record' AND COLUMN_NAME NOT IN ('ex_record_no', 'user_id', 'ex_date');
+	</select>
+	
+	<select id="selectExRecord">
+		
+	</select>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.mvc.model.dao.ExDataDao">
+	<insert id="insertOrUpdateExRecord">
+		INSERT INTO ex_record(
+		<foreach collection="exRecordList" item="ex" separator="," index="idx">
+		${ex.part}
+		<if test="idx == exRecordList.size - 1">, ex_date, user_id</if>
+		</foreach>
+		)
+		VALUE (
+		<foreach collection="exRecordList" item="ex" separator="," index="idx">
+		#{ex.partValue}
+		<if test="idx == exRecordList.size - 1">, #{ex.exDate}, #{ex.userId}</if>
+		</foreach>
+		) ON DUPLICATE KEY UPDATE
+		<foreach collection="exRecordList" item="ex" separator="," index="idx">
+		${ex.part} = #{ex.partValue}
+		</foreach>
+	</insert>
+	
+	<select id="selectExRecordColumnName" resultType="String">
+		SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE TABLE_NAME = 'ex_record' AND COLUMN_NAME NOT IN ('ex_record_no', 'user_id', 'ex_date');
+	</select>
+	
+	<select id="selectExRecord" resultType="ExRecord">
+		<foreach collection="column" item="colName" separator="UNION ALL">
+			SELECT #{colName} as part, sum(${colName}) as partValue
+			FROM ex_record
+			WHERE user_id = #{userId}
+			GROUP BY user_id
+		</foreach>
+	</select>
+</mapper>
